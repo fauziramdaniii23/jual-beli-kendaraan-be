@@ -1,41 +1,100 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    LayoutGrid,
+    Settings,
+    HelpCircle, LayoutList, PackageSearch
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
-    SidebarContent,
     SidebarFooter,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
+    SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
+const menuItems = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
     },
-];
+    {
+        title: 'Inventory & Sales',
+        href: '#',
+        icon: PackageSearch,
+        items: [
+            {
+                title: 'Stock Unit',
+                href: '/inventory/stock-unit',
+            },
+            {
+                title: 'Pengajuan Jual Unit',
+                href: '/inventory/pengajuan-jual-unit',
+            },
+            {
+                title: 'Tukar Tambah',
+                href: '/inventory/tukar-tambah',
+            },
+            {
+                title: 'Pre Order',
+                href: '/inventory/pre-order',
+            },
+            {
+                title: 'Faktur Penjualan',
+                href: '/inventory/faktur-penjualan',
+            },
+        ],
+    },
+    {
+        title: 'Master',
+        href: '#',
+        icon: LayoutList,
+        items: [
+            {
+                title: 'Brand',
+                href: '/master/brand',
+            },
+            {
+                title: 'Model',
+                href: '/master/model',
+            },
+            {
+                title: 'Transmission',
+                href: '/master/transmission',
+            },
+            {
+                title: 'Type Mobil',
+                href: '/master/type-mobil',
+            },
+            {
+                title: 'Bahan Bakar',
+                href: '/master/bahan-bakar',
+            },
+            {
+                title: 'User',
+                href: '/master/user',
+            },
+        ],
+    },
+]
 
-const footerNavItems: NavItem[] = [
+const secondaryItems = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
+        title: 'Settings',
+        href: '#',
+        icon: Settings,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Help',
+        href: '#',
+        icon: HelpCircle,
     },
-];
+]
 
 export function AppSidebar() {
     return (
@@ -52,13 +111,10 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain items={mainNavItems} />
-            </SidebarContent>
+            <NavMain items={menuItems} />
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
+                <NavFooter items={secondaryItems} className="mt-auto" />
             </SidebarFooter>
         </Sidebar>
     );
