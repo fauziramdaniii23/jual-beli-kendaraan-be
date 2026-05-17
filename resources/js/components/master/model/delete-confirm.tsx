@@ -1,5 +1,5 @@
 import { router } from "@inertiajs/react";
-import { destroy as deleteModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
+import { destroy as deleteModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import {
     AlertDialog,
     AlertDialogAction,

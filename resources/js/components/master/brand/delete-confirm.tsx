@@ -1,5 +1,5 @@
 import { router } from "@inertiajs/react";
-import { destroy as deleteBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
+import { destroy as deleteBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import {
     AlertDialog,
     AlertDialogAction,

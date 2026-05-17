@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import React, { useEffect } from 'react';
-import { update as updateBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
+import { update as updateBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import type { TBrand } from '@/components/master/brand/type';
 import { Button } from '@/components/ui/button';
 import {

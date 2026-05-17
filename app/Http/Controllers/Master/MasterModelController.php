@@ -9,7 +9,7 @@ use App\services\CarModelService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class CarModelController extends Controller
+class MasterModelController extends Controller
 {
     public function __construct(protected CarModelService $carModelService, protected BrandService $brandService) {}
 

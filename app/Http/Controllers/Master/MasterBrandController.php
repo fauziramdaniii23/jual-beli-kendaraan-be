@@ -8,7 +8,7 @@ use App\services\BrandService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class BrandController extends Controller
+class MasterBrandController extends Controller
 {
     public function __construct(protected BrandService $brandService) {}
 

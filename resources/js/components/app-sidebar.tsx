@@ -4,8 +4,8 @@ import {
     Settings,
     HelpCircle, LayoutList, PackageSearch
 } from 'lucide-react';
-import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
-import { index as indexModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
+import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
+import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';

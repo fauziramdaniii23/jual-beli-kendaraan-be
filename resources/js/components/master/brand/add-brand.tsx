@@ -1,7 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import React from 'react';
-import { store as storeBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
+import { store as storeBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,

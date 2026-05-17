@@ -1,17 +1,9 @@
 import { useForm } from '@inertiajs/react';
 import React, { useEffect } from 'react';
-import { update as updateModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
+import { update as updateModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import type { TBrand } from '@/components/master/brand/type';
 import type { TModel } from '@/components/master/model/type';
 import { Button } from '@/components/ui/button';
-import {
-    Combobox,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxList
-} from '@/components/ui/combobox';
 import {
     Dialog,
     DialogClose,

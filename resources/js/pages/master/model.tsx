@@ -8,7 +8,7 @@ import {
     MoreHorizontal, SquarePen, Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { index as indexModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
+import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import type { TBrand } from '@/components/master/brand/type';
 import CreateModelDialog from '@/components/master/model/add-model';
 import { ConfirmDeleteModel } from '@/components/master/model/delete-confirm';

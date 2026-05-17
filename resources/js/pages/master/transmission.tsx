@@ -8,7 +8,7 @@ import {
     MoreHorizontal, SquarePen, Trash
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
+import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
 import CreateBrandDialog from '@/components/master/brand/add-brand';
 import { ConfirmDeleteBrand } from '@/components/master/brand/delete-confirm';
 import type { TBrand } from '@/components/master/brand/type';
@@ -35,7 +35,7 @@ type PageProps = {
     brands: TBrand[];
 };
 
-export default function MasterBrandPage() {
+export default function MasterTransmissionPage() {
     const { brands } = usePage<PageProps>().props;
     const [brand, setBrand] = useState<TBrand>({
         brand_id: 0,
@@ -198,13 +198,13 @@ export default function MasterBrandPage() {
     );
 }
 
-MasterBrandPage.layout = {
+MasterTransmissionPage.layout = {
     breadcrumbs: [
         {
             title: 'Master',
         },
         {
-            title: 'Brand',
+            title: 'Transmisi',
         },
     ],
 };
