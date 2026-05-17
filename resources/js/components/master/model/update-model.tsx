@@ -1,8 +1,17 @@
 import { useForm } from '@inertiajs/react';
 import React, { useEffect } from 'react';
-import { update as updateBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
+import { update as updateModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
 import type { TBrand } from '@/components/master/brand/type';
+import type { TModel } from '@/components/master/model/type';
 import { Button } from '@/components/ui/button';
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList
+} from '@/components/ui/combobox';
 import {
     Dialog,
     DialogClose,
@@ -24,14 +33,16 @@ import {
 } from '@/components/ui/select';
 
 interface Props {
-    brand: TBrand;
+    model: TModel;
+    brands: TBrand[];
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
 
-export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
+export default function UpdateModelDialog({ model, brands, isOpen, setIsOpen }: Props) {
     const { data, setData, put, processing, errors, reset } = useForm({
-        brand_name: '',
+        model_name: '',
+        brand_id: '',
         is_active: 'false',
     });
 
@@ -41,14 +52,15 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
         }
 
         setData({
-            brand_name: brand.brand_name,
-            is_active: brand.is_active ? 'true' : 'false',
+            model_name: model.model_name,
+            brand_id: String(model.brand_id),
+            is_active: model.is_active ? 'true' : 'false',
         });
-    }, [brand, isOpen, setData]);
+    }, [model, isOpen, setData]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        put(updateBrand({ brand: brand.brand_id }).url, {
+        put(updateModel({ model_id: model.model_id }).url, {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
@@ -62,27 +74,51 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
             <DialogContent className="sm:max-w-sm">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <DialogHeader>
-                        <DialogTitle>Update Merek</DialogTitle>
+                        <DialogTitle>Update Model</DialogTitle>
                     </DialogHeader>
 
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="brand_name">Nama Merek</Label>
+                            <Label htmlFor="model_name">Nama Model</Label>
                             <Input
-                                id="brand_name"
-                                name="brand_name"
-                                value={data.brand_name}
+                                id="model_name"
+                                name="model_name"
+                                value={data.model_name}
                                 onChange={(e) =>
-                                    setData('brand_name', e.target.value)
+                                    setData('model_name', e.target.value)
                                 }
                             />
-                            {errors.brand_name && (
+                            {errors.model_name && (
                                 <p className="text-sm text-red-500">
-                                    {errors.brand_name}
+                                    {errors.model_name}
                                 </p>
                             )}
                         </Field>
-
+                        <Field>
+                            <Label>Merek</Label>
+                            <Select
+                                value={String(data.brand_id)}
+                                onValueChange={(value) =>
+                                    setData('brand_id', String(value))
+                                }
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Pilih Merek" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {brands.map((brand) => (
+                                            <SelectItem
+                                                key={brand.brand_id}
+                                                value={String(brand.brand_id)}
+                                            >
+                                                {brand.brand_name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </Field>
                         <Field>
                             <Label>Status</Label>
                             <Select
@@ -102,6 +138,7 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                                 </SelectContent>
                             </Select>
                         </Field>
+
                     </FieldGroup>
 
                     <DialogFooter>

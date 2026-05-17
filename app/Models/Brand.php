@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,10 +43,18 @@ class Brand extends Model
         });
     }
 
-    public function cars()
+    public function cars(): HasMany
     {
         return $this->hasMany(
             Car::class,
+            'brand_id',
+            'brand_id'
+        );
+    }
+    public function carModels(): HasMany
+    {
+        return $this->hasMany(
+            CarModel::class,
             'brand_id',
             'brand_id'
         );

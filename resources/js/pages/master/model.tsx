@@ -5,16 +5,25 @@ import {
     ArrowDownNarrowWide,
     ArrowUpDown,
     ArrowUpWideNarrow, Eye,
-    MoreHorizontal, SquarePen, Trash
+    MoreHorizontal, SquarePen, Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
-import CreateBrandDialog from '@/components/master/brand/add-brand';
-import { ConfirmDeleteBrand } from '@/components/master/brand/delete-confirm';
+import { index as indexModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
 import type { TBrand } from '@/components/master/brand/type';
-import UpdateBrandDialog from '@/components/master/brand/update-brand';
+import CreateModelDialog from '@/components/master/model/add-model';
+import { ConfirmDeleteModel } from '@/components/master/model/delete-confirm';
+import type { TModel } from '@/components/master/model/type';
+import UpdateModelDialog from '@/components/master/model/update-model';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList
+} from '@/components/ui/combobox';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
     DropdownMenu,
@@ -32,21 +41,29 @@ import {
 } from '@/components/ui/select';
 
 type PageProps = {
+    carModels: TModel[];
     brands: TBrand[];
 };
 
-export default function MasterBrandPage() {
-    const { brands } = usePage<PageProps>().props;
-    const [brand, setBrand] = useState<TBrand>({
+export default function MasterModelPage() {
+    const { carModels, brands } = usePage<PageProps>().props;
+    const [model, seTModel] = useState<TModel>({
+        model_id: 0,
+        model_name: '',
         brand_id: 0,
-        brand_name: '',
+        brand: {
+            brand_id: 0,
+            brand_name: '',
+            is_active: false,
+        },
         is_active: false,
     });
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [selectedBrand, setSelectedBrand] = useState<TBrand | null>(null);
     const [selectStatus, setSelectStatus] = useState<string>('all');
-    const handleAction = (brand: TBrand, type: 'update' | 'delete') => {
-        setBrand(brand);
+    const handleAction = (model: TModel, type: 'update' | 'delete') => {
+        seTModel(model);
 
         if (type === 'update') {
             setIsUpdateDialogOpen(true);
@@ -56,9 +73,10 @@ export default function MasterBrandPage() {
     };
     const submitFilter = () => {
         router.get(
-            indexBrand().url,
+            indexModel().url,
             {
-                status: selectStatus === 'all' ? undefined : selectStatus,
+                brand_id: selectedBrand?.brand_id || undefined,
+                status: selectStatus === "all" ? undefined : selectStatus,
             },
             {
                 preserveState: true,
@@ -66,9 +84,32 @@ export default function MasterBrandPage() {
             }
         );
     };
-    const columns: ColumnDef<TBrand>[] = [
+
+    const columns: ColumnDef<TModel>[] = [
         {
-            accessorKey: 'brand_name',
+            accessorKey: 'model_name',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Nama Model
+                        {/* NONE */}
+                        {!sorted && <ArrowUpDown />}
+                        {/* ASC */}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {/* DESC */}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+        },
+        {
+            accessorKey: 'brand.brand_name',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
 
@@ -79,11 +120,8 @@ export default function MasterBrandPage() {
                         className="flex w-full items-center justify-between"
                     >
                         Nama Merek
-                        {/* NONE */}
                         {!sorted && <ArrowUpDown />}
-                        {/* ASC */}
                         {sorted === 'asc' && <ArrowDownNarrowWide />}
-                        {/* DESC */}
                         {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
@@ -119,7 +157,7 @@ export default function MasterBrandPage() {
             ),
             enableHiding: false,
             cell: ({ row }) => {
-                const brand = row.original;
+                const model : TModel = row.original;
 
                 return (
                     <div className="text-center">
@@ -132,19 +170,19 @@ export default function MasterBrandPage() {
 
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                    onClick={() => console.log('Detail', brand)}
+                                    onClick={() => console.log('Detail', model)}
                                 >
                                     <Eye /> View Detail
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(brand, 'update')}
+                                    onClick={() => handleAction(model, 'update')}
                                 >
                                     <SquarePen /> Edit
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(brand, 'delete')}
+                                    onClick={() => handleAction(model, 'delete')}
                                     className="text-red-500"
                                 >
                                     <Trash className="text-red-500"/> Delete
@@ -159,14 +197,13 @@ export default function MasterBrandPage() {
 
     return (
         <>
-            <Head title="Brand" />
+            <Head title="model" />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">
                         Status
                     </span>
                     <Select
-                        value={selectStatus}
                         onValueChange={(val) => setSelectStatus(val as string)}
                     >
                         <SelectTrigger className="w-full max-w-48">
@@ -183,28 +220,55 @@ export default function MasterBrandPage() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <span className="text-sm text-muted-foreground">
+                        Nama Merek
+                    </span>
+                    <div className="w-full max-w-56">
+                        <Combobox
+                            items={brands}
+                            itemToStringLabel={(item : TBrand) => item.brand_name}
+                            onValueChange={(val : TBrand | null) => setSelectedBrand(val)}
+                        >
+                            <ComboboxInput placeholder="Pilih Merek Mobil" showClear/>
+
+                            <ComboboxContent>
+                                <ComboboxEmpty>Brand tidak ditemukan.</ComboboxEmpty>
+
+                                <ComboboxList>
+                                    {(brand) => (
+                                        <ComboboxItem
+                                            key={brand.brand_id}
+                                            value={brand}
+                                        >
+                                            {brand.brand_name}
+                                        </ComboboxItem>
+                                    )}
+                                </ComboboxList>
+                            </ComboboxContent>
+                        </Combobox>
+                    </div>
                     <Button onClick={submitFilter}>
                         Filter
                     </Button>
                 </div>
-                <CreateBrandDialog/>
+                <CreateModelDialog brands={brands}/>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={brands} />
+                <DataTable columns={columns} data={carModels} />
             </div>
-            <UpdateBrandDialog brand={brand} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteBrand brand_id={brand.brand_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <UpdateModelDialog model={model} brands={brands} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
+            <ConfirmDeleteModel model_id={model.model_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
         </>
     );
 }
 
-MasterBrandPage.layout = {
+MasterModelPage.layout = {
     breadcrumbs: [
         {
             title: 'Master',
         },
         {
-            title: 'Brand',
+            title: 'model',
         },
     ],
 };

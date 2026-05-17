@@ -4,6 +4,8 @@ import {
     Settings,
     HelpCircle, LayoutList, PackageSearch
 } from 'lucide-react';
+import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
+import { index as indexModel } from '@/actions/App/Http/Controllers/Master/CarModelController';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -57,11 +59,11 @@ const menuItems = [
         items: [
             {
                 title: 'Brand',
-                href: '/master/brand',
+                href: indexBrand(),
             },
             {
                 title: 'Model',
-                href: '/master/model',
+                href: indexModel(),
             },
             {
                 title: 'Transmission',
