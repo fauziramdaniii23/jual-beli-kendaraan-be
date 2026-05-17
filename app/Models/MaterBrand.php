@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class Brand extends Model
+class MaterBrand extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'brand';
@@ -54,7 +54,7 @@ class Brand extends Model
     public function carModels(): HasMany
     {
         return $this->hasMany(
-            CarModel::class,
+            MasterModel::class,
             'brand_id',
             'brand_id'
         );

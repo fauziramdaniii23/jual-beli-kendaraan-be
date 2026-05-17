@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Models\MaterBrand;
 use App\services\BrandService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,7 +34,7 @@ class BrandController extends Controller
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Brand berhasil ditambahkan.',
+                'message' => 'Merek berhasil ditambahkan.',
             ]);
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
@@ -45,7 +45,7 @@ class BrandController extends Controller
         }
     }
 
-    public function update(Request $request, Brand $brand)
+    public function update(Request $request, MaterBrand $brand)
     {
         $validated = $request->validate([
             'brand_name' => [
@@ -62,7 +62,7 @@ class BrandController extends Controller
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Brand berhasil diupdate.',
+                'message' => 'Merek berhasil diupdate.',
             ]);
 
             return redirect()->route('master.brand');
@@ -74,7 +74,7 @@ class BrandController extends Controller
         }
     }
 
-    public function destroy(Request $request, Brand $brand)
+    public function destroy(Request $request, MaterBrand $brand)
     {
         try {
             if ($brand->cars()->exists()) {

@@ -2,13 +2,13 @@
 
 namespace App\repositories;
 
-use App\Models\CarModel;
+use App\Models\MasterModel;
 
 class CarModelRepository
 {
     public function getCarModels(array $filters = [])
     {
-        return CarModel::with(['brand' => function ($query) {
+        return MasterModel::with(['brand' => function ($query) {
             $query->select([
                 'brand_id',
                 'brand_name',
@@ -43,6 +43,6 @@ class CarModelRepository
     }
     public function store(array $data)
     {
-        return CarModel::create($data);
+        return MasterModel::create($data);
     }
 }

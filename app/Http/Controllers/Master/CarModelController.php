@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\CarModel;
+use App\Models\MasterModel;
 use App\services\BrandService;
 use App\services\CarModelService;
 use Illuminate\Http\Request;
@@ -46,7 +46,7 @@ class CarModelController extends Controller
         }
     }
 
-    public function update(Request $request, CarModel $carModel)
+    public function update(Request $request, MasterModel $carModel)
     {
         try {
             $request->merge(['is_active' => filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN)]);
@@ -74,7 +74,7 @@ class CarModelController extends Controller
         }
     }
 
-    public function destroy(Request $request, CarModel $carModel)
+    public function destroy(Request $request, MasterModel $carModel)
     {
         try {
             if ($carModel->cars()->exists()) {
