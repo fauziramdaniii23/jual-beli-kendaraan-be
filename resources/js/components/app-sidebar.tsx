@@ -2,10 +2,14 @@ import { Link } from '@inertiajs/react';
 import {
     LayoutGrid,
     Settings,
-    HelpCircle, LayoutList, PackageSearch
+    HelpCircle,
+    LayoutList,
+    PackageSearch,
+    KeyRound
 } from 'lucide-react';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
+import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -17,6 +21,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from '@/components/ui/sidebar';
+import { MASTER_REFERENCE_TYPE } from '@/const/constant';
 import { dashboard } from '@/routes';
 
 const menuItems = [
@@ -58,7 +63,7 @@ const menuItems = [
         icon: LayoutList,
         items: [
             {
-                title: 'Brand',
+                title: 'Merek',
                 href: indexBrand(),
             },
             {
@@ -66,23 +71,42 @@ const menuItems = [
                 href: indexModel(),
             },
             {
-                title: 'Transmission',
-                href: '/master/transmission',
+                title: 'Transmisi',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.TRANSMISSION}),
             },
             {
                 title: 'Type Mobil',
-                href: '/master/type-mobil',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.CAR_TYPE}),
             },
             {
                 title: 'Bahan Bakar',
-                href: '/master/bahan-bakar',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.FUEL_TYPE}),
             },
             {
-                title: 'User',
-                href: '/master/user',
+                title: 'Jumlah Kursi',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.SEAT_TYPE}),
             },
+            {
+                title: 'Jenis Plat',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.PLATE_TYPE}),
+            }
         ],
     },
+    {
+        title: 'Otentikasi',
+        href: '#',
+        icon: KeyRound,
+        items: [
+            {
+                title: 'User',
+                href: '/auth/user',
+            },
+            {
+                title: 'Role',
+                href: '/auth/role',
+            },
+        ],
+    }
 ]
 
 const secondaryItems = [

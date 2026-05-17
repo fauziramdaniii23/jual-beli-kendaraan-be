@@ -2,13 +2,13 @@
 
 namespace App\repositories;
 
-use App\Models\MaterBrand;
+use App\Models\MasterBrand;
 
 class BrandRepository
 {
     public function getBrands(array $filters = [])
     {
-        return MaterBrand::query()
+        return MasterBrand::query()
             ->select([
                 'brand_id',
                 'brand_name',
@@ -31,6 +31,6 @@ class BrandRepository
 
     public function store(array $data)
     {
-        return MaterBrand::create($data);
+        return MasterBrand::create($data);
     }
 }

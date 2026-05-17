@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterBrandController;
-use App\Http\Controllers\Master\MasterTransmissionController;
+use App\Http\Controllers\Master\MasterReferenceController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -24,10 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('car-model/{car_model}', [MasterModelController::class, 'update'])->name('master.carmodel.update');
         Route::delete('car-model/{car_model}', [MasterModelController::class, 'destroy'])->name('master.carmodel.destroy');
 
-        Route::get('transmission', [MasterTransmissionController::class, 'index'])->name('master.transmission');
-        Route::post('transmission', [MasterTransmissionController::class, 'store'])->name('master.transmission.store');
-        Route::put('transmission/{id}', [MasterTransmissionController::class, 'update'])->name('master.transmission.update');
-        Route::delete('transmission/{id}', [MasterTransmissionController::class, 'destroy'])->name('master.transmission.destroy');
+        Route::get('mst-reference/{type}', [MasterReferenceController::class, 'index'])->name('master.reference');
+        Route::post('mst-reference/{type}', [MasterReferenceController::class, 'store'])->name('master.reference.store');
+        Route::put('mst-reference/{id}', [MasterReferenceController::class, 'update'])->name('master.reference.update');
+        Route::delete('mst-reference/{id}', [MasterReferenceController::class, 'destroy'])->name('master.reference.destroy');
     });
 });
 

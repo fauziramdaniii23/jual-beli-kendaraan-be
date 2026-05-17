@@ -131,11 +131,6 @@ export default function MasterBrandPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => console.log('Detail', brand)}
-                                >
-                                    <Eye /> View Detail
-                                </DropdownMenuItem>
 
                                 <DropdownMenuItem
                                     onClick={() => handleAction(brand, 'update')}
@@ -204,7 +199,7 @@ MasterBrandPage.layout = {
             title: 'Master',
         },
         {
-            title: 'Brand',
+            title: 'Merek',
         },
     ],
 };

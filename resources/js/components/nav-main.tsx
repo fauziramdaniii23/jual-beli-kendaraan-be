@@ -3,7 +3,8 @@ import { ChevronDown, Dot } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
     SidebarContent,
-    SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
+    SidebarGroup,
+    SidebarGroupContent,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem
@@ -15,9 +16,8 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { isCurrentUrl } = useCurrentUrl();
 
     return (
-        <SidebarContent>
+        <SidebarContent className="overflow-y-auto scrollbar-hide">
             <SidebarGroup>
-                <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
                 <SidebarGroupContent>
                     <SidebarMenu>
                         {items.map((item) => {

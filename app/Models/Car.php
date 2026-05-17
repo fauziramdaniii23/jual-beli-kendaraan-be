@@ -80,12 +80,12 @@ class Car extends Model
     */
 
     /**
-     * MaterBrand Relation
+     * MasterBrand Relation
      */
     public function brand()
     {
         return $this->belongsTo(
-            MaterBrand::class,
+            MasterBrand::class,
             'brand_id',
             'brand_id'
         );

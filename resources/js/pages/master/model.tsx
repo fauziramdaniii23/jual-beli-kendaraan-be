@@ -169,11 +169,6 @@ export default function MasterModelPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => console.log('Detail', model)}
-                                >
-                                    <Eye /> View Detail
-                                </DropdownMenuItem>
 
                                 <DropdownMenuItem
                                     onClick={() => handleAction(model, 'update')}

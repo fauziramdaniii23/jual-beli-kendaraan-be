@@ -4,15 +4,14 @@ import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
-    ArrowUpWideNarrow, Eye,
+    ArrowUpWideNarrow,
     MoreHorizontal, SquarePen, Trash
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/BrandController';
-import CreateBrandDialog from '@/components/master/brand/add-brand';
-import { ConfirmDeleteBrand } from '@/components/master/brand/delete-confirm';
-import type { TBrand } from '@/components/master/brand/type';
-import UpdateBrandDialog from '@/components/master/brand/update-brand';
+import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
+import CreatereferenceDialog from '@/components/master/reference/add-reference';
+import { ConfirmDeleteReference } from '@/components/master/reference/delete-confirm';
+import UpdateReferenceDialog from '@/components/master/reference/update-reference';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -30,23 +29,29 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
+import { MASTER_REFERENCE_LABEL } from '@/const/constant';
+import AppLayout from '@/layouts/app-layout';
+import type { TMasterReference } from '@/types';
 
 type PageProps = {
-    brands: TBrand[];
+    data_reference: TMasterReference[];
+    type: keyof typeof MASTER_REFERENCE_LABEL;
 };
-
-export default function MasterTransmissionPage() {
-    const { brands } = usePage<PageProps>().props;
-    const [brand, setBrand] = useState<TBrand>({
-        brand_id: 0,
-        brand_name: '',
+export default function MasterReferencePage() {
+    const { data_reference, type } = usePage<PageProps>().props;
+    const label = MASTER_REFERENCE_LABEL[type];
+    const [reference, setReference] = useState<TMasterReference>({
+        ref_id: 0,
+        ref_type: type,
+        ref_code: '',
+        ref_value: '',
         is_active: false,
     });
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [selectStatus, setSelectStatus] = useState<string>('all');
-    const handleAction = (brand: TBrand, type: 'update' | 'delete') => {
-        setBrand(brand);
+    const handleAction = (reference: TMasterReference, type: 'update' | 'delete') => {
+        setReference(reference);
 
         if (type === 'update') {
             setIsUpdateDialogOpen(true);
@@ -56,7 +61,7 @@ export default function MasterTransmissionPage() {
     };
     const submitFilter = () => {
         router.get(
-            indexBrand().url,
+            indexReference({type: type}).url,
             {
                 status: selectStatus === 'all' ? undefined : selectStatus,
             },
@@ -66,9 +71,9 @@ export default function MasterTransmissionPage() {
             }
         );
     };
-    const columns: ColumnDef<TBrand>[] = [
+    const columns: ColumnDef<TMasterReference>[] = [
         {
-            accessorKey: 'brand_name',
+            accessorKey: 'ref_code',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
 
@@ -78,7 +83,29 @@ export default function MasterTransmissionPage() {
                         onClick={() => column.toggleSorting()}
                         className="flex w-full items-center justify-between"
                     >
-                        Nama Merek
+                        Kode {label}
+                        {/* NONE */}
+                        {!sorted && <ArrowUpDown />}
+                        {/* ASC */}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {/* DESC */}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+        },
+        {
+            accessorKey: 'ref_value',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Nama {label}
                         {/* NONE */}
                         {!sorted && <ArrowUpDown />}
                         {/* ASC */}
@@ -119,7 +146,7 @@ export default function MasterTransmissionPage() {
             ),
             enableHiding: false,
             cell: ({ row }) => {
-                const brand = row.original;
+                const reference = row.original;
 
                 return (
                     <div className="text-center">
@@ -131,20 +158,15 @@ export default function MasterTransmissionPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => console.log('Detail', brand)}
-                                >
-                                    <Eye /> View Detail
-                                </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(brand, 'update')}
+                                    onClick={() => handleAction(reference, 'update')}
                                 >
                                     <SquarePen /> Edit
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(brand, 'delete')}
+                                    onClick={() => handleAction(reference, 'delete')}
                                     className="text-red-500"
                                 >
                                     <Trash className="text-red-500"/> Delete
@@ -159,7 +181,7 @@ export default function MasterTransmissionPage() {
 
     return (
         <>
-            <Head title="Brand" />
+            <Head title={label} />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">
@@ -187,24 +209,29 @@ export default function MasterTransmissionPage() {
                         Filter
                     </Button>
                 </div>
-                <CreateBrandDialog/>
+                <CreatereferenceDialog type={type} label={label}/>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={brands} />
+                <DataTable columns={columns} data={data_reference} />
             </div>
-            <UpdateBrandDialog brand={brand} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteBrand brand_id={brand.brand_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <UpdateReferenceDialog label={label} reference={reference} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
+            <ConfirmDeleteReference label={label} ref_id={reference.ref_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
         </>
     );
 }
 
-MasterTransmissionPage.layout = {
-    breadcrumbs: [
-        {
-            title: 'Master',
-        },
-        {
-            title: 'Transmisi',
-        },
-    ],
+MasterReferencePage.layout = (page: React.ReactElement<PageProps>) => {
+    const pageProps = (page.props as PageProps | undefined) ?? undefined;
+    const breadcrumbTitle = pageProps?.type ? MASTER_REFERENCE_LABEL[pageProps.type] : '';
+
+    return (
+        <AppLayout
+            breadcrumbs={[
+                { title: 'Master', href: '#' },
+                { title: breadcrumbTitle, href: '#' },
+            ]}
+        >
+            {page}
+        </AppLayout>
+    );
 };

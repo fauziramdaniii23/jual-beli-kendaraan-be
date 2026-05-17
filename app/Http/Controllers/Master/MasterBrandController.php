@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\MaterBrand;
+use App\Models\MasterBrand;
 use App\services\BrandService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,7 +30,6 @@ class MasterBrandController extends Controller
         ]);
         try {
             $this->brandService->store($validated);
-            $brands = $this->brandService->getBrands($request);
 
             Inertia::flash('toast', [
                 'type' => 'success',
@@ -38,14 +37,15 @@ class MasterBrandController extends Controller
             ]);
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
-            return Inertia::flash('toast', [
+            Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
             ]);
+            return back()->withErrors($e->getMessage());
         }
     }
 
-    public function update(Request $request, MaterBrand $brand)
+    public function update(Request $request, MasterBrand $brand)
     {
         $validated = $request->validate([
             'brand_name' => [
@@ -67,14 +67,15 @@ class MasterBrandController extends Controller
 
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
-            return Inertia::flash('toast', [
+            Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
             ]);
+            return back()->withErrors($e->getMessage());
         }
     }
 
-    public function destroy(Request $request, MaterBrand $brand)
+    public function destroy(Request $request, MasterBrand $brand)
     {
         try {
             if ($brand->cars()->exists()) {
@@ -93,10 +94,11 @@ class MasterBrandController extends Controller
             ]);
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
-            return Inertia::flash('toast', [
+            Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
             ]);
+            return back()->withErrors($e->getMessage());
         }
     }
 }

@@ -55,7 +55,7 @@ class MasterModel extends Model
     public function brand(): BelongsTo
     {
         return $this->belongsTo(
-            MaterBrand::class,
+            MasterBrand::class,
             'brand_id',
             'brand_id'
         );
