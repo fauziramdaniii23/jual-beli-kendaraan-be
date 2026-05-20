@@ -10,7 +10,11 @@ export function cn(...inputs: ClassValue[]) {
 export function toUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: any): string {
+    if (!dateString) {
+        return '';
+    }
+
     const date = new Date(dateString);
 
     const day = String(date.getUTCDate()).padStart(2, '0');

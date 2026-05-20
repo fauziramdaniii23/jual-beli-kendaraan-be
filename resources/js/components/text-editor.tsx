@@ -6,11 +6,13 @@ import "quill/dist/quill.snow.css";
 type Props = {
     value?: string;
     onChange?: (value: string) => void;
+    disabled?: boolean;
 };
 
 export default function TextEditor({
    value = "",
    onChange,
+    disabled,
 }: Props) {
     const editorRef = useRef<HTMLDivElement | null>(null);
     const quillRef = useRef<Quill | null>(null);
@@ -42,6 +44,18 @@ export default function TextEditor({
 
         quillRef.current = quill;
     }, []);
+
+    useEffect(() => {
+        if (!quillRef.current) {
+            return
+        }
+
+        if (disabled) {
+            quillRef.current.enable(false);
+        } else {
+            quillRef.current.enable(true);
+        }
+    }, [disabled]);
 
     return (
         <div className="rounded-md overflow-hidden">

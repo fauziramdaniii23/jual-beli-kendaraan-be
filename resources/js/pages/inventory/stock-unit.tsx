@@ -3,7 +3,7 @@ import { Head, usePage } from '@inertiajs/react';
 import { ChevronDownIcon, Plus, Filter
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { index as indexStockUnit, create as createStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { index as indexStockUnit, create as createStockUnit, show as showStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { stockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
 import { SelectWithClear } from '@/components/select-with-clear';
@@ -183,3 +183,15 @@ StockUnitPage.layout = {
         },
     ],
 };
+
+export const handleShowAction = (id: number | undefined, type: 'detail' | 'update') => {
+    router.get(showStockUnit(id ?? 0).url,
+        {
+            type: type,
+        },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    );
+}

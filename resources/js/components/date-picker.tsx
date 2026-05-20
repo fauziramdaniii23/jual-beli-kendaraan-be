@@ -17,6 +17,7 @@ interface Props {
     placeholder?: string;
     startMonth?: Date;
     endMonth?: Date;
+    disabled?: boolean;
 }
 
 export default function DatePicker({
@@ -24,7 +25,8 @@ export default function DatePicker({
    onChange,
    placeholder = 'Pilih Tanggal',
    startMonth,
-   endMonth
+   endMonth,
+    disabled
 }: Props) {
     const [open, setOpen] = React.useState(false);
     const [label, setLabel] = React.useState(value);
@@ -52,6 +54,7 @@ export default function DatePicker({
                 <Button
                     variant="outline"
                     className="w-52 justify-between font-normal"
+                    disabled={disabled}
                 >
                     {label || placeholder}
 

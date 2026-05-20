@@ -67,7 +67,6 @@ class Car extends Model
         'kilometer' => 'decimal:2',
         'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'stnk_validity_period' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

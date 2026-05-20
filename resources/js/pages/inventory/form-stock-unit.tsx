@@ -1,6 +1,6 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
-import React, { useMemo } from 'react';
-import { index as indexStockUnit, store as storeUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import React, { useEffect, useMemo } from 'react';
+import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import DatePicker from '@/components/date-picker';
 import { ImageUpload } from '@/components/image-upload';
 import type { TUnit, TStockUnitOptions } from '@/components/inventory/stock-unit/type';
@@ -14,12 +14,14 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/in
 
 type PageProps = {
     options: TStockUnitOptions;
-    initial?: Partial<TUnit>;
+    stock_unit?: TUnit;
+    type?: 'detail' | 'update';
 };
 
-export default function AddStockUnitPage() {
-    const { options } = usePage<PageProps>().props;
-    const form = useForm<TUnit>(defaultUnit);
+export default function FormStockUnitPage() {
+    const { options, stock_unit, type } = usePage<PageProps>().props;
+    const form = useForm<TUnit>(stock_unit ?? defaultUnit);
+    const disable = type === 'detail';
 
     const filteredModels = useMemo(() => {
         return options.model.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
@@ -32,12 +34,22 @@ export default function AddStockUnitPage() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        form.post(storeUnit.url(), {
-            preserveScroll: true,
-             onSuccess: () => {
-                 form.reset();
-             }
-        })
+
+        if (type === 'update' && stock_unit) {
+            form.put(updateUnit(stock_unit!.cars_id!).url, {
+                preserveScroll: true,
+                 onSuccess: () => {
+                     form.reset();
+                 }
+            })
+        } else {
+            form.post(storeUnit.url(), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    form.reset();
+                }
+            })
+        }
     };
 
     return (
@@ -61,6 +73,7 @@ export default function AddStockUnitPage() {
                                         onChange={(e) => form.setData('name', e.target.value)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.name}
+                                        disabled={disable}
                                     />
                                     {form.errors.name && <div className="text-sm text-destructive">{form.errors.name}</div>}
                                 </Field>
@@ -74,6 +87,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('model_id', val === '' ? undefined as any : val as any)}
                                         items={filteredModels.map((m) => ({ label: m.label, value: String(m.value) }))}
                                         aria-invalid={!!form.errors.model_id}
+                                        disabled={disable}
                                     />
                                     {form.errors.model_id &&
                                         <div className="text-sm text-destructive">{form.errors.model_id}</div>}
@@ -87,6 +101,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('transmission_code', val === '' ? undefined as any : val as any)}
                                         items={options.transmission}
                                         aria-invalid={!!form.errors.transmission_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.transmission_code &&
                                         <div className="text-sm text-destructive">{form.errors.transmission_code}</div>}
@@ -99,6 +114,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('plate_code', val === '' ? undefined as any : val as any)}
                                         items={options.plate_type || []}
                                         aria-invalid={!!form.errors.plate_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.plate_code &&
                                         <div className="text-sm text-destructive">{form.errors.plate_code}</div>}
@@ -111,6 +127,7 @@ export default function AddStockUnitPage() {
                                         onChange={(e) => form.setData('engine_cc', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.engine_cc}
+                                        disabled={disable}
                                     />
                                     {form.errors.engine_cc &&
                                         <div className="text-sm text-destructive">{form.errors.engine_cc}</div>}
@@ -124,6 +141,7 @@ export default function AddStockUnitPage() {
                                         startMonth={new Date(new Date().getFullYear() - 5, 11)}
                                         endMonth={new Date(new Date().getFullYear() + 5, 11)}
                                         aria-invalid={!!form.errors.stnk_validity_period}
+                                        disabled={disable}
                                     />
                                     {form.errors.stnk_validity_period &&
                                         <div className="text-sm text-destructive">{form.errors.stnk_validity_period}</div>}
@@ -137,6 +155,7 @@ export default function AddStockUnitPage() {
                                             onChange={(e) => form.setData('price', e.target.value === '' ? undefined as any : e.target.value as any)}
                                             className="w-full input"
                                             aria-invalid={!!form.errors.price}
+                                            disabled={disable}
                                         />
                                         <InputGroupAddon>
                                             Rp.
@@ -153,6 +172,7 @@ export default function AddStockUnitPage() {
                                         onChange={(e) => form.setData('kilometer', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.kilometer}
+                                        disabled={disable}
                                     />
                                     {form.errors.kilometer &&
                                         <div className="text-sm text-destructive">{form.errors.kilometer}</div>}
@@ -169,6 +189,7 @@ export default function AddStockUnitPage() {
                                         onChange={handleBrandChange}
                                         items={options.brand}
                                         aria-invalid={!!form.errors.brand_id}
+                                        disabled={disable}
                                     />
                                     {form.errors.brand_id &&
                                         <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
@@ -182,6 +203,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('type_code', val === '' ? undefined as any : val as any)}
                                         items={options.car_type}
                                         aria-invalid={!!form.errors.type_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.type_code &&
                                         <div className="text-sm text-destructive">{form.errors.type_code}</div>}
@@ -195,6 +217,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('fuel_type_code', val === '' ? undefined as any : val as any)}
                                         items={options.fuel_type}
                                         aria-invalid={!!form.errors.fuel_type_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.fuel_type_code &&
                                         <div className="text-sm text-destructive">{form.errors.fuel_type_code}</div>}
@@ -207,6 +230,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('seat_code', val === '' ? undefined as any : val as any)}
                                         items={options.seat_type || []}
                                         aria-invalid={!!form.errors.seat_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.seat_code &&
                                         <div className="text-sm text-destructive">{form.errors.seat_code}</div>}
@@ -219,6 +243,7 @@ export default function AddStockUnitPage() {
                                         onChange={(e) => form.setData('year', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.year}
+                                        disabled={disable}
                                     />
                                     {form.errors.year &&
                                         <div className="text-sm text-destructive">{form.errors.year}</div>}
@@ -230,6 +255,7 @@ export default function AddStockUnitPage() {
                                         onChange={(e) => form.setData('color', e.target.value)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.color}
+                                        disabled={disable}
                                     />
                                     {form.errors.color &&
                                         <div className="text-sm text-destructive">{form.errors.color}</div>}
@@ -242,6 +268,7 @@ export default function AddStockUnitPage() {
                                         onChange={(val) => form.setData('status_code', val)}
                                         items={options.status}
                                         aria-invalid={!!form.errors.status_code}
+                                        disabled={disable}
                                     />
                                     {form.errors.status &&
                                         <div className="text-sm text-destructive">{form.errors.status}</div>}
@@ -254,16 +281,22 @@ export default function AddStockUnitPage() {
                         <TextEditor
                             value={form.data.description || ''}
                             onChange={(val) => form.setData('description', val)}
+                            disabled={disable}
                         />
                     </Field>
 
                     <div className="flex gap-2">
-                        <Button type="button" variant="outline">
-                            Batal
+                        <Button
+                            onClick={() => router.get(indexStockUnit().url, {}, { preserveState: true, replace: true} )}
+                            type="button"
+                            variant="outline">
+                            {disable ? 'Kembali' : 'Batal'}
                         </Button>
-                        <Button type="submit" disabled={form.processing}>
-                            Simpan
-                        </Button>
+                        { !disable &&
+                            <Button type="submit" disabled={form.processing}>
+                                Simpan
+                            </Button>
+                        }
                     </div>
                 </form>
             </div>
@@ -271,7 +304,7 @@ export default function AddStockUnitPage() {
     );
 }
 
-AddStockUnitPage.layout = {
+FormStockUnitPage.layout = {
     breadcrumbs: [
         {
             title: 'Inventory'

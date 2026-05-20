@@ -2,11 +2,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
-    ArrowUpWideNarrow,
+    ArrowUpWideNarrow, Eye,
     MoreHorizontal,
     SquarePen,
-    Trash,
-} from "lucide-react";
+    Trash
+} from 'lucide-react';
 import React from "react";
 import type { TUnit } from "@/components/inventory/stock-unit/type";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
+import { handleShowAction } from '@/pages/inventory/stock-unit';
 
 export const stockUnitColumns: ColumnDef<TUnit>[] = [
     {
@@ -151,7 +152,9 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
         id: "actions",
         header: () => <div className="text-center">Aksi</div>,
         enableHiding: false,
-        cell: () => {
+        cell: ({row}) => {
+            const id = row.original.cars_id;
+
             return (
                 <div className="text-center">
                     <DropdownMenu>
@@ -162,7 +165,14 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => handleShowAction(id, 'detail') }
+                            >
+                                <Eye /> Detail
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => handleShowAction(id, 'update') }
+                            >
                                 <SquarePen /> Edit
                             </DropdownMenuItem>
 

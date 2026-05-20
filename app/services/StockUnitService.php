@@ -2,6 +2,8 @@
 
 namespace App\services;
 
+use App\Helper\DateHelper;
+use App\Models\Car;
 use App\repositories\BrandRepository;
 use App\repositories\CarModelRepository;
 use App\repositories\StockUnitRepository;
@@ -52,6 +54,17 @@ class StockUnitService
         }
 
         return $this->stockUnitRepository->getOptionFilter($type);
+    }
+
+    public function getUnitById(int $id)
+    {
+        $stockUnit = Car::findOrFail($id);
+
+        $stockUnit->stnk_validity_period = DateHelper::dateFormat(
+            $stockUnit->stnk_validity_period
+        );
+
+        return $stockUnit;
     }
 
     public function store(array $data)
