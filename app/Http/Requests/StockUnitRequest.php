@@ -36,7 +36,7 @@ class StockUnitRequest extends FormRequest
             'fuel_type_code' => 'nullable|string',
             'plate_code' => 'nullable|string',
             'seat_code' => 'nullable|string',
-            'status_code' => 'nullable|string',
+            'status_code' => 'required|string',
 
             'kilometer' => 'nullable|integer|min:0',
             'year' => 'nullable|integer|min:1900|max:'.date('Y'),
