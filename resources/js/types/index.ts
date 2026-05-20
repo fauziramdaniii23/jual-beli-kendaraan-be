@@ -9,3 +9,7 @@ export type TMasterReference = {
     ref_value: string;
     is_active: boolean;
 }
+export type TOptionItem = {
+    value: string;
+    label: string;
+};

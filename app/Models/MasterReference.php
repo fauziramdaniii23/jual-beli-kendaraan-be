@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class MasterReference extends Model
 {
     const TYPE_TRANSMISSION = 'TRANSMISSION';
+    const TYPE_CAR = 'CAR_TYPE';
+    const TYPE_FUEL_TYPE = 'FUEL_TYPE';
+    const TYPE_PLATE = 'PLATE_TYPE';
+    const TYPE_SEAT = 'SEAT_TYPE';
+    const TYPE_STATUS = 'CAR_STATUS';
 
     use HasFactory;
     protected $table = 'mst_reference';
@@ -45,9 +50,8 @@ class MasterReference extends Model
             $brand->saveQuietly();
         });
     }
-
-    public function scopeTransmission($query)
+    public function scopeByType($query, string $type)
     {
-        return $query->where('ref_type', self::TYPE_TRANSMISSION);
+        return $query->where('ref_type', $type);
     }
 }

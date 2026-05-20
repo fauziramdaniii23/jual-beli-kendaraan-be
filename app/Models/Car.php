@@ -72,6 +72,7 @@ class Car extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+    protected $appends = ['formatted_price'];
 
     /*
     |--------------------------------------------------------------------------
@@ -101,6 +102,80 @@ class Car extends Model
             'model_id',
             'model_id'
         );
+    }
+    /*
+   |--------------------------------------------------------------------------
+   | Transmission
+   |--------------------------------------------------------------------------
+   */
+
+    public function transmission()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'transmision_code',
+            'ref_code'
+        )->where('ref_type', 'TRANSMISSION');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fuel Type
+    |--------------------------------------------------------------------------
+    */
+
+    public function fuelType()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'fuel_type_code',
+            'ref_code'
+        )->where('ref_type', 'FUEL_TYPE');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Plate
+    |--------------------------------------------------------------------------
+    */
+
+    public function plate()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'plate_code',
+            'ref_code'
+        )->where('ref_type', 'PLATE');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Seat
+    |--------------------------------------------------------------------------
+    */
+
+    public function seat()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'seat_code',
+            'ref_code'
+        )->where('ref_type', 'SEAT');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Status
+    |--------------------------------------------------------------------------
+    */
+
+    public function status()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'status_code',
+            'ref_code'
+        )->where('ref_type', 'CAR_STATUS');
     }
 
     /*

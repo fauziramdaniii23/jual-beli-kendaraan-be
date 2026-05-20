@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Master\MasterModelController;
+use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBrandController;
+use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterReferenceController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -12,6 +13,14 @@ Route::inertia('/', 'welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+
+    Route::prefix('inventory')->group(function () {
+        Route::get('stock-unit', [StockUnitController::class, 'index'])->name('inventory.stock-unit');
+        Route::get('stock-unit/{id}', [StockUnitController::class, 'show'])->name('inventory.stock-unit.show');
+        Route::post('stock-unit', [StockUnitController::class, 'store'])->name('inventory.stock-unit.store');
+        Route::put('stock-unit/{id}', [StockUnitController::class, 'update'])->name('inventory.stock-unit.update');
+        Route::delete('stock-unit/{id}', [StockUnitController::class, 'destroy'])->name('inventory.stock-unit.destroy');
+    });
 
     Route::prefix('master')->group(function () {
         Route::get('brand', [MasterBrandController::class, 'index'])->name('master.brand');

@@ -5,8 +5,9 @@ import {
     HelpCircle,
     LayoutList,
     PackageSearch,
-    KeyRound
+    KeyRound, HandPlatter, Wallet, Users
 } from 'lucide-react';
+import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
@@ -31,31 +32,111 @@ const menuItems = [
         icon: LayoutGrid,
     },
     {
-        title: 'Inventory & Sales',
+        title: 'Inventory',
         href: '#',
         icon: PackageSearch,
         items: [
             {
                 title: 'Stock Unit',
-                href: '/inventory/stock-unit',
+                href: indexStockUnit(),
             },
             {
                 title: 'Pengajuan Jual Unit',
                 href: '/inventory/pengajuan-jual-unit',
             },
             {
-                title: 'Tukar Tambah',
-                href: '/inventory/tukar-tambah',
-            },
-            {
-                title: 'Pre Order',
-                href: '/inventory/pre-order',
+                title: 'Garansi',
+                href: '/inventory/garansi',
             },
             {
                 title: 'Faktur Penjualan',
                 href: '/inventory/faktur-penjualan',
             },
         ],
+    },
+    {
+        title: 'Sales Service',
+        href: '#',
+        icon: HandPlatter,
+        items: [
+            {
+                title: 'order',
+                href: '/inventory/order',
+            },
+            {
+                title: 'Pre Order',
+                href: '/inventory/pre-order',
+            },
+            {
+                title: 'Test Drive',
+                href: '/inventory/test-driver',
+            },
+            {
+                title: 'Tukar Tambah',
+                href: '/inventory/tukar-tambah',
+            },
+        ]
+    },
+    {
+        title: 'Customers',
+        href: '#',
+        icon: Users,
+        items: [
+            {
+                title: 'Customer List',
+                href: '/customers',
+            },
+            {
+                title: 'Leads', //Menyimpan calon customer yang belum closing.
+                href: '/customers/leads',
+            },
+            {
+                title: 'Follow Up',
+                href: '/customers/follow-up',
+            },
+        ]
+    },
+    {
+        title: 'Financing',
+        href: '#',
+        icon: Wallet,
+        items: [
+            {
+                title: 'Kredit',
+                href: '/financing/credit',
+            },
+            {
+                title: 'Simulasi Kredit',
+                href: '/financing/simulation',
+            },
+            {
+                title: 'Leasing Partner',
+                href: '/financing/leasing',
+            },
+            {
+                title: 'Approval',
+                href: '/financing/approval',
+            },
+        ]
+    },
+    {
+      title: 'News',
+      href: '#',
+      icon: LayoutGrid,
+      items: [
+          {
+              title: 'Blog',
+              href: '/news/blog',
+          },
+          {
+              title: 'Promo',
+              href: '/news/promo',
+          },
+          {
+              title: 'Testimoni',
+              href: '/news/testimonial',
+          }
+      ]
     },
     {
         title: 'Master',
