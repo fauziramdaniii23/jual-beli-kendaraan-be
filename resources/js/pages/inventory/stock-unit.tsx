@@ -3,10 +3,9 @@ import { Head, usePage } from '@inertiajs/react';
 import { ChevronDownIcon, Plus, Filter
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { index as indexStockUnit, create as createStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { stockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
-import { defaultUnit } from '@/components/inventory/stock-unit/type';
 import { SelectWithClear } from '@/components/select-with-clear';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -21,7 +20,6 @@ type PageProps = {
 
 export default function StockUnitPage() {
     const { stock_unit, options } = usePage<PageProps>().props;
-    const [unit, seTUnit] = useState<TUnit>(defaultUnit);
 
     const [selectBrand, setSelectBrand] = useState<string>('');
     const [selectModel, setSelectModel] = useState<string>('');
@@ -56,6 +54,15 @@ export default function StockUnitPage() {
     const handleBrandChange = (val: string) => {
         setSelectBrand(val);
         setSelectModel(''); // Reset model selection when brand changes
+    }
+    const handleAddStockUnit = () => {
+        router.get(createStockUnit().url,
+            {},
+            {
+                preserveState: true,
+                replace: true,
+            }
+            );
     }
 
     return (
@@ -154,7 +161,7 @@ export default function StockUnitPage() {
             </div>
 
             <div className="mx-4">
-                <Button>
+                <Button onClick={handleAddStockUnit}>
                     <Plus />
                     Tambah Stock Unit Baru
                 </Button>

@@ -43,7 +43,7 @@ class Car extends Model
         'brand_id',
         'model_id',
         'type_code',
-        'transmision_code',
+        'transmission_code',
         'fuel_type_code',
         'plate_code',
         'seat_code',

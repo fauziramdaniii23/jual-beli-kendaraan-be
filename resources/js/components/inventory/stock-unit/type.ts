@@ -1,7 +1,7 @@
 import type { TOptionItem, TMasterReference } from '@/types';
 
 export type TUnit = {
-    cars_id: number;
+    cars_id?: number;
     name: string;
     description?: string | null;
     brand_id: string | number;
@@ -20,6 +20,7 @@ export type TUnit = {
     price?: number | null;
     stnk_validity_period?: string | null;
     is_active: boolean;
+    image?: File[] | null;
 }
 export type TOptionItemModel = {
     value: string | number;
@@ -33,19 +34,13 @@ export type TStockUnitOptions = {
     fuel_type: TOptionItem[];
     car_type: TOptionItem[];
     status: TOptionItem[];
+    plate_type?: TOptionItem[];
+    seat_type?: TOptionItem[];
 };
 
 export const defaultUnit: TUnit = {
-    cars_id: 0,
     name: '',
-    description: null,
-    brand_id: 0,
-    model_id: 0,
-    type_code: null,
-    transmission_code: null,
-    fuel_type_code: null,
-    kilometer: 0,
-    year: null,
-    price: 0,
+    brand_id: '',
+    model_id: '',
     is_active: true,
 };

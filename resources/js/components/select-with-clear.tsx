@@ -13,27 +13,33 @@ type SelectWithClearProps = {
     value: string;
     onChange: (val: string) => void;
     placeholder?: string;
+    name?: string
     items: { label: string; value: string }[];
     disabled?: boolean;
     loading?: boolean;
+    required?: boolean;
 };
 
 export function SelectWithClear({
         value,
         onChange,
         placeholder = 'Select option',
+        name,
         items,
         disabled = false,
-        loading = false
+        loading = false,
+        required = false,
     }: SelectWithClearProps) {
     const isDisabled = disabled || loading;
 
     return (
         <div className="flex w-full items-center gap-2">
             <Select
+                name={name}
                 value={value}
                 onValueChange={onChange}
                 disabled={isDisabled}
+                required={required}
             >
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder={placeholder} />

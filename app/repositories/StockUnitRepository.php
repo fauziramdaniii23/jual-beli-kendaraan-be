@@ -48,4 +48,8 @@ class StockUnitRepository
                 'label' => $item->ref_value,
             ]);
     }
+    public function store(array $data)
+    {
+        return Car::create($data);
+    }
 }
