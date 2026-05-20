@@ -10,6 +10,7 @@ class StockUnitRepository
     public function getUnit(array $filter = [])
     {
         $query = Car::query()
+            ->select(['cars_id', 'name', 'year', 'brand_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
             ->with([
                 'brand:brand_id,brand_name',
                 'model:model_id,model_name',
@@ -35,7 +36,7 @@ class StockUnitRepository
             }
         }
 
-        return $query->get();
+        return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
 
     public function getOptionFilter(string $type)

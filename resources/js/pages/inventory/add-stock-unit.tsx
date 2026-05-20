@@ -73,6 +73,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.model_id ?? '')}
                                         onChange={(val) => form.setData('model_id', val === '' ? undefined as any : val as any)}
                                         items={filteredModels.map((m) => ({ label: m.label, value: String(m.value) }))}
+                                        aria-invalid={!!form.errors.model_id}
                                     />
                                     {form.errors.model_id &&
                                         <div className="text-sm text-destructive">{form.errors.model_id}</div>}
@@ -85,6 +86,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.transmission_code ?? '')}
                                         onChange={(val) => form.setData('transmission_code', val === '' ? undefined as any : val as any)}
                                         items={options.transmission}
+                                        aria-invalid={!!form.errors.transmission_code}
                                     />
                                     {form.errors.transmission_code &&
                                         <div className="text-sm text-destructive">{form.errors.transmission_code}</div>}
@@ -96,6 +98,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.plate_code ?? '')}
                                         onChange={(val) => form.setData('plate_code', val === '' ? undefined as any : val as any)}
                                         items={options.plate_type || []}
+                                        aria-invalid={!!form.errors.plate_code}
                                     />
                                     {form.errors.plate_code &&
                                         <div className="text-sm text-destructive">{form.errors.plate_code}</div>}
@@ -107,6 +110,7 @@ export default function AddStockUnitPage() {
                                         value={form.data.engine_cc || ''}
                                         onChange={(e) => form.setData('engine_cc', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
+                                        aria-invalid={!!form.errors.engine_cc}
                                     />
                                     {form.errors.engine_cc &&
                                         <div className="text-sm text-destructive">{form.errors.engine_cc}</div>}
@@ -117,6 +121,9 @@ export default function AddStockUnitPage() {
                                     <DatePicker
                                         value={form.data.stnk_validity_period || ''}
                                         onChange={(val) => form.setData('stnk_validity_period', val)}
+                                        startMonth={new Date(new Date().getFullYear() - 5, 11)}
+                                        endMonth={new Date(new Date().getFullYear() + 5, 11)}
+                                        aria-invalid={!!form.errors.stnk_validity_period}
                                     />
                                     {form.errors.stnk_validity_period &&
                                         <div className="text-sm text-destructive">{form.errors.stnk_validity_period}</div>}
@@ -129,6 +136,7 @@ export default function AddStockUnitPage() {
                                             value={String(form.data.price) || ''}
                                             onChange={(e) => form.setData('price', e.target.value === '' ? undefined as any : e.target.value as any)}
                                             className="w-full input"
+                                            aria-invalid={!!form.errors.price}
                                         />
                                         <InputGroupAddon>
                                             Rp.
@@ -144,6 +152,7 @@ export default function AddStockUnitPage() {
                                         value={form.data.kilometer || ''}
                                         onChange={(e) => form.setData('kilometer', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
+                                        aria-invalid={!!form.errors.kilometer}
                                     />
                                     {form.errors.kilometer &&
                                         <div className="text-sm text-destructive">{form.errors.kilometer}</div>}
@@ -159,6 +168,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.brand_id ?? '')}
                                         onChange={handleBrandChange}
                                         items={options.brand}
+                                        aria-invalid={!!form.errors.brand_id}
                                     />
                                     {form.errors.brand_id &&
                                         <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
@@ -171,6 +181,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.type_code ?? '')}
                                         onChange={(val) => form.setData('type_code', val === '' ? undefined as any : val as any)}
                                         items={options.car_type}
+                                        aria-invalid={!!form.errors.type_code}
                                     />
                                     {form.errors.type_code &&
                                         <div className="text-sm text-destructive">{form.errors.type_code}</div>}
@@ -183,6 +194,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.fuel_type_code ?? '')}
                                         onChange={(val) => form.setData('fuel_type_code', val === '' ? undefined as any : val as any)}
                                         items={options.fuel_type}
+                                        aria-invalid={!!form.errors.fuel_type_code}
                                     />
                                     {form.errors.fuel_type_code &&
                                         <div className="text-sm text-destructive">{form.errors.fuel_type_code}</div>}
@@ -194,6 +206,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.seat_code ?? '')}
                                         onChange={(val) => form.setData('seat_code', val === '' ? undefined as any : val as any)}
                                         items={options.seat_type || []}
+                                        aria-invalid={!!form.errors.seat_code}
                                     />
                                     {form.errors.seat_code &&
                                         <div className="text-sm text-destructive">{form.errors.seat_code}</div>}
@@ -205,6 +218,7 @@ export default function AddStockUnitPage() {
                                         value={form.data.year || ''}
                                         onChange={(e) => form.setData('year', e.target.value === '' ? undefined as any : e.target.value as any)}
                                         className="w-full input"
+                                        aria-invalid={!!form.errors.year}
                                     />
                                     {form.errors.year &&
                                         <div className="text-sm text-destructive">{form.errors.year}</div>}
@@ -215,6 +229,7 @@ export default function AddStockUnitPage() {
                                         value={form.data.color || ''}
                                         onChange={(e) => form.setData('color', e.target.value)}
                                         className="w-full input"
+                                        aria-invalid={!!form.errors.color}
                                     />
                                     {form.errors.color &&
                                         <div className="text-sm text-destructive">{form.errors.color}</div>}
@@ -226,6 +241,7 @@ export default function AddStockUnitPage() {
                                         value={String(form.data.status_code ?? '')}
                                         onChange={(val) => form.setData('status_code', val)}
                                         items={options.status}
+                                        aria-invalid={!!form.errors.status_code}
                                     />
                                     {form.errors.status &&
                                         <div className="text-sm text-destructive">{form.errors.status}</div>}

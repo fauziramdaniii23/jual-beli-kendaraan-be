@@ -1,41 +1,45 @@
-import { format, parse } from "date-fns";
-import { ChevronDownIcon } from "lucide-react";
-import * as React from "react";
+import { format, parse } from 'date-fns';
+import { ChevronDownIcon } from 'lucide-react';
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 
 import {
     Popover,
     PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
+    PopoverTrigger
+} from '@/components/ui/popover';
 
 interface Props {
     value?: string;
     onChange?: (value: string) => void;
     placeholder?: string;
+    startMonth?: Date;
+    endMonth?: Date;
 }
 
 export default function DatePicker({
    value,
    onChange,
-   placeholder = "Pilih Tanggal",
+   placeholder = 'Pilih Tanggal',
+   startMonth,
+   endMonth
 }: Props) {
     const [open, setOpen] = React.useState(false);
     const [label, setLabel] = React.useState(value);
 
     // derived state
     const date = value
-        ? parse(value, "dd-MM-yyyy", new Date())
+        ? parse(value, 'dd-MM-yyyy', new Date())
         : undefined;
 
     const handleSelectDate = (
         date: Date | undefined
     ) => {
         const formatted = date
-            ? format(date, "dd-MM-yyyy")
-            : "";
+            ? format(date, 'dd-MM-yyyy')
+            : '';
 
         onChange?.(formatted);
         setLabel(formatted);
@@ -65,6 +69,8 @@ export default function DatePicker({
                     captionLayout="dropdown"
                     defaultMonth={date}
                     onSelect={handleSelectDate}
+                    startMonth={startMonth}
+                    endMonth={endMonth}
                 />
             </PopoverContent>
         </Popover>
