@@ -79,13 +79,44 @@ class StockUnitController extends Controller
         return Inertia::render('inventory/form-stock-unit', ['stock_unit' => $stockUnit, 'options' => $options, 'type' => $type]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StockUnitRequest $request, $id)
     {
-        return redirect()->route('inventory.stock-unit');
+        try {
+            $this->stockUnitService->update($id, $request->validated());
+
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => 'Stock Unit berhasil diperbarui.',
+            ]);
+
+            return redirect()->route('inventory.stock-unit');
+        } catch (\Exception $e) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function destroy($id)
     {
-        return redirect()->route('inventory.stock-unit');
+        try {
+            $stockUnit = Car::findOrFail($id);
+            $stockUnit->delete();
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => 'Stock Unit berhasil dihapus.',
+            ]);
+            return redirect()->route('inventory.stock-unit');
+        } catch (\Exception $e) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

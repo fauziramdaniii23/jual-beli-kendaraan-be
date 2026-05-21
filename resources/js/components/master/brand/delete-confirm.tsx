@@ -16,7 +16,7 @@ interface Props {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
-export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Props) {
+export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Props>) {
     const handleDelete = () => {
         router.delete(deleteBrand({ brand: brand_id }).url, {
             preserveScroll: true,
@@ -24,27 +24,23 @@ export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Props) {
                 setIsOpen(false);
             },
         });
-    }
+    };
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Hapus Merek
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>Hapus Merek</AlertDialogTitle>
 
                     <AlertDialogDescription>
-                        Apakah Anda yakin ingin menghapus Merek ini?
-                        Tindakan ini tidak dapat dibatalkan dan dapat
-                        memengaruhi data mobil yang terkait dengan Merek.
+                        Apakah Anda yakin ingin menghapus Merek ini? Tindakan
+                        ini tidak dapat dibatalkan dan dapat memengaruhi data
+                        mobil yang terkait dengan Merek.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel>
-                        Batal
-                    </AlertDialogCancel>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
 
                     <AlertDialogAction onClick={handleDelete}>
                         Hapus
@@ -52,6 +48,6 @@ export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Props) {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
 

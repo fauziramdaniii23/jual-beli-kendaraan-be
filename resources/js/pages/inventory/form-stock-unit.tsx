@@ -1,5 +1,5 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import DatePicker from '@/components/date-picker';
 import { ImageUpload } from '@/components/image-upload';
@@ -36,7 +36,7 @@ export default function FormStockUnitPage() {
         e.preventDefault();
 
         if (type === 'update' && stock_unit) {
-            form.put(updateUnit(stock_unit!.cars_id!).url, {
+            form.put(updateUnit(stock_unit.cars_id!).url, {
                 preserveScroll: true,
                  onSuccess: () => {
                      form.reset();
@@ -151,8 +151,8 @@ export default function FormStockUnitPage() {
                                     <InputGroup>
                                         <InputGroupInput
                                             type="number"
-                                            value={String(form.data.price) || ''}
-                                            onChange={(e) => form.setData('price', e.target.value === '' ? undefined as any : e.target.value as any)}
+                                            value={form.data.price || ''}
+                                            onChange={(e) => form.setData('price', e.target.value === '' ? undefined as any : Number(e.target.value) as any)}
                                             className="w-full input"
                                             aria-invalid={!!form.errors.price}
                                             disabled={disable}
@@ -169,7 +169,7 @@ export default function FormStockUnitPage() {
                                     <Input
                                         type="number"
                                         value={form.data.kilometer || ''}
-                                        onChange={(e) => form.setData('kilometer', e.target.value === '' ? undefined as any : e.target.value as any)}
+                                        onChange={(e) => form.setData('kilometer', e.target.value === '' ? undefined as any : Number(e.target.value) as any)}
                                         className="w-full input"
                                         aria-invalid={!!form.errors.kilometer}
                                         disabled={disable}

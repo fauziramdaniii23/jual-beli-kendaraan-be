@@ -60,9 +60,9 @@ class StockUnitService
     {
         $stockUnit = Car::findOrFail($id);
 
-        $stockUnit->stnk_validity_period = DateHelper::dateFormat(
-            $stockUnit->stnk_validity_period
-        );
+        $stockUnit->stnk_validity_period = DateHelper::dateFormat($stockUnit->stnk_validity_period);
+        $stockUnit->kilometer = (int) $stockUnit->kilometer;
+        $stockUnit->price = (float) $stockUnit->price;
 
         return $stockUnit;
     }
@@ -88,6 +88,29 @@ class StockUnitService
                 'price' => $data['price'],
                 'stnk_validity_period' => $data['stnk_validity_period'],
                 'is_active' => true,
+            ]);
+        });
+    }
+    public function update(int $id, array $data)
+    {
+        return DB::transaction(function () use ($id, $data) {
+            return $this->stockUnitRepository->update($id, [
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'brand_id' => $data['brand_id'],
+                'model_id' => $data['model_id'],
+                'type_code' => $data['type_code'],
+                'transmission_code' => $data['transmission_code'],
+                'fuel_type_code' => $data['fuel_type_code'],
+                'plate_code' => $data['plate_code'],
+                'seat_code' => $data['seat_code'],
+                'status_code' => $data['status_code'],
+                'kilometer' => $data['kilometer'],
+                'year' => $data['year'],
+                'engine_cc' => $data['engine_cc'],
+                'color' => $data['color'],
+                'price' => $data['price'],
+                'stnk_validity_period' => $data['stnk_validity_period'],
             ]);
         });
     }

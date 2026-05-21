@@ -18,9 +18,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
-import { handleShowAction } from '@/pages/inventory/stock-unit';
 
-export const stockUnitColumns: ColumnDef<TUnit>[] = [
+interface Props {
+    onDetail: (id: number | undefined) => void;
+    onEdit: (id: number | undefined) => void;
+    onDelete: (id: number | undefined) => void;
+}
+
+export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): ColumnDef<TUnit>[] => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -166,17 +171,17 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
 
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                                onClick={() => handleShowAction(id, 'detail') }
+                                onClick={() => onDetail(id) }
                             >
                                 <Eye /> Detail
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => handleShowAction(id, 'update') }
+                                onClick={() => onEdit(id) }
                             >
                                 <SquarePen /> Edit
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem className="text-red-500">
+                            <DropdownMenuItem onClick={() => onDelete(id)} className="text-red-500">
                                 <Trash className="text-red-500" /> Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>

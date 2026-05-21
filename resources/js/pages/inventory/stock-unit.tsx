@@ -3,8 +3,9 @@ import { Head, usePage } from '@inertiajs/react';
 import { ChevronDownIcon, Plus, Filter
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { index as indexStockUnit, create as createStockUnit, show as showStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
-import { stockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
+import { index as indexStockUnit, create as createStockUnit, show as showStockUnit, destroy as deleteStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { ConfirmDeleteDialog } from '@/components/delete-confirm';
+import { getStockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
 import { SelectWithClear } from '@/components/select-with-clear';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,8 @@ export default function StockUnitPage() {
     const [selectTransmission, setSelectTransmission] = useState<string>('');
     const [selectFuelType, setSelectFuelType] = useState<string>('');
     const [selectStatus, setSelectStatus] = useState<string>('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [stockUnitId, setStockUnitId] = useState<number | undefined>();
 
     const filteredModels = useMemo(() => {
         return options.model.filter(
@@ -63,6 +66,35 @@ export default function StockUnitPage() {
                 replace: true,
             }
             );
+    }
+    const columns = getStockUnitColumns({
+        onDelete: (id) => {
+            setStockUnitId(id);
+            setDeleteDialogOpen(true);
+        },
+        onDetail: (id) => {
+            handleShowAction(id, 'detail');
+        },
+        onEdit: (id) => {
+            handleShowAction(id, 'update');
+        }
+    });
+    const handleShowAction = (id: number | undefined, type: 'detail' | 'update') => {
+        router.get(showStockUnit(id ?? 0).url,
+            {
+                type: type,
+            },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }
+    const handleDeleteAction = () => {
+        router.delete(deleteStockUnit(stockUnitId ?? 0).url, {
+                preserveState: true,
+                replace: true,
+        })
     }
 
     return (
@@ -167,8 +199,15 @@ export default function StockUnitPage() {
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={stockUnitColumns} data={stock_unit} />
+                <DataTable columns={columns} data={stock_unit} />
             </div>
+            <ConfirmDeleteDialog
+                title="Hapus Stock Unit"
+                description="Apakah Anda yakin ingin menghapus Stock Unit ini? Tindakan ini tidak dapat dibatalkan dan dapat memengaruhi data yang terkait dengan Stock Unit."
+                open={deleteDialogOpen}
+                onOpenChange={(val) => setDeleteDialogOpen(val)}
+                onConfirm={handleDeleteAction}
+            />
         </>
     );
 }
@@ -183,15 +222,3 @@ StockUnitPage.layout = {
         },
     ],
 };
-
-export const handleShowAction = (id: number | undefined, type: 'detail' | 'update') => {
-    router.get(showStockUnit(id ?? 0).url,
-        {
-            type: type,
-        },
-        {
-            preserveState: true,
-            replace: true,
-        }
-    );
-}

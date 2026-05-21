@@ -53,4 +53,10 @@ class StockUnitRepository
     {
         return Car::create($data);
     }
+    public function update(int $id, array $data)
+    {
+        $car = Car::findOrFail($id);
+        $car->update($data);
+        return $car;
+    }
 }
