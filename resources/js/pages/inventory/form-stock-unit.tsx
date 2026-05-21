@@ -22,6 +22,8 @@ export default function FormStockUnitPage() {
     const { options, stock_unit, type } = usePage<PageProps>().props;
     const form = useForm<TUnit>(stock_unit ?? defaultUnit);
     const disable = type === 'detail';
+    console.log(form);
+
 
     const filteredModels = useMemo(() => {
         return options.model.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
@@ -34,22 +36,18 @@ export default function FormStockUnitPage() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        const url = type === 'update' && stock_unit ? updateUnit(stock_unit.cars_id!).url : storeUnit.url();
 
-        if (type === 'update' && stock_unit) {
-            form.put(updateUnit(stock_unit.cars_id!).url, {
-                preserveScroll: true,
-                 onSuccess: () => {
-                     form.reset();
-                 }
-            })
-        } else {
-            form.post(storeUnit.url(), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    form.reset();
-                }
-            })
-        }
+        form.post(url, {
+            forceFormData: true,
+            preserveScroll: true,
+             onSuccess: () => {
+                 form.reset();
+             }
+        })
+    };
+    const handleImageChange = (files: File[]) => {
+        form.setData('image', files);
     };
 
     return (
@@ -58,7 +56,7 @@ export default function FormStockUnitPage() {
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <ImageUpload
-                        onImagesSelected={(files) => form.setData('image', files)}
+                        onImagesSelected={handleImageChange}
                         maxImages={10}
                         maxFileSize={5}
                     />
@@ -86,11 +84,10 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.model_id ?? '')}
                                         onChange={(val) => form.setData('model_id', val === '' ? undefined as any : val as any)}
                                         items={filteredModels.map((m) => ({ label: m.label, value: String(m.value) }))}
-                                        aria-invalid={!!form.errors.model_id}
+                                        invalid={!!form.errors.model_id}
                                         disabled={disable}
                                     />
-                                    {form.errors.model_id &&
-                                        <div className="text-sm text-destructive">{form.errors.model_id}</div>}
+                                    {form.errors.model_id && <div className="text-sm text-destructive">{form.errors.model_id}</div>}
                                 </Field>
 
                                 <Field>
@@ -100,11 +97,10 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.transmission_code ?? '')}
                                         onChange={(val) => form.setData('transmission_code', val === '' ? undefined as any : val as any)}
                                         items={options.transmission}
-                                        aria-invalid={!!form.errors.transmission_code}
+                                        invalid={!!form.errors.transmission_code}
                                         disabled={disable}
                                     />
-                                    {form.errors.transmission_code &&
-                                        <div className="text-sm text-destructive">{form.errors.transmission_code}</div>}
+                                    {form.errors.transmission_code && <div className="text-sm text-destructive">{form.errors.transmission_code}</div>}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Tipe Plat</FieldLabel>
@@ -113,11 +109,10 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.plate_code ?? '')}
                                         onChange={(val) => form.setData('plate_code', val === '' ? undefined as any : val as any)}
                                         items={options.plate_type || []}
-                                        aria-invalid={!!form.errors.plate_code}
+                                        invalid={!!form.errors.plate_code}
                                         disabled={disable}
                                     />
-                                    {form.errors.plate_code &&
-                                        <div className="text-sm text-destructive">{form.errors.plate_code}</div>}
+                                    {form.errors.plate_code && <div className="text-sm text-destructive">{form.errors.plate_code}</div>}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Kapasitas Mesin (CC)</FieldLabel>
@@ -129,8 +124,7 @@ export default function FormStockUnitPage() {
                                         aria-invalid={!!form.errors.engine_cc}
                                         disabled={disable}
                                     />
-                                    {form.errors.engine_cc &&
-                                        <div className="text-sm text-destructive">{form.errors.engine_cc}</div>}
+                                    {form.errors.engine_cc && <div className="text-sm text-destructive">{form.errors.engine_cc}</div>}
                                 </Field>
 
                                 <Field>
@@ -140,11 +134,10 @@ export default function FormStockUnitPage() {
                                         onChange={(val) => form.setData('stnk_validity_period', val)}
                                         startMonth={new Date(new Date().getFullYear() - 5, 11)}
                                         endMonth={new Date(new Date().getFullYear() + 5, 11)}
-                                        aria-invalid={!!form.errors.stnk_validity_period}
+                                        invalid={!!form.errors.stnk_validity_period}
                                         disabled={disable}
                                     />
-                                    {form.errors.stnk_validity_period &&
-                                        <div className="text-sm text-destructive">{form.errors.stnk_validity_period}</div>}
+                                    {form.errors.stnk_validity_period && <div className="text-sm text-destructive">{form.errors.stnk_validity_period}</div>}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Harga</FieldLabel>
@@ -161,8 +154,7 @@ export default function FormStockUnitPage() {
                                             Rp.
                                         </InputGroupAddon>
                                     </InputGroup>
-                                    {form.errors.price &&
-                                        <div className="text-sm text-destructive">{form.errors.price}</div>}
+                                    {form.errors.price && <div className="text-sm text-destructive">{form.errors.price}</div>}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Kilometer(KM)</FieldLabel>
@@ -188,7 +180,7 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.brand_id ?? '')}
                                         onChange={handleBrandChange}
                                         items={options.brand}
-                                        aria-invalid={!!form.errors.brand_id}
+                                        invalid={!!form.errors.brand_id}
                                         disabled={disable}
                                     />
                                     {form.errors.brand_id &&
@@ -202,7 +194,7 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.type_code ?? '')}
                                         onChange={(val) => form.setData('type_code', val === '' ? undefined as any : val as any)}
                                         items={options.car_type}
-                                        aria-invalid={!!form.errors.type_code}
+                                        invalid={!!form.errors.type_code}
                                         disabled={disable}
                                     />
                                     {form.errors.type_code &&
@@ -216,7 +208,7 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.fuel_type_code ?? '')}
                                         onChange={(val) => form.setData('fuel_type_code', val === '' ? undefined as any : val as any)}
                                         items={options.fuel_type}
-                                        aria-invalid={!!form.errors.fuel_type_code}
+                                        invalid={!!form.errors.fuel_type_code}
                                         disabled={disable}
                                     />
                                     {form.errors.fuel_type_code &&
@@ -229,7 +221,7 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.seat_code ?? '')}
                                         onChange={(val) => form.setData('seat_code', val === '' ? undefined as any : val as any)}
                                         items={options.seat_type || []}
-                                        aria-invalid={!!form.errors.seat_code}
+                                        invalid={!!form.errors.seat_code}
                                         disabled={disable}
                                     />
                                     {form.errors.seat_code &&
@@ -267,11 +259,10 @@ export default function FormStockUnitPage() {
                                         value={String(form.data.status_code ?? '')}
                                         onChange={(val) => form.setData('status_code', val)}
                                         items={options.status}
-                                        aria-invalid={!!form.errors.status_code}
+                                        invalid={!!form.errors.status_code}
                                         disabled={disable}
                                     />
-                                    {form.errors.status &&
-                                        <div className="text-sm text-destructive">{form.errors.status}</div>}
+                                    {form.errors.status_code && <div className="text-sm text-destructive">{form.errors.status_code}</div>}
                                 </Field>
                             </FieldGroup>
                         </div>

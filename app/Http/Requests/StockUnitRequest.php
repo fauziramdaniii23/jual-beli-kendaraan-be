@@ -63,6 +63,7 @@ class StockUnitRequest extends FormRequest
 
             'brand_id.required' => 'Brand wajib dipilih.',
             'model_id.required' => 'Model wajib dipilih.',
+            'status_code.required' => 'Status wajib dipilih.',
 
             'kilometer.integer' => 'Kilometer harus berupa angka.',
             'kilometer.min' => 'Kilometer tidak boleh negatif.',

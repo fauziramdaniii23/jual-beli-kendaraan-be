@@ -39,7 +39,7 @@ class CarImage extends Model
      */
     protected $fillable = [
         'car_id',
-        'image_url',
+        'path',
         'is_primary',
         'created_by',
         'updated_by',

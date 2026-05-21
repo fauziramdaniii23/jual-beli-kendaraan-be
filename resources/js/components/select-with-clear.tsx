@@ -18,6 +18,7 @@ type SelectWithClearProps = {
     disabled?: boolean;
     loading?: boolean;
     required?: boolean;
+    invalid?: boolean;
 };
 
 export function SelectWithClear({
@@ -29,6 +30,7 @@ export function SelectWithClear({
         disabled = false,
         loading = false,
         required = false,
+        invalid = false,
     }: SelectWithClearProps) {
     const isDisabled = disabled || loading;
 
@@ -41,7 +43,7 @@ export function SelectWithClear({
                 disabled={isDisabled}
                 required={required}
             >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" aria-invalid={invalid}>
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
 

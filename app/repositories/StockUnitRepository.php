@@ -3,6 +3,7 @@
 namespace App\repositories;
 
 use App\Models\Car;
+use App\Models\CarImage;
 use App\Models\MasterReference;
 
 class StockUnitRepository
@@ -65,14 +66,35 @@ class StockUnitRepository
                 'label' => $item->ref_value,
             ]);
     }
+
     public function store(array $data)
     {
         return Car::create($data);
     }
+
     public function update(int $id, array $data)
     {
         $car = Car::findOrFail($id);
         $car->update($data);
-        return $car;
+
+        return $car->fresh();
+    }
+
+    public function storeImage(int $stockUnitId, string $path): CarImage
+    {
+        return CarImage::create([
+            'car_id' => $stockUnitId,
+            'path' => $path,
+        ]);
+    }
+
+    public function findImage(int $imageId): ?CarImage
+    {
+        return CarImage::find($imageId);
+    }
+
+    public function deleteImage(int $imageId): bool
+    {
+        return CarImage::destroy($imageId) > 0;
     }
 }

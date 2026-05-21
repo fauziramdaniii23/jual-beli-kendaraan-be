@@ -200,9 +200,7 @@ export function ImageUpload({
             </div>
 
             {/* Error Message */}
-            {error && (
-                <p className="mt-2 text-sm text-destructive">{error}</p>
-            )}
+            {error && ( <p className="mt-2 text-sm text-destructive">{error}</p> )}
 
             {/* Image Preview Grid */}
             {images.length > 0 && (

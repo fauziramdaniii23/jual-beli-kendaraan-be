@@ -19,7 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('stock-unit/create', [StockUnitController::class, 'create'])->name('inventory.stock-unit.create');
         Route::get('stock-unit/{id}', [StockUnitController::class, 'show'])->name('inventory.stock-unit.show');
         Route::post('stock-unit', [StockUnitController::class, 'store'])->name('inventory.stock-unit.store');
-        Route::put('stock-unit/{id}', [StockUnitController::class, 'update'])->name('inventory.stock-unit.update');
+        Route::post('stock-unit/{id}', [StockUnitController::class, 'update'])->name('inventory.stock-unit.update');
         Route::delete('stock-unit/{id}', [StockUnitController::class, 'destroy'])->name('inventory.stock-unit.destroy');
     });
 

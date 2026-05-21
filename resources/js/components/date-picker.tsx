@@ -18,6 +18,7 @@ interface Props {
     startMonth?: Date;
     endMonth?: Date;
     disabled?: boolean;
+    invalid?: boolean;
 }
 
 export default function DatePicker({
@@ -26,7 +27,8 @@ export default function DatePicker({
    placeholder = 'Pilih Tanggal',
    startMonth,
    endMonth,
-    disabled
+    disabled,
+    invalid,
 }: Props) {
     const [open, setOpen] = React.useState(false);
     const [label, setLabel] = React.useState(value);
@@ -50,7 +52,7 @@ export default function DatePicker({
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild aria-invalid={invalid}>
                 <Button
                     variant="outline"
                     className="w-52 justify-between font-normal"
