@@ -38,6 +38,22 @@ class StockUnitRepository
 
         return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
+    public function getUnitById($id)
+    {
+        $query = Car::query()
+            ->with([
+                'images:image_id,car_id,path,is_primary',
+                'brand:brand_id,brand_name',
+                'model:model_id,model_name',
+                'transmission:ref_code,ref_value',
+                'fuelType:ref_code,ref_value',
+                'plate:ref_code,ref_value',
+                'seat:ref_code,ref_value',
+                'status:ref_code,ref_value',
+            ]);
+
+        return $query->findOrFail($id);
+    }
 
     public function getOptionFilter(string $type)
     {
