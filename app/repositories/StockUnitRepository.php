@@ -39,6 +39,7 @@ class StockUnitRepository
 
         return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
+
     public function getUnitById($id)
     {
         $query = Car::query()
@@ -86,6 +87,20 @@ class StockUnitRepository
             'car_id' => $stockUnitId,
             'path' => $path,
         ]);
+    }
+
+    public function setPrimaryImage($cars_id, $id): void
+    {
+        CarImage::where('car_id', $cars_id)
+            ->update([
+                'is_primary' => false,
+            ]);
+
+        CarImage::where('car_id', $cars_id)
+            ->where('image_id', $id)
+            ->update([
+                'is_primary' => true,
+            ]);
     }
 
     public function findImage(int $imageId): ?CarImage

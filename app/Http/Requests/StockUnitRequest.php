@@ -50,9 +50,10 @@ class StockUnitRequest extends FormRequest
 
             'is_active' => 'required|boolean',
 
-            'image' => 'nullable|array',
-            'image.*' => 'file|image|mimes:jpg,jpeg,png,webp|max:5048',
+            'upload_images' => 'nullable|array',
+            'upload_images.*' => 'file|image|mimes:jpg,jpeg,png,webp|max:5048',
             'deleted_image_ids' => 'nullable|array',
+            'primary_image_id' => 'nullable|integer',
         ];
     }
 

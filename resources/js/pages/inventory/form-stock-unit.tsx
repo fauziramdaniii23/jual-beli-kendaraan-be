@@ -23,7 +23,7 @@ export default function FormStockUnitPage() {
     const { options, stock_unit, type } = usePage<PageProps>().props;
     const form = useForm<TUnit>(stock_unit ?? defaultUnit);
     const disable = type === 'detail';
-    
+    console.log(stock_unit)
     const filteredModels = useMemo(() => {
         return options.model.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
     }, [options.model, form.data.brand_id]);
@@ -277,6 +277,22 @@ export default function FormStockUnitPage() {
                                     />
                                     {form.errors.status_code && <div className="text-sm text-destructive">{form.errors.status_code}</div>}
                                 </Field>
+                                {
+                                    (type === 'update' || type === 'detail') && stock_unit && stock_unit.images!.length > 0 && (
+                                        <Field>
+                                            <FieldLabel>Gambar Utama</FieldLabel>
+                                            <SelectWithClear
+                                                placeholder={type === 'detail' ? '' : 'Pilih gambar utama'}
+                                                value={String(form.data.primary_image_id ?? '')}
+                                                onChange={(val) => form.setData('primary_image_id', val  === '' ? undefined as any : val as any)}
+                                                items={stock_unit.images!.map((m) => ({ label: m.file_name, value: String(m.image_id) }))}
+                                                invalid={!!form.errors.primary_image_id}
+                                                disabled={disable}
+                                            />
+                                            {form.errors.primary_image_id && <div className="text-sm text-destructive">{form.errors.primary_image_id}</div>}
+                                        </Field>
+                                    )
+                                }
                             </FieldGroup>
                         </div>
                     </div>

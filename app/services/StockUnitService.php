@@ -9,6 +9,7 @@ use App\repositories\StockUnitRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class StockUnitService
 {
@@ -63,6 +64,9 @@ class StockUnitService
         $stockUnit->stnk_validity_period = DateHelper::dateFormat($stockUnit->stnk_validity_period);
         $stockUnit->kilometer = (int) $stockUnit->kilometer;
         $stockUnit->price = (float) $stockUnit->price;
+        $primaryImage = $stockUnit->images->firstWhere('is_primary', true);
+        $stockUnit->primary_image = $primaryImage ?? null;
+        $stockUnit->primary_image_id = $primaryImage?->image_id;
 
         return $stockUnit;
     }
@@ -102,13 +106,16 @@ class StockUnitService
         return DB::transaction(function () use ($id, $data) {
             $stockUnit = $this->stockUnitRepository->update($id, $data);
 
-            if (! empty($data['image'])) {
-                $this->uploadImages($stockUnit, $data['image']);
+            if (! empty($data['upload_images'])) {
+                $this->uploadImages($stockUnit, $data['upload_images']);
             }
             if (! empty($data['deleted_image_ids'])) {
                 foreach ($data['deleted_image_ids'] as $imageId) {
                     $this->deleteImage($imageId);
                 }
+            }
+            if (! empty($data['primary_image_id'])) {
+                $this->stockUnitRepository->setPrimaryImage($id, $data['primary_image_id']);
             }
 
             return $stockUnit;
@@ -126,7 +133,8 @@ class StockUnitService
 
     private function uploadImage($file, string $folder): string
     {
-        $filename = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $filename = time().'_'.Str::slug($originalName).'.'.$file->getClientOriginalExtension();
 
         return $file->storeAs(
             $folder,       // folder tujuan → storage/app/public/stock-units

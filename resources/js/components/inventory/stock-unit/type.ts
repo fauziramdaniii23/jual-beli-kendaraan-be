@@ -23,6 +23,7 @@ export type TUnit = {
     images?: TImagesFile[]
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
+    primary_image_id?: number | null;
 }
 export type TOptionItemModel = {
     value: string | number;
