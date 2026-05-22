@@ -6,10 +6,10 @@ import type { TImagesFile } from '@/types';
 interface Props {
     images: TImagesFile[];
     removeImage: (id: number) => void;
-    type?: 'edit' | 'detail';
+    type?: 'update' | 'create' | 'detail';
 }
 
-export function ExistingImage({images, removeImage}: Props) {
+export function ExistingImage({images, removeImage, type}: Props) {
     const [existingImages, setExistingImages] = useState<TImagesFile[]>(images);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedImageId, setSelectedImageId] = useState<number | null>(null);
@@ -44,14 +44,18 @@ export function ExistingImage({images, removeImage}: Props) {
                         <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/40" />
 
                         {/* Delete Button */}
-                        <button
-                            onClick={() => handleDeleteClick(image.image_id)}
-                            className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
-                            aria-label={`Hapus ${image.file_name}`}
-                            type="button"
-                        >
-                            <X className="h-4 w-4 text-white" />
-                        </button>
+                        {
+                            type !== 'detail' && (
+                                <button
+                                    onClick={() => handleDeleteClick(image.image_id)}
+                                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                    aria-label={`Hapus ${image.file_name}`}
+                                    type="button"
+                                >
+                                    <X className="h-4 w-4 text-white" />
+                                </button>
+                            )
+                        }
 
                         {/* File Name */}
                         <p className="absolute bottom-0 w-full truncate bg-black/50 px-2 py-1 text-xs text-white">

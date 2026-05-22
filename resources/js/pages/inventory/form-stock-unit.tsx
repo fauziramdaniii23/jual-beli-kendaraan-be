@@ -71,6 +71,7 @@ export default function FormStockUnitPage() {
                             <ExistingImage
                                 images={stock_unit?.images || []}
                                 removeImage={handleRemoveExistingImage}
+                                type={type}
                             />
                         )
                     }
