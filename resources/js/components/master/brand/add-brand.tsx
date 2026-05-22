@@ -15,6 +15,7 @@ import {
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function CreateBrandDialog() {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -78,6 +79,7 @@ export default function CreateBrandDialog() {
                         </DialogClose>
 
                         <Button type="submit" disabled={processing}>
+                            {processing && <Spinner />}
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </Button>
                     </DialogFooter>

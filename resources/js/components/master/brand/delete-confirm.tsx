@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import React, { useState } from 'react';
 import { destroy as deleteBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import {
     AlertDialog,
@@ -10,6 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     brand_id: number;
@@ -17,10 +19,15 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Props>) {
+    const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteBrand({ brand: brand_id }).url, {
             preserveScroll: true,
+            onStart: () => {
+                setIsOpen(false);
+            },
             onSuccess: () => {
+                setLoading(false);
                 setIsOpen(false);
             },
         });
@@ -42,7 +49,8 @@ export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Pro
                 <AlertDialogFooter>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete}>
+                    <AlertDialogAction onClick={handleDelete} disabled={loading}>
+                        {loading && <Spinner />}
                         Hapus
                     </AlertDialogAction>
                 </AlertDialogFooter>

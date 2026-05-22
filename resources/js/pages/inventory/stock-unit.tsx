@@ -90,10 +90,15 @@ export default function StockUnitPage() {
             }
         );
     }
+
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const handleDeleteAction = () => {
         router.delete(deleteStockUnit(stockUnitId ?? 0).url, {
                 preserveState: true,
                 replace: true,
+            onStart: () => {
+                setDeleteLoading(false);
+            },
         })
     }
 
@@ -208,6 +213,7 @@ export default function StockUnitPage() {
                 open={deleteDialogOpen}
                 onOpenChange={(val) => setDeleteDialogOpen(val)}
                 onConfirm={handleDeleteAction}
+                loading={deleteLoading}
             />
         </>
     );

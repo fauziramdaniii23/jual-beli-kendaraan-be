@@ -22,6 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     brand: TBrand;
@@ -111,6 +112,7 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                             </Button>
                         </DialogClose>
                         <Button type="submit" disabled={processing}>
+                            {processing && <Spinner />}
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </Button>
                     </DialogFooter>

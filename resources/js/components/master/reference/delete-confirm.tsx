@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import React, { useState } from 'react';
 import { destroy as deleteReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
 import {
     AlertDialog,
@@ -10,6 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     label: string;
@@ -18,10 +20,15 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 export function ConfirmDeleteReference({ label, ref_id, isOpen, setIsOpen }: Props) {
+    const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteReference({ id: ref_id }).url, {
             preserveScroll: true,
+            onStart: () => {
+                setLoading(true);
+            },
             onSuccess: () => {
+                setLoading(false);
                 setIsOpen(false);
             },
         });
@@ -47,7 +54,8 @@ export function ConfirmDeleteReference({ label, ref_id, isOpen, setIsOpen }: Pro
                         Batal
                     </AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete}>
+                    <AlertDialogAction onClick={handleDelete} disabled={loading}>
+                        {loading && <Spinner />}
                         Hapus
                     </AlertDialogAction>
                 </AlertDialogFooter>

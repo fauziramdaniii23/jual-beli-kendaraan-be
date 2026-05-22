@@ -10,6 +10,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import React, { useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     model_id: number;
@@ -17,10 +19,15 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 export function ConfirmDeleteModel({ model_id, isOpen, setIsOpen }: Props) {
+    const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteModel({ model_id: model_id }).url, {
             preserveScroll: true,
+            onStart: () => {
+                setLoading(true);
+            },
             onSuccess: () => {
+                setLoading(false);
                 setIsOpen(false);
             },
         });
@@ -46,7 +53,11 @@ export function ConfirmDeleteModel({ model_id, isOpen, setIsOpen }: Props) {
                         Batal
                     </AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete}>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={loading}
+                    >
+                        {loading && <Spinner />}
                         Hapus
                     </AlertDialogAction>
                 </AlertDialogFooter>

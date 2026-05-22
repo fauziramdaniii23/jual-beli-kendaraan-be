@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
 
 type PageProps = {
     options: TStockUnitOptions;
@@ -314,7 +315,8 @@ export default function FormStockUnitPage() {
                         </Button>
                         { !disable &&
                             <Button type="submit" disabled={form.processing}>
-                                Simpan
+                                {form.processing && <Spinner />}
+                                {form.processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
                         }
                     </div>
