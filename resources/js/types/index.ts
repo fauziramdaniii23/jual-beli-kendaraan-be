@@ -13,3 +13,11 @@ export type TOptionItem = {
     value: string;
     label: string;
 };
+export type TImagesFile = {
+    image_id: number;
+    cars_id: number;
+    file_name: string;
+    path: string;
+    file_src: string;
+    is_primary: boolean;
+};

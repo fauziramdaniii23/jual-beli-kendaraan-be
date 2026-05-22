@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import DatePicker from '@/components/date-picker';
 import { ImageUpload } from '@/components/image-upload';
+import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
 import type { TUnit, TStockUnitOptions } from '@/components/inventory/stock-unit/type';
 import { defaultUnit } from '@/components/inventory/stock-unit/type';
 import { SelectWithClear } from '@/components/select-with-clear';
@@ -15,7 +16,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/in
 type PageProps = {
     options: TStockUnitOptions;
     stock_unit?: TUnit;
-    type?: 'detail' | 'update';
+    type?: 'detail' | 'create' | 'update';
 };
 
 export default function FormStockUnitPage() {
@@ -47,19 +48,32 @@ export default function FormStockUnitPage() {
         })
     };
     const handleImageChange = (files: File[]) => {
-        form.setData('image', files);
+        form.setData('upload_images', files);
     };
+    const handleRemoveExistingImage = (id: number) => {
+        form.setData('deleted_image_ids', [...form.data.deleted_image_ids || [], id]);
+    }
 
     return (
         <>
             <Head title="Tambah Stock Unit" />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
-                    <ImageUpload
-                        onImagesSelected={handleImageChange}
-                        maxImages={10}
-                        maxFileSize={5}
-                    />
+                    { !disable &&
+                        <ImageUpload
+                            onImagesSelected={handleImageChange}
+                            maxImages={10}
+                            maxFileSize={5}
+                        />
+                   }
+                    {
+                        type !== 'create' && (
+                            <ExistingImage
+                                images={stock_unit?.images || []}
+                                removeImage={handleRemoveExistingImage}
+                            />
+                        )
+                    }
                     <div className="flex gap-4 w-full mt-4">
                         <div className="flex-1">
                             <FieldGroup>

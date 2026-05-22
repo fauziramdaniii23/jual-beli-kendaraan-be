@@ -105,6 +105,11 @@ class StockUnitService
             if (! empty($data['image'])) {
                 $this->uploadImages($stockUnit, $data['image']);
             }
+            if (! empty($data['deleted_image_ids'])) {
+                foreach ($data['deleted_image_ids'] as $imageId) {
+                    $this->deleteImage($imageId);
+                }
+            }
 
             return $stockUnit;
         });

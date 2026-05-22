@@ -1,4 +1,4 @@
-import type { TOptionItem, TMasterReference } from '@/types';
+import type { TOptionItem, TMasterReference, TImagesFile } from '@/types';
 
 export type TUnit = {
     cars_id?: number;
@@ -20,7 +20,9 @@ export type TUnit = {
     price?: number | null;
     stnk_validity_period?: string | null;
     is_active: boolean;
-    image?: File[] | null;
+    images?: TImagesFile[]
+    upload_images?: File[] | null;
+    deleted_image_ids?: number[] | null;
 }
 export type TOptionItemModel = {
     value: string | number;

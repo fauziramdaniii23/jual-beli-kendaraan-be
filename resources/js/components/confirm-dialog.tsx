@@ -20,12 +20,12 @@ interface Props {
     loading?: boolean;
 }
 
-export function ConfirmDeleteDialog({
+export function ConfirmDialog({
     open,
     onOpenChange,
-    title = "Hapus Data",
-    description = "Apakah Anda yakin ingin menghapus data ini?",
-    confirmText = "Hapus",
+    title = "?",
+    description = "Apakah Anda yakin?",
+    confirmText = "Lanjutkan",
     cancelText = "Batal",
     onConfirm,
     loading = false,

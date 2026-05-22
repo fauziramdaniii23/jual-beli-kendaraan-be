@@ -44,7 +44,7 @@ class StockUnitController extends Controller
                 $key => $this->stockUnitService->getOptionFilter($type),
             ]);
 
-        return Inertia::render('inventory/form-stock-unit', ['options' => $options]);
+        return Inertia::render('inventory/form-stock-unit', ['options' => $options, 'type' => 'create']);
     }
 
     public function store(StockUnitRequest $request)
