@@ -9,35 +9,11 @@ use Illuminate\Support\Facades\Auth;
 class Car extends Model
 {
     use SoftDeletes;
-
-    /**
-     * Table Name
-     */
     protected $table = 'cars';
-
-    /**
-     * Primary Key
-     */
     protected $primaryKey = 'cars_id';
-
-    /**
-     * Auto Increment
-     */
     public $incrementing = true;
-
-    /**
-     * Primary Key Type
-     */
     protected $keyType = 'int';
-
-    /**
-     * Timestamps
-     */
     public $timestamps = true;
-
-    /**
-     * Fillable Columns
-     */
     protected $fillable = [
         'name',
         'description',
@@ -60,10 +36,6 @@ class Car extends Model
         'updated_by',
         'deleted_by',
     ];
-
-    /**
-     * Cast Attributes
-     */
     protected $casts = [
         'is_active' => 'boolean',
         'created_at' => 'datetime',
@@ -93,16 +65,6 @@ class Car extends Model
             $car->saveQuietly();
         });
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * MasterBrand Relation
-     */
     public function brand()
     {
         return $this->belongsTo(
@@ -111,10 +73,6 @@ class Car extends Model
             'brand_id'
         );
     }
-
-    /**
-     * Model Relation
-     */
     public function model()
     {
         return $this->belongsTo(
@@ -123,12 +81,6 @@ class Car extends Model
             'model_id'
         );
     }
-    /*
-   |--------------------------------------------------------------------------
-   | Transmission
-   |--------------------------------------------------------------------------
-   */
-
     public function transmission()
     {
         return $this->belongsTo(
@@ -137,13 +89,6 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', 'TRANSMISSION');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Fuel Type
-    |--------------------------------------------------------------------------
-    */
-
     public function fuelType()
     {
         return $this->belongsTo(
@@ -152,13 +97,6 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', 'FUEL_TYPE');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Plate
-    |--------------------------------------------------------------------------
-    */
-
     public function plate()
     {
         return $this->belongsTo(
@@ -167,13 +105,6 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', 'PLATE');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Seat
-    |--------------------------------------------------------------------------
-    */
-
     public function seat()
     {
         return $this->belongsTo(
@@ -182,13 +113,6 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', 'SEAT');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Status
-    |--------------------------------------------------------------------------
-    */
-
     public function status()
     {
         return $this->belongsTo(
@@ -197,45 +121,18 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', 'CAR_STATUS');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Scopes
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Active Cars Scope
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
-
-    /**
-     * Available Cars Scope
-     */
     public function scopeAvailable($query)
     {
         return $query->where('status_code', 'AVAILABLE');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Accessors
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Format Price
-     */
     public function getFormattedPriceAttribute(): string
     {
         return 'Rp '.number_format($this->price, 0, ',', '.');
     }
-    /**
-     * Car Images Relation
-     */
     public function images()
     {
         return $this->hasMany(
@@ -244,10 +141,6 @@ class Car extends Model
             'cars_id'
         );
     }
-
-    /**
-     * Primary Image Relation
-     */
     public function primaryImage()
     {
         return $this->hasOne(

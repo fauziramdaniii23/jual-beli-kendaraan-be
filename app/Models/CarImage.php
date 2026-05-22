@@ -8,35 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CarImage extends Model
 {
     use SoftDeletes;
-
-    /**
-     * Table Name
-     */
     protected $table = 'car_images';
-
-    /**
-     * Primary Key
-     */
     protected $primaryKey = 'image_id';
-
-    /**
-     * Auto Increment
-     */
     public $incrementing = true;
-
-    /**
-     * Key Type
-     */
     protected $keyType = 'int';
-
-    /**
-     * Timestamps
-     */
     public $timestamps = true;
-
-    /**
-     * Fillable
-     */
     protected $fillable = [
         'car_id',
         'path',
@@ -45,10 +21,6 @@ class CarImage extends Model
         'updated_by',
         'deleted_by',
     ];
-
-    /**
-     * Casts
-     */
     protected $casts = [
         'is_primary' => 'boolean',
         'created_at' => 'datetime',
@@ -56,15 +28,7 @@ class CarImage extends Model
         'deleted_at' => 'datetime',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
 
-    /**
-     * Car Relation
-     */
     public function car()
     {
         return $this->belongsTo(
