@@ -86,12 +86,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                     {sorted === "desc" && <ArrowUpWideNarrow />}
                 </Button>
             );
-        },
-        cell: ({ row }) => {
-            const value = row.getValue("stnk_validity_period") as string;
-
-            return formatDate(value);
-        },
+        }
     },
     {
         accessorKey: "formatted_price",

@@ -23,7 +23,7 @@ export default function FormStockUnitPage() {
     const { options, stock_unit, type } = usePage<PageProps>().props;
     const form = useForm<TUnit>(stock_unit ?? defaultUnit);
     const disable = type === 'detail';
-    
+
     const filteredModels = useMemo(() => {
         return options.model.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
     }, [options.model, form.data.brand_id]);

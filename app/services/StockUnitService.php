@@ -21,17 +21,18 @@ class StockUnitService
 
     public function getUnit(Request $request)
     {
-        return $this->stockUnitRepository
-            ->getUnit(
-                filter: [
-                    'brand_id' => $request->brand_id,
-                    'model_id' => $request->model_id,
-                    'transmission' => $request->transmission,
-                    'car_type' => $request->car_type,
-                    'fuel_type' => $request->fuel_type,
-                    'status' => $request->status,
-                ]
-            );
+        $units = $this->stockUnitRepository->getUnit(
+            filter: [
+                'brand_id' => $request->brand_id,
+                'model_id' => $request->model_id,
+                'transmission' => $request->transmission,
+                'car_type' => $request->car_type,
+                'fuel_type' => $request->fuel_type,
+                'status' => $request->status,
+            ]
+        );
+
+        return $units->map(fn ($unit) => $this->mapUnit($unit));
     }
 
     public function getOptionFilter(string $type)
@@ -160,5 +161,21 @@ class StockUnitService
         $this->stockUnitRepository->deleteImage($imageId);
 
         return true;
+    }
+    private function mapUnit($unit)
+    {
+        $unit->stnk_validity_period = DateHelper::dateFormat(
+            $unit->stnk_validity_period
+        );
+
+        $unit->kilometer = (int) $unit->kilometer;
+        $unit->price = (float) $unit->price;
+
+        $primaryImage = $unit->images->firstWhere('is_primary', true);
+
+        $unit->primary_image = $primaryImage;
+        $unit->primary_image_id = $primaryImage?->image_id;
+
+        return $unit;
     }
 }

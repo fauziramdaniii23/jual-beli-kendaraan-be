@@ -20,6 +20,7 @@ class StockUnitRepository
                 'plate:ref_code,ref_value',
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
+                'images:image_id,car_id,path,is_primary',
             ]);
 
         $columns = [
