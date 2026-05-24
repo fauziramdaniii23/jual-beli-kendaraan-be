@@ -37,6 +37,7 @@ class StockUnitRepository
                 $query->where($column, $filter[$key]);
             }
         }
+        $query->orderBy('created_at', 'desc');
 
         return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
