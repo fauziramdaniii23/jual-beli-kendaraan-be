@@ -21,6 +21,7 @@ export type TUnit = {
     stnk_validity_period?: string | null;
     is_active: boolean;
     images?: TImagesFile[]
+    primary_image?: TImagesFile | null;
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
     primary_image_id?: number | null;

@@ -40,6 +40,55 @@ class StockUnitRepository
 
         return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
+    public function getUnitWithPagination(array $filter = [], int $perPage = 10)
+    {
+        $query = Car::query()
+            ->select([
+                'cars_id',
+                'name',
+                'year',
+                'brand_id',
+                'model_id',
+                'stnk_validity_period',
+                'price',
+                'kilometer',
+                'transmission_code',
+                'type_code',
+                'fuel_type_code',
+                'plate_code',
+                'seat_code',
+                'status_code',
+            ])
+            ->with([
+                'brand:brand_id,brand_name',
+                'model:model_id,model_name',
+                'transmission:ref_code,ref_value',
+                'fuelType:ref_code,ref_value',
+                'plate:ref_code,ref_value',
+                'seat:ref_code,ref_value',
+                'status:ref_code,ref_value',
+                'images:image_id,car_id,path,is_primary',
+            ]);
+
+        $columns = [
+            'brand_id' => 'brand_id',
+            'model_id' => 'model_id',
+            'transmission' => 'transmission_code',
+            'car_type' => 'type_code',
+            'fuel_type' => 'fuel_type_code',
+            'status' => 'status_code',
+        ];
+
+        foreach ($columns as $key => $column) {
+            if (! empty($filter[$key])) {
+                $query->where($column, $filter[$key]);
+            }
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        return $query->paginate($perPage);
+    }
 
     public function getUnitById($id)
     {

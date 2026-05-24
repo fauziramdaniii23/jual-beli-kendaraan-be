@@ -35,6 +35,26 @@ class StockUnitService
         return $units->map(fn ($unit) => $this->mapUnit($unit));
     }
 
+    public function getUnitWithPagination(Request $request)
+    {
+        $units = $this->stockUnitRepository->getUnitWithPagination(
+            filter: [
+                'brand_id' => $request->brand_id,
+                'model_id' => $request->model_id,
+                'transmission' => $request->transmission,
+                'car_type' => $request->car_type,
+                'fuel_type' => $request->fuel_type,
+                'status' => $request->status,
+            ],
+            perPage: (int) $request->per_page
+        );
+        $units->getCollection()->transform(
+            fn ($unit) => $this->mapUnit($unit)
+        );
+
+        return $units;
+    }
+
     public function getOptionFilter(string $type)
     {
         if ($type == 'MODEL') {
@@ -162,6 +182,7 @@ class StockUnitService
 
         return true;
     }
+
     private function mapUnit($unit)
     {
         $unit->stnk_validity_period = DateHelper::dateFormat(
@@ -171,11 +192,21 @@ class StockUnitService
         $unit->kilometer = (int) $unit->kilometer;
         $unit->price = (float) $unit->price;
 
-        $primaryImage = $unit->images->firstWhere('is_primary', true);
+        $primaryImage = $this->getPrimaryImage($unit->images);
 
         $unit->primary_image = $primaryImage;
         $unit->primary_image_id = $primaryImage?->image_id;
 
         return $unit;
+    }
+
+    private function getPrimaryImage($images)
+    {
+        $primary_image = null;
+        if (! $images->isEmpty()) {
+            $primary_image = $images->firstWhere('is_primary', true) ?? $images->first();
+        }
+
+        return $primary_image;
     }
 }

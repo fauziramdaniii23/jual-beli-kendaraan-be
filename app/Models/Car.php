@@ -85,9 +85,9 @@ class Car extends Model
     {
         return $this->belongsTo(
             MasterReference::class,
-            'transmision_code',
+            'transmission_code',
             'ref_code'
-        )->where('ref_type', 'TRANSMISSION');
+        )->where('ref_type', MasterReference::TYPE_TRANSMISSION);
     }
     public function fuelType()
     {
@@ -95,7 +95,7 @@ class Car extends Model
             MasterReference::class,
             'fuel_type_code',
             'ref_code'
-        )->where('ref_type', 'FUEL_TYPE');
+        )->where('ref_type', MasterReference::TYPE_FUEL_TYPE);
     }
     public function plate()
     {
@@ -103,7 +103,7 @@ class Car extends Model
             MasterReference::class,
             'plate_code',
             'ref_code'
-        )->where('ref_type', 'PLATE');
+        )->where('ref_type', MasterReference::TYPE_PLATE);
     }
     public function seat()
     {
@@ -111,7 +111,7 @@ class Car extends Model
             MasterReference::class,
             'seat_code',
             'ref_code'
-        )->where('ref_type', 'SEAT');
+        )->where('ref_type', MasterReference::TYPE_SEAT);
     }
     public function status()
     {
@@ -119,7 +119,7 @@ class Car extends Model
             MasterReference::class,
             'status_code',
             'ref_code'
-        )->where('ref_type', 'CAR_STATUS');
+        )->where('ref_type', MasterReference::TYPE_STATUS);
     }
     public function scopeActive($query)
     {
