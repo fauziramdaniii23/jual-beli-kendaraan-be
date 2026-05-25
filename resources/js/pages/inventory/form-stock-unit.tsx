@@ -1,13 +1,13 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React, { useMemo } from 'react';
 import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
-import DatePicker from '@/components/date-picker';
-import { ImageUpload } from '@/components/image-upload';
+import DatePicker from '@/components/app/date-picker';
+import { ImageUpload } from '@/components/app/image-upload';
 import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
 import type { TUnit, TStockUnitOptions } from '@/components/inventory/stock-unit/type';
 import { defaultUnit } from '@/components/inventory/stock-unit/type';
-import { SelectWithClear } from '@/components/select-with-clear';
-import TextEditor from '@/components/text-editor';
+import { SelectWithClear } from '@/components/app/select-with-clear';
+import TextEditor from '@/components/app/text-editor';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';

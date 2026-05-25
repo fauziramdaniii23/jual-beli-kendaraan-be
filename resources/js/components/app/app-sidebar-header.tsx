@@ -1,6 +1,6 @@
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import { NavUser } from '@/components/nav-user';
-import { NotificationIcon } from '@/components/notification-icon';
+import { Breadcrumbs } from '@/components/app/breadcrumbs';
+import { NavUser } from '@/components/app/nav-user';
+import { NotificationIcon } from '@/components/app/notification-icon';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 

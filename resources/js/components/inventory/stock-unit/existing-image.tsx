@@ -1,8 +1,8 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import { ConfirmDialog } from '@/components/confirm-dialog';
+import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import type { TImagesFile } from '@/types';
-import ImagePreview from '@/components/image-preview';
+import ImagePreview from '@/components/app/image-preview';
 
 interface Props {
     images: TImagesFile[];

@@ -4,10 +4,10 @@ import { ChevronDownIcon, Plus, Filter
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { index as indexStockUnit, create as createStockUnit, show as showStockUnit, destroy as deleteStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
-import { ConfirmDialog } from '@/components/confirm-dialog';
+import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { getStockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
-import { SelectWithClear } from '@/components/select-with-clear';
+import { SelectWithClear } from '@/components/app/select-with-clear';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';

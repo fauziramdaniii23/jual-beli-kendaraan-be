@@ -11,9 +11,9 @@ import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventor
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
-import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
+import AppLogo from '@/components/app/app-logo';
+import { NavFooter } from '@/components/app/nav-footer';
+import { NavMain } from '@/components/app/nav-main';
 import {
     Sidebar,
     SidebarFooter,
@@ -87,36 +87,13 @@ const menuItems = [
                 href: '/customers',
             },
             {
-                title: 'Leads', //Menyimpan calon customer yang belum closing.
-                href: '/customers/leads',
-            },
-            {
                 title: 'Follow Up',
                 href: '/customers/follow-up',
             },
-        ]
-    },
-    {
-        title: 'Financing',
-        href: '#',
-        icon: Wallet,
-        items: [
             {
-                title: 'Kredit',
-                href: '/financing/credit',
-            },
-            {
-                title: 'Simulasi Kredit',
-                href: '/financing/simulation',
-            },
-            {
-                title: 'Leasing Partner',
-                href: '/financing/leasing',
-            },
-            {
-                title: 'Approval',
-                href: '/financing/approval',
-            },
+                title: 'Rating & Ulasan',
+                href: '/news/review',
+            }
         ]
     },
     {
@@ -132,10 +109,6 @@ const menuItems = [
               title: 'Promo',
               href: '/news/promo',
           },
-          {
-              title: 'Testimoni',
-              href: '/news/testimonial',
-          }
       ]
     },
     {
@@ -191,11 +164,6 @@ const menuItems = [
 ]
 
 const secondaryItems = [
-    {
-        title: 'Settings',
-        href: '#',
-        icon: Settings,
-    },
     {
         title: 'Help',
         href: '#',
