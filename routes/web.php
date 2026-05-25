@@ -26,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('master')->group(function () {
         Route::get('brand', [MasterBrandController::class, 'index'])->name('master.brand');
         Route::post('brand', [MasterBrandController::class, 'store'])->name('master.brand.store');
-        Route::put('brand/{brand}', [MasterBrandController::class, 'update'])->name('master.brand.update');
+        Route::post('brand/{brand}', [MasterBrandController::class, 'update'])->name('master.brand.update');
         Route::delete('brand/{brand}', [MasterBrandController::class, 'destroy'])->name('master.brand.destroy');
 
         Route::get('car-model', [MasterModelController::class, 'index'])->name('master.carmodel');

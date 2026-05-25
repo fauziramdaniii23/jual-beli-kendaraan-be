@@ -17,7 +17,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDate } from "@/lib/utils";
 
 interface Props {
     onDetail: (id: number | undefined) => void;

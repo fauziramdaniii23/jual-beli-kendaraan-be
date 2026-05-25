@@ -9,11 +9,17 @@ use Illuminate\Support\Facades\Auth;
 class CarImage extends Model
 {
     use SoftDeletes;
+
     protected $table = 'car_images';
+
     protected $primaryKey = 'image_id';
+
     public $incrementing = true;
+
     protected $keyType = 'int';
+
     public $timestamps = true;
+
     protected $fillable = [
         'car_id',
         'path',
@@ -22,12 +28,14 @@ class CarImage extends Model
         'updated_by',
         'deleted_by',
     ];
+
     protected $casts = [
         'is_primary' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
     protected static function booted(): void
     {
         static::creating(function ($car) {
@@ -49,15 +57,17 @@ class CarImage extends Model
             $car->saveQuietly();
         });
     }
+
     protected $appends = ['file_name', 'file_src'];
 
     public function getFileNameAttribute()
     {
         return basename($this->path);
     }
+
     public function getFileSrcAttribute()
     {
-        return asset('storage/' . $this->path);
+        return asset('storage/'.$this->path);
     }
 
     public function car()

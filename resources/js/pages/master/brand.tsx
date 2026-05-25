@@ -68,6 +68,28 @@ export default function MasterBrandPage() {
     };
     const columns: ColumnDef<TBrand>[] = [
         {
+            accessorKey: "file_src",
+            header: "Gambar Logo",
+            cell: ({ row }) => {
+                const image = row.getValue("file_src") as string;
+
+                return (
+                    <div className="flex items-center justify-center">
+                        <img
+                            src={image}
+                            alt={image}
+                            className="
+                            h-16
+                            object-cover
+                            rounded-md
+                            border
+                        "
+                        />
+                    </div>
+                );
+            },
+        },
+        {
             accessorKey: 'brand_name',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
@@ -188,7 +210,7 @@ export default function MasterBrandPage() {
                 <DataTable columns={columns} data={brands} />
             </div>
             <UpdateBrandDialog brand={brand} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteBrand brand_id={brand.brand_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <ConfirmDeleteBrand brand_id={brand.brand_id!} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
         </>
     );
 }

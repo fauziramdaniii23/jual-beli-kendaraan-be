@@ -21,44 +21,43 @@ class MasterBrandController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'brand_name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-        ]);
         try {
+            $validated = $request->validate([
+                'brand_name' => 'required|string|max:255',
+                'is_active' => 'sometimes|boolean',
+                'logo' => 'file|image|mimes:jpg,jpeg,png,webp|max:5048',
+            ]);
             $this->brandService->store($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
                 'message' => 'Merek berhasil ditambahkan.',
             ]);
+
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
             ]);
+
             return back()->withErrors($e->getMessage());
         }
     }
 
     public function update(Request $request, MasterBrand $brand)
     {
-        $validated = $request->validate([
-            'brand_name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-        ]);
         try {
-            $brand->update([
-                'brand_name' => $validated['brand_name'],
-                'is_active' => $request->has('is_active') ? filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN) : $brand->is_active,
+            $validated = $request->validate([
+                'brand_name' => 'required|string|max:255',
+                'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5048',
+                'is_active' => 'sometimes|boolean',
             ]);
+
+            $this->brandService->update(
+                brand: $brand,
+                data: $validated
+            );
 
             Inertia::flash('toast', [
                 'type' => 'success',
@@ -66,7 +65,9 @@ class MasterBrandController extends Controller
             ]);
 
             return redirect()->route('master.brand');
+
         } catch (\Exception $e) {
+
             Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
@@ -92,12 +93,14 @@ class MasterBrandController extends Controller
                 'type' => 'success',
                 'message' => 'Merek berhasil dihapus.',
             ]);
+
             return redirect()->route('master.brand');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
                 'message' => $e->getMessage(),
             ]);
+
             return back()->withErrors($e->getMessage());
         }
     }
