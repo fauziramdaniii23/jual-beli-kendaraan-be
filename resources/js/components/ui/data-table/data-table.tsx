@@ -124,56 +124,58 @@ export function DataTable<TData, TValue>(
 
     return (
         <div className="w-full space-y-4">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            {showRowPerPage && (
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">
                             Rows per page
                         </span>
-                    <Select
-                        value={String(
-                            table.getState().pagination.pageSize
-                        )}
-                        onValueChange={(value) => {
-                            table.setPageSize(Number(value));
-                        }}
-                    >
-                        <SelectTrigger>
-                            <SelectValue />
-                        </SelectTrigger>
+                        <Select
+                            value={String(
+                                table.getState().pagination.pageSize
+                            )}
+                            onValueChange={(value) => {
+                                table.setPageSize(Number(value));
+                            }}
+                        >
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
 
-                        <SelectContent>
-                            {pageSizeOptions.map((pageSize) => (
-                                <SelectItem
-                                    key={pageSize}
-                                    value={String(pageSize)}
-                                >
-                                    {pageSize}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                            <SelectContent>
+                                {pageSizeOptions.map((pageSize) => (
+                                    <SelectItem
+                                        key={pageSize}
+                                        value={String(pageSize)}
+                                    >
+                                        {pageSize}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    {/* SEARCH */}
+                    <InputGroup className="max-w-xs">
+                        <InputGroupInput
+                            placeholder="Search..."
+                            value={globalFilter}
+                            onChange={(event) =>
+                                setGlobalFilter(
+                                    event.target.value
+                                )
+                            }
+                        />
+                        <InputGroupAddon>
+                            <Search className="h-4 w-4" />
+                        </InputGroupAddon>
+
+                        <InputGroupAddon align="inline-end">
+                            {table.getFilteredRowModel().rows.length} results
+                        </InputGroupAddon>
+
+                    </InputGroup>
                 </div>
-                {/* SEARCH */}
-                <InputGroup className="max-w-xs">
-                    <InputGroupInput
-                        placeholder="Search..."
-                        value={globalFilter}
-                        onChange={(event) =>
-                            setGlobalFilter(
-                                event.target.value
-                            )
-                        }
-                    />
-                    <InputGroupAddon>
-                        <Search className="h-4 w-4" />
-                    </InputGroupAddon>
-
-                    <InputGroupAddon align="inline-end">
-                        {table.getFilteredRowModel().rows.length} results
-                    </InputGroupAddon>
-
-                </InputGroup>
-            </div>
+            )}
 
             <div className="rounded-md border">
                 <Table className="border-collapse border border-border">
@@ -226,126 +228,127 @@ export function DataTable<TData, TValue>(
             {/* ====================================================== */}
             {/* PAGINATION */}
             {/* ====================================================== */}
-
-            <div className="flex items-center justify-between">
-                {/* ROWS PER PAGE */}
-                <div className="flex items-center gap-2">
-                    <div className="text-sm text-muted-foreground">
-                        Showing{" "}
-                        {table.getState().pagination.pageIndex *
-                            table.getState().pagination.pageSize + 1}
-                        {" - "}
-                        {Math.min(
-                            (table.getState().pagination.pageIndex + 1) *
-                            table.getState().pagination.pageSize,
-                            table.getFilteredRowModel().rows.length
-                        )}
-                        {" of "}
-                        {table.getFilteredRowModel().rows.length}
+            {showPagination && (
+                <div className="flex items-center justify-between">
+                    {/* ROWS PER PAGE */}
+                    <div className="flex items-center gap-2">
+                        <div className="text-sm text-muted-foreground">
+                            Showing{" "}
+                            {table.getState().pagination.pageIndex *
+                                table.getState().pagination.pageSize + 1}
+                            {" - "}
+                            {Math.min(
+                                (table.getState().pagination.pageIndex + 1) *
+                                table.getState().pagination.pageSize,
+                                table.getFilteredRowModel().rows.length
+                            )}
+                            {" of "}
+                            {table.getFilteredRowModel().rows.length}
+                        </div>
                     </div>
-                </div>
 
-                {/* PAGINATION */}
-                <div className="flex items-center gap-2">
+                    {/* PAGINATION */}
+                    <div className="flex items-center gap-2">
 
-                    {/* PREVIOUS */}
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
+                        {/* PREVIOUS */}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
 
-                    {/* PAGE NUMBERS */}
-                    <div className="flex items-center gap-1">
-                        {(() => {
-                            const currentPage = table.getState().pagination.pageIndex;
+                        {/* PAGE NUMBERS */}
+                        <div className="flex items-center gap-1">
+                            {(() => {
+                                const currentPage = table.getState().pagination.pageIndex;
 
-                            const totalPages = table.getPageCount();
+                                const totalPages = table.getPageCount();
 
-                            const pages: (number | string)[] = [];
+                                const pages: (number | string)[] = [];
 
-                            /*
-                            Example:
-                            1 ... 4 5 6 ... 20
-                            */
+                                /*
+                                Example:
+                                1 ... 4 5 6 ... 20
+                                */
 
-                            // ALWAYS SHOW FIRST PAGE
-                            pages.push(0);
+                                // ALWAYS SHOW FIRST PAGE
+                                pages.push(0);
 
-                            // LEFT DOTS
-                            if (currentPage > 2) {
-                                pages.push('left-dots');
-                            }
-
-                            // CURRENT PAGE RANGE
-                            for (let i = Math.max(1, currentPage - 1);
-                                 i <= Math.min(
-                                     totalPages - 2,
-                                     currentPage + 1
-                                 );
-                                 i++
-                            ) {
-                                pages.push(i);
-                            }
-
-                            // RIGHT DOTS
-                            if (currentPage < totalPages - 3) {
-                                pages.push('right-dots');
-                            }
-
-                            // ALWAYS SHOW LAST PAGE
-                            if (totalPages > 1) {
-                                pages.push(totalPages - 1);
-                            }
-
-                            return pages.map((page, index) => {
-
-                                // DOTS
-                                if (page === 'left-dots' || page === 'right-dots') {
-                                    return (
-                                        <div
-                                            key={`${page}-${index}`}
-                                            className="flex h-8 w-8 items-center justify-center"
-                                        >
-                                            ...
-                                        </div>
-                                    );
+                                // LEFT DOTS
+                                if (currentPage > 2) {
+                                    pages.push('left-dots');
                                 }
 
-                                // PAGE BUTTON
-                                const isActive = currentPage === page;
-                                return (
-                                    <Button
-                                        key={page}
-                                        variant={isActive ? 'default' : 'outline'}
-                                        size="sm"
-                                        className="h-8 w-8 p-0"
-                                        onClick={() =>
-                                            table.setPageIndex(Number(page))
-                                        }
-                                    >
-                                        {Number(page) + 1}
-                                    </Button>
-                                );
-                            });
-                        })()}
+                                // CURRENT PAGE RANGE
+                                for (let i = Math.max(1, currentPage - 1);
+                                     i <= Math.min(
+                                         totalPages - 2,
+                                         currentPage + 1
+                                     );
+                                     i++
+                                ) {
+                                    pages.push(i);
+                                }
 
+                                // RIGHT DOTS
+                                if (currentPage < totalPages - 3) {
+                                    pages.push('right-dots');
+                                }
+
+                                // ALWAYS SHOW LAST PAGE
+                                if (totalPages > 1) {
+                                    pages.push(totalPages - 1);
+                                }
+
+                                return pages.map((page, index) => {
+
+                                    // DOTS
+                                    if (page === 'left-dots' || page === 'right-dots') {
+                                        return (
+                                            <div
+                                                key={`${page}-${index}`}
+                                                className="flex h-8 w-8 items-center justify-center"
+                                            >
+                                                ...
+                                            </div>
+                                        );
+                                    }
+
+                                    // PAGE BUTTON
+                                    const isActive = currentPage === page;
+                                    return (
+                                        <Button
+                                            key={page}
+                                            variant={isActive ? 'default' : 'outline'}
+                                            size="sm"
+                                            className="h-8 w-8 p-0"
+                                            onClick={() =>
+                                                table.setPageIndex(Number(page))
+                                            }
+                                        >
+                                            {Number(page) + 1}
+                                        </Button>
+                                    );
+                                });
+                            })()}
+
+                        </div>
+
+                        {/* NEXT */}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
                     </div>
-
-                    {/* NEXT */}
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

@@ -25,9 +25,9 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                         {items.map((item) => {
                             const hasChildren = item.items && item.items.length > 0;
 
-                            // if (!can(item.permission)) {
-                            //     return null;
-                            // }
+                            if (!can(item.permission)) {
+                                return null;
+                            }
 
                             return (
                                 <SidebarMenuItem key={item.title}>

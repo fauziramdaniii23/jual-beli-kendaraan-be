@@ -3,8 +3,10 @@ import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventor
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
+import { indexRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+import { PERMISSIONS } from '@/types/permission';
 
 export const MASTER_REFERENCE_TYPE = {
     FUEL_TYPE: 'FUEL_TYPE',
@@ -27,13 +29,13 @@ export const menuItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
-        permission: ''
+        permission: PERMISSIONS.DASHBOARD_VIEW
     },
     {
         title: 'Inventory',
         href: '#',
         icon: PackageSearch,
-        permission: '',
+        permission: PERMISSIONS.INVENTORY_VIEW,
         items: [
             {
                 title: 'Stock Unit',
@@ -65,7 +67,7 @@ export const menuItems: NavItem[] = [
         title: 'Sales Service',
         href: '#',
         icon: HandPlatter,
-        permission: '',
+        permission: PERMISSIONS.SALES_VIEW,
         items: [
             {
                 title: 'order',
@@ -97,7 +99,7 @@ export const menuItems: NavItem[] = [
         title: 'Customers',
         href: '#',
         icon: Users,
-        permission: '',
+        permission: PERMISSIONS.CUSTOMER_VIEW,
         items: [
             {
                 title: 'Customer List',
@@ -123,7 +125,7 @@ export const menuItems: NavItem[] = [
         title: 'News',
         href: '#',
         icon: LayoutGrid,
-        permission: '',
+        permission: PERMISSIONS.NEWS_VIEW,
         items: [
             {
                 title: 'Blog',
@@ -143,7 +145,7 @@ export const menuItems: NavItem[] = [
         title: 'Master',
         href: '#',
         icon: LayoutList,
-        permission: 'master.view',
+        permission: PERMISSIONS.MASTER_VIEW,
         items: [
             {
                 title: 'Merek',
@@ -193,7 +195,7 @@ export const menuItems: NavItem[] = [
         title: 'Otentikasi',
         href: '#',
         icon: KeyRound,
-        permission: '',
+        permission: PERMISSIONS.OTENTIKASI_VIEW,
         items: [
             {
                 title: 'User',
@@ -202,8 +204,8 @@ export const menuItems: NavItem[] = [
                 icon: null,
             },
             {
-                title: 'Role',
-                href: '/auth/role',
+                title: 'Role & Permissions',
+                href: indexRole(),
                 permission: '',
                 icon: null,
             },
