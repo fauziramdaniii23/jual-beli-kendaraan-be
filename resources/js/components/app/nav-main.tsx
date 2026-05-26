@@ -10,10 +10,12 @@ import {
     SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { usePermission } from '@/hooks/use-permission';
 import type { NavItem } from '@/types';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { isCurrentUrl } = useCurrentUrl();
+    const { can } = usePermission();
 
     return (
         <SidebarContent className="overflow-y-auto scrollbar-hide">
@@ -22,6 +24,10 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                     <SidebarMenu>
                         {items.map((item) => {
                             const hasChildren = item.items && item.items.length > 0;
+
+                            // if (!can(item.permission)) {
+                            //     return null;
+                            // }
 
                             return (
                                 <SidebarMenuItem key={item.title}>
