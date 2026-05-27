@@ -13,6 +13,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import AppLayout from '@/layouts/app-layout';
 
 type TRoles = {
     id: number;
@@ -26,7 +27,7 @@ export type TFormUser = {
     password_confirmation: string;
     phone_number?: string;
     avatar?: File | null | string;
-    avatar_src?: string;
+    avatar_src?: string | null;
     data_roles?: string[];
 }
 
@@ -196,7 +197,7 @@ export default function FormUserPage() {
                                 onChange={(file) => form.setData('avatar', file)}
                                 disabled={disable}
                                 userName={form.data.name}
-                                avatarSrc={user.avatar_src}
+                                avatarSrc={user?.avatar_src}
                             />
                         </div>
                     </div>
@@ -221,17 +222,24 @@ export default function FormUserPage() {
     );
 }
 
-FormUserPage.layout = {
-    breadcrumbs: [
-        {
-            title: 'Otentikasi'
-        },
-        {
-            title: 'Users',
-            href: indexUser()
-        },
-        {
-            title: 'Tambah User'
-        }
-    ]
+FormUserPage.layout = (page: React.ReactElement<PageProps>) => {
+    const TYPE_LABEL = {
+        create: 'Tambah',
+        update: 'Update',
+        detail: 'Detail',
+    } as const;
+    const pageProps = (page.props as PageProps | undefined) ?? undefined;
+    const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
+
+    return (
+        <AppLayout
+            breadcrumbs={[
+                { title: 'Otentikasi', href: '#' },
+                { title: 'Users', href: indexUser() },
+                { title: `${breadcrumbTitle} User`, href: '#' },
+            ]}
+        >
+            {page}
+        </AppLayout>
+    );
 };

@@ -39,6 +39,7 @@ type PageProps = {
 };
 export default function MasterReferencePage() {
     const { data_reference, type } = usePage<PageProps>().props;
+    console.log(type);
     const label = MASTER_REFERENCE_LABEL[type];
     const [reference, setReference] = useState<TMasterReference>({
         ref_id: 0,

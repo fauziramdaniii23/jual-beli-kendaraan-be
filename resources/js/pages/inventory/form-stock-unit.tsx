@@ -13,6 +13,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
+import AppLayout from '@/layouts/app-layout';
 
 type PageProps = {
     options: TStockUnitOptions;
@@ -326,17 +327,24 @@ export default function FormStockUnitPage() {
     );
 }
 
-FormStockUnitPage.layout = {
-    breadcrumbs: [
-        {
-            title: 'Inventory'
-        },
-        {
-            title: 'Stock Unit',
-            href: indexStockUnit()
-        },
-        {
-            title: 'Tambah Stock Unit'
-        }
-    ]
+FormStockUnitPage.layout = (page: React.ReactElement<PageProps>) => {
+    const TYPE_LABEL = {
+        create: 'Tambah',
+        update: 'Update',
+        detail: 'Detail',
+    } as const;
+    const pageProps = (page.props as PageProps | undefined) ?? undefined;
+    const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
+
+    return (
+        <AppLayout
+            breadcrumbs={[
+                { title: 'Inventory', href: '#' },
+                { title: 'Stock Unit', href: indexStockUnit() },
+                { title: `${breadcrumbTitle} Unit`, href: '#' },
+            ]}
+        >
+            {page}
+        </AppLayout>
+    );
 };
