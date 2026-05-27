@@ -3,12 +3,12 @@ import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     Eye,
-    MoreHorizontal, Trash
+    MoreHorizontal, Plus, SquarePen, Trash
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { indexPermission, destroyRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
+import { destroy as deleteUser, formUser } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
-import CreateRoleDialog from '@/components/otentikasi/role-permission/add-role';
+import type { TUser } from '@/components/otentikasi/user/type';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
@@ -18,28 +18,26 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-type TRole = {
-    id: number;
-    name: string;
-}
-
 type PageProps = {
-    roles: TRole[];
+    users: TUser[];
 };
 
-export default function MasterRolePage() {
-    const { roles } = usePage<PageProps>().props;
+export default function UsersPage() {
+    const { users } = usePage<PageProps>().props;
 
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [roleId, setRoleId] = useState<number | null>(null);
-    const handleActionDelete = (role: TRole) => {
-        setRoleId(role.id);
+    const [userId, seTUserId] = useState<number | null>(null);
+    const handleActionDelete = (user: TUser) => {
+        seTUserId(user.id);
         setIsDeleteConfirmOpen(true);
     };
-    const handleActionDetail = (role: TRole) => {
+    const handleAction = (user_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
-            indexPermission(role.id).url,
-            {},
+            formUser().url,
+            {
+                user_id: user_id,
+                type: type
+            },
             {
                 preserveState: true,
                 replace: true,
@@ -47,7 +45,7 @@ export default function MasterRolePage() {
         );
     }
     const handleDelete = () => {
-        router.delete(destroyRole(roleId!).url, {
+        router.delete(deleteUser(userId!).url, {
             preserveScroll: true,
             onSuccess: () => {
                 setIsDeleteConfirmOpen(false);
@@ -55,10 +53,30 @@ export default function MasterRolePage() {
         });
     };
 
-    const columns: ColumnDef<TRole>[] = [
+    const columns: ColumnDef<TUser>[] = [
         {
             accessorKey: 'name',
-            header: 'Nama Role'
+            header: 'Nama'
+        },
+        {
+            accessorKey: 'email',
+            header: 'Email',
+        },
+        {
+            accessorKey: 'phone',
+            header: 'No Telepon',
+        },
+        {
+            id: 'roles',
+            accessorFn: (row) => row.roles?.join(', '),
+            header: 'Roles',
+
+            cell: ({ row }) => {
+
+                const roles = row.original.roles
+
+                return roles?.join(', ')
+            }
         },
         {
             id: 'actions',
@@ -69,7 +87,7 @@ export default function MasterRolePage() {
             ),
             enableHiding: false,
             cell: ({ row }) => {
-                const role = row.original;
+                const user = row.original;
 
                 return (
                     <div className="text-center">
@@ -83,13 +101,18 @@ export default function MasterRolePage() {
                             <DropdownMenuContent align="end">
 
                                 <DropdownMenuItem
-                                    onClick={() => handleActionDetail(role)}
+                                    onClick={() => handleAction(user.id, 'detail')}
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => handleAction(user.id, 'update')}
+                                >
+                                    <SquarePen /> Update
+                                </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleActionDelete(role)}
+                                    onClick={() => handleActionDelete(user)}
                                     className="text-red-500"
                                 >
                                     <Trash className="text-red-500"/> Delete
@@ -106,10 +129,13 @@ export default function MasterRolePage() {
         <>
             <Head title="role" />
             <div className="mx-4 mt-4">
-                <CreateRoleDialog />
+                <Button onClick={() => handleAction(undefined, 'create')}>
+                    <Plus />
+                    Tambah User Baru
+                </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={roles} />
+                <DataTable columns={columns} data={users} />
             </div>
             <ConfirmDialog
                 confirmText="Hapus"
@@ -125,13 +151,13 @@ export default function MasterRolePage() {
     );
 }
 
-MasterRolePage.layout = {
+UsersPage.layout = {
     breadcrumbs: [
         {
             title: 'Otentikasi',
         },
         {
-            title: 'Role',
+            title: 'User',
         },
     ],
 };

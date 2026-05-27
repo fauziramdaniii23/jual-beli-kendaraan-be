@@ -5,6 +5,7 @@ use App\Http\Controllers\Master\MasterBrandController;
 use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterReferenceController;
 use App\Http\Controllers\Otentikasi\RoleAndPermissionController;
+use App\Http\Controllers\Otentikasi\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -46,6 +47,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('role/{id}', [RoleAndPermissionController::class, 'destroyRole'])->name('otentikasi.role.destroy')->middleware('can:otentikasi.delete');
         Route::get('permission/{role}', [RoleAndPermissionController::class, 'indexPermission'])->name('otentikasi.permission');
         Route::put('permission/{role}', [RoleAndPermissionController::class, 'updatePermission'])->name('otentikasi.permission.update')->middleware('can:otentikasi.edit');
+
+        Route::get('user', [UserController::class, 'index'])->name('otentikasi.user');
+        Route::get('user/form', [UserController::class, 'formUser'])->name('otentikasi.form.user');
+        Route::post('user', [UserController::class, 'store'])->name('otentikasi.user.store')->middleware('can:otentikasi.create');
+        Route::post('user/{user}', [UserController::class, 'update'])->name('otentikasi.user.update')->middleware('can:otentikasi.edit');
+        Route::delete('user/{user}', [UserController::class, 'destroy'])->name('otentikasi.user.destroy')->middleware('can:otentikasi.delete');
     });
 });
 

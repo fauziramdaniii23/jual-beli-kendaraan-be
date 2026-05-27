@@ -1,7 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import React from 'react';
-import { storeRole } from '@/actions/App/Http/Controllers/otentikasi/RoleAndPermissionController';
+import { storeRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,

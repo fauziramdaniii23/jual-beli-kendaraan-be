@@ -4,6 +4,7 @@ import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/Maste
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
 import { indexRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
+import { index as indexUsers } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import { PERMISSIONS } from '@/types/permission';
@@ -199,7 +200,7 @@ export const menuItems: NavItem[] = [
         items: [
             {
                 title: 'User',
-                href: '/auth/user',
+                href: indexUsers(),
                 permission: '',
                 icon: null,
             },

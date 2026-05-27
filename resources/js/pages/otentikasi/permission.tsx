@@ -197,7 +197,7 @@ export default function MasterPermissionPage() {
 MasterPermissionPage.layout = {
     breadcrumbs: [
         {
-            title: 'Master',
+            title: 'Otentikasi',
         },
         {
             title: 'Role',
