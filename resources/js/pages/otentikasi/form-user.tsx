@@ -1,12 +1,12 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React from 'react';
 import { index as indexUser, store as storeUser, update as updateUser } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
+import { AvatarUpload } from '@/components/otentikasi/user/avatar-upload';
 import { Button } from '@/components/ui/button';
 import {
     Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput,
     ComboboxContent,
     ComboboxEmpty,
-    ComboboxInput,
     ComboboxItem,
     ComboboxList, ComboboxValue
 } from '@/components/ui/combobox';
@@ -25,7 +25,8 @@ export type TFormUser = {
     password: string;
     password_confirmation: string;
     phone_number?: string;
-    avatar?: File | null;
+    avatar?: File | null | string;
+    avatar_src?: string;
     data_roles?: string[];
 }
 
@@ -42,7 +43,7 @@ const defaultUser = {
     password: '',
     password_confirmation: '',
     phone_number: '',
-    avatar: '',
+    avatar: null,
     data_roles: [],
 }
 
@@ -188,6 +189,15 @@ export default function FormUserPage() {
                                 </Field>
 
                             </FieldGroup>
+                        </div>
+                        <div className="flex flex-1 items-center justify-center">
+                            <AvatarUpload
+                                value={form.data.avatar as File}
+                                onChange={(file) => form.setData('avatar', file)}
+                                disabled={disable}
+                                userName={form.data.name}
+                                avatarSrc={user.avatar_src}
+                            />
                         </div>
                     </div>
 

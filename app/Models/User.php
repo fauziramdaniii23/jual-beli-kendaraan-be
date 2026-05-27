@@ -32,4 +32,15 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+    protected $appends = ['avatar_name', 'avatar_src'];
+
+    public function getAvatarNameAttribute()
+    {
+        return basename($this->avatar);
+    }
+
+    public function getAvatarSrcAttribute()
+    {
+        return asset('storage/'.$this->avatar);
+    }
 }
