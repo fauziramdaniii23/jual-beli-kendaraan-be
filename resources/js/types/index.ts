@@ -21,3 +21,9 @@ export type TImagesFile = {
     file_src: string;
     is_primary: boolean;
 };
+
+export type TImageProps = {
+    image_id: number;
+    image_name: string;
+    image_src: string;
+}

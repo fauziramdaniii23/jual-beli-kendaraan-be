@@ -3,6 +3,8 @@
 namespace App\services;
 
 use App\Helper\DateHelper;
+use App\Models\Car;
+use App\Models\CarImage;
 use App\repositories\BrandRepository;
 use App\repositories\CarModelRepository;
 use App\repositories\StockUnitRepository;
@@ -162,6 +164,17 @@ class StockUnitService
             $filename,
             'public'       // disk → config/filesystems.php
         );
+    }
+    public function deleteUnit(int $id)
+    {
+        return DB::transaction(function () use ($id) {
+            $stockUnit = Car::findOrFail($id);
+            $images = CarImage::where('cars_id', $id)->get();
+            foreach ($images as $image) {
+                $this->deleteImage($image->image_id);
+            }
+            $stockUnit->delete();
+        });
     }
 
     public function deleteImage(int $imageId): bool

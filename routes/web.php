@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBrandController;
 use App\Http\Controllers\Master\MasterModelController;
@@ -23,6 +24,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('stock-unit', [StockUnitController::class, 'store'])->name('inventory.stock-unit.store')->middleware('can:inventory.create');
         Route::post('stock-unit/{id}', [StockUnitController::class, 'update'])->name('inventory.stock-unit.update')->middleware('can:inventory.edit');
         Route::delete('stock-unit/{id}', [StockUnitController::class, 'destroy'])->name('inventory.stock-unit.destroy')->middleware('can:inventory.delete');
+    });
+
+    Route::middleware('can:customer.view')->prefix('customer')->group(function () {
+        Route::get('reviews', [ReviewsController::class, 'index'])->name('customer.reviews');
+        Route::get('reviews/form', [ReviewsController::class, 'form'])->name('customer.reviews.form');
+        Route::post('reviews', [ReviewsController::class, 'store'])->name('customer.reviews.store')->middleware('can:customer.create');
+        Route::post('reviews/{review}', [ReviewsController::class, 'update'])->name('customer.reviews.update')->middleware('can:customer.edit');
+        Route::delete('reviews/{review}', [ReviewsController::class, 'destroy'])->name('customer.reviews.destroy')->middleware('can:customer.delete');
     });
 
     Route::middleware('can:master.view')->prefix('master')->group(function () {

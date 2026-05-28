@@ -105,8 +105,7 @@ class StockUnitController extends Controller
     public function destroy($id)
     {
         try {
-            $stockUnit = Car::findOrFail($id);
-            $stockUnit->delete();
+            $this->stockUnitService->deleteUnit($id);
             Inertia::flash('toast', [
                 'type' => 'success',
                 'message' => 'Stock Unit berhasil dihapus.',

@@ -1,17 +1,17 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
-import type { TImagesFile } from '@/types';
 import ImagePreview from '@/components/app/image-preview';
+import type { TImageProps } from '@/types';
 
 interface Props {
-    images: TImagesFile[];
+    images: TImageProps[];
     removeImage: (id: number) => void;
     type?: 'update' | 'create' | 'detail';
 }
 
 export function ExistingImage({images, removeImage, type}: Props) {
-    const [existingImages, setExistingImages] = useState<TImagesFile[]>(images);
+    const [existingImages, setExistingImages] = useState<TImageProps[]>(images);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedImageId, setSelectedImageId] = useState<number | null>(null);
 
@@ -41,13 +41,13 @@ export function ExistingImage({images, removeImage, type}: Props) {
                 {existingImages.map((image) => (
                     <div
                         key={image.image_id}
-                        onClick={() => openPreview(image.file_src, image.file_name)}
+                        onClick={() => openPreview(image.image_src, image.image_name)}
                         className="group relative overflow-hidden rounded-lg border border-muted-foreground/25"
                     >
                         {/* Image */}
                         <img
-                            src={image.file_src}
-                            alt={image.file_name}
+                            src={image.image_src}
+                            alt={image.image_name}
                             className="h-24 w-full object-cover transition-transform group-hover:scale-105"
                         />
 
@@ -63,7 +63,7 @@ export function ExistingImage({images, removeImage, type}: Props) {
                                         handleDeleteClick(image.image_id)
                                     }}
                                     className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
-                                    aria-label={`Hapus ${image.file_name}`}
+                                    aria-label={`Hapus ${image.image_name}`}
                                     type="button"
                                 >
                                     <X className="h-4 w-4 text-white" />
@@ -73,7 +73,7 @@ export function ExistingImage({images, removeImage, type}: Props) {
 
                         {/* File Name */}
                         <p className="absolute bottom-0 w-full truncate bg-black/50 px-2 py-1 text-xs text-white">
-                            {image.file_name}
+                            {image.image_name}
                         </p>
                     </div>
                 ))}

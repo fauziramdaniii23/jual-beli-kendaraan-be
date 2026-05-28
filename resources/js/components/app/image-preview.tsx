@@ -1,18 +1,9 @@
 import { X } from 'lucide-react';
-import { useState } from 'react';
 import {
     Dialog,
     DialogContent,
-    DialogClose
+    DialogClose, DialogTitle
 } from '@/components/ui/dialog';
-
-interface ImageData {
-    id: string | number;
-    preview: string;
-    file: {
-        name: string
-    };
-}
 
 interface ImagePreviewProps {
     image_src: string;
@@ -28,6 +19,7 @@ export default function ImagePreview({image_src, file_name, isOpen, onClose}: Im
             {/* Image Detail Dialog */}
             <Dialog open={isOpen} onOpenChange={onClose}>
                 <DialogContent className="max-w-3xl border-0 bg-transparent p-4">
+                    <DialogTitle>{file_name}</DialogTitle>
                     <DialogClose
                         className="absolute -right-10 -top-10 rounded-full bg-white/10 p-2 text-white hover:bg-white/20">
                         <X className="h-6 w-6" />

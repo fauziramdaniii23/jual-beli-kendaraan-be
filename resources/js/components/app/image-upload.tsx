@@ -1,8 +1,8 @@
 import { Upload, X } from 'lucide-react';
 import { useState, useCallback } from 'react';
+import ImagePreview from '@/components/app/image-preview';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import ImagePreview from '@/components/app/image-preview';
 
 interface ImageFile {
     id: string;

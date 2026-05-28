@@ -10,6 +10,7 @@ interface AvatarUploadProps {
     currentAvatar?: string;
     userName?: string;
     avatarSrc?: string | null;
+    onPreview: () => void
 }
 
 export function AvatarUpload({
@@ -18,7 +19,8 @@ export function AvatarUpload({
      disabled = false,
      currentAvatar,
      userName = 'User',
-    avatarSrc = null
+    avatarSrc = null,
+    onPreview
  }: AvatarUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(avatarSrc);
@@ -75,7 +77,7 @@ export function AvatarUpload({
     return (
         <Field>
             <div className="flex flex-col items-center gap-4">
-                <Avatar className="w-24 h-24">
+                <Avatar onClick={onPreview} className="w-24 h-24">
                     {displayImage && <AvatarImage src={displayImage} alt={userName} />}
                     <AvatarFallback>{getInitials(userName)}</AvatarFallback>
                 </Avatar>

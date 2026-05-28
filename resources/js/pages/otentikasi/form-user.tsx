@@ -1,6 +1,7 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React from 'react';
 import { index as indexUser, store as storeUser, update as updateUser } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
+import ImagePreview from '@/components/app/image-preview';
 import { AvatarUpload } from '@/components/otentikasi/user/avatar-upload';
 import { Button } from '@/components/ui/button';
 import {
@@ -65,6 +66,8 @@ export default function FormUserPage() {
             }
         })
     };
+
+    const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
     return (
         <>
@@ -198,6 +201,7 @@ export default function FormUserPage() {
                                 disabled={disable}
                                 userName={form.data.name}
                                 avatarSrc={user?.avatar_src}
+                                onPreview={() =>setIsPreviewOpen(true)}
                             />
                         </div>
                     </div>
@@ -218,6 +222,12 @@ export default function FormUserPage() {
                     </div>
                 </form>
             </div>
+            <ImagePreview
+                image_src={form.data.avatar_src!}
+                file_name={form.data.name}
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+            />
         </>
     );
 }

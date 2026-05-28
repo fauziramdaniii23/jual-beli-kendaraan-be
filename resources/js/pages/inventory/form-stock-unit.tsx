@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
+import { TImageProps } from '@/types';
 
 type PageProps = {
     options: TStockUnitOptions;
@@ -54,6 +55,14 @@ export default function FormStockUnitPage() {
         form.setData('deleted_image_ids', [...form.data.deleted_image_ids || [], id]);
     }
 
+    const existingImage: TImageProps[] = stock_unit?.images?.map((image) => {
+        return {
+            image_id: image.image_id,
+            image_name: image.file_name,
+            image_src: image.file_src
+        };
+    }) ?? [];
+
     return (
         <>
             <Head title="Tambah Stock Unit" />
@@ -69,7 +78,7 @@ export default function FormStockUnitPage() {
                     {
                         type !== 'create' && (
                             <ExistingImage
-                                images={stock_unit?.images || []}
+                                images={existingImage}
                                 removeImage={handleRemoveExistingImage}
                                 type={type}
                             />

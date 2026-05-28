@@ -1,4 +1,5 @@
 import { HandPlatter, HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users } from 'lucide-react';
+import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
@@ -23,6 +24,12 @@ export const MASTER_REFERENCE_LABEL = {
     CAR_TYPE: 'Jenis Mobil',
     SEAT_TYPE: 'Jumlah Kursi',
     PLATE_TYPE: 'Jenis Plat',
+} as const;
+
+export const TYPE_LABEL = {
+    create: 'Tambah',
+    update: 'Update',
+    detail: 'Detail',
 } as const;
 
 export const menuItems: NavItem[] = [
@@ -116,7 +123,7 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Rating & Ulasan',
-                href: '/news/review',
+                href: indexReviews(),
                 permission: '',
                 icon: null,
             }
