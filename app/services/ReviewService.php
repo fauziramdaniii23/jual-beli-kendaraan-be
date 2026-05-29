@@ -49,6 +49,15 @@ class ReviewService
             return $review->refresh();
         });
     }
+    public function delete($review)
+    {
+        return DB::transaction(function () use ($review) {
+            if ($review->image && Storage::disk('public')->exists($review->image)) {
+                Storage::disk('public')->delete($review->image);
+            }
+            $review->delete();
+        });
+    }
     public function uploadImage($file)
     {
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

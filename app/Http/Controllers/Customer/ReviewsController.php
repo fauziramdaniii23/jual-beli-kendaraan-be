@@ -110,7 +110,7 @@ class ReviewsController extends Controller
     public function destroy(Reviews $review)
     {
         try {
-
+            $this->reviewService->delete($review);
             Inertia::flash('toast', [
                 'type' => 'success',
                 'message' => 'Rating & Ulasan Customer berhasil dihapus.',
