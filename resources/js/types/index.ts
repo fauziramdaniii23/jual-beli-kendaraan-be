@@ -23,7 +23,7 @@ export type TImagesFile = {
 };
 
 export type TImageProps = {
-    image_id: number;
-    image_name: string;
-    image_src: string;
+    image_id?: number;
+    image_name?: string;
+    image_src?: string;
 }

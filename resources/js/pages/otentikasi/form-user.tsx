@@ -14,6 +14,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 
 type TRoles = {
@@ -35,7 +36,7 @@ export type TFormUser = {
 type PageProps = {
     roles: TRoles[];
     user: TFormUser;
-    type?: 'detail' | 'create' | 'update';
+    type: 'detail' | 'create' | 'update';
 };
 
 const defaultUser = {
@@ -51,6 +52,7 @@ const defaultUser = {
 
 export default function FormUserPage() {
     const { roles, user, type } = usePage<PageProps>().props;
+    const label = TYPE_LABEL[type];
     const form = useForm<TFormUser>(user ?? defaultUser);
     const disable = type === 'detail';
 
@@ -71,7 +73,7 @@ export default function FormUserPage() {
 
     return (
         <>
-            <Head title="Tambah Stock Unit" />
+            <Head title={`${label} User`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <div className="flex gap-4 w-full mt-4">
@@ -233,11 +235,6 @@ export default function FormUserPage() {
 }
 
 FormUserPage.layout = (page: React.ReactElement<PageProps>) => {
-    const TYPE_LABEL = {
-        create: 'Tambah',
-        update: 'Update',
-        detail: 'Detail',
-    } as const;
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
     const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
 

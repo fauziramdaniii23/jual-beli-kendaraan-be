@@ -3,17 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class Car extends Model
 {
     use SoftDeletes;
+
     protected $table = 'cars';
+
     protected $primaryKey = 'cars_id';
+
     public $incrementing = true;
+
     protected $keyType = 'int';
+
     public $timestamps = true;
+
     protected $fillable = [
         'name',
         'description',
@@ -36,13 +43,16 @@ class Car extends Model
         'updated_by',
         'deleted_by',
     ];
+
     protected $casts = [
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
     protected $appends = ['formatted_price'];
+
     protected static function booted(): void
     {
         static::creating(function ($car) {
@@ -65,6 +75,7 @@ class Car extends Model
             $car->saveQuietly();
         });
     }
+
     public function brand()
     {
         return $this->belongsTo(
@@ -73,6 +84,7 @@ class Car extends Model
             'brand_id'
         );
     }
+
     public function model()
     {
         return $this->belongsTo(
@@ -81,6 +93,7 @@ class Car extends Model
             'model_id'
         );
     }
+
     public function transmission()
     {
         return $this->belongsTo(
@@ -89,6 +102,7 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_TRANSMISSION);
     }
+
     public function fuelType()
     {
         return $this->belongsTo(
@@ -97,6 +111,7 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_FUEL_TYPE);
     }
+
     public function plate()
     {
         return $this->belongsTo(
@@ -105,6 +120,7 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_PLATE);
     }
+
     public function seat()
     {
         return $this->belongsTo(
@@ -113,6 +129,7 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_SEAT);
     }
+
     public function status()
     {
         return $this->belongsTo(
@@ -121,18 +138,22 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_STATUS);
     }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
+
     public function scopeAvailable($query)
     {
         return $query->where('status_code', 'AVAILABLE');
     }
+
     public function getFormattedPriceAttribute(): string
     {
         return 'Rp '.number_format($this->price, 0, ',', '.');
     }
+
     public function images()
     {
         return $this->hasMany(
@@ -141,6 +162,7 @@ class Car extends Model
             'cars_id'
         );
     }
+
     public function primaryImage()
     {
         return $this->hasOne(
@@ -148,5 +170,14 @@ class Car extends Model
             'car_id',
             'cars_id'
         )->where('is_primary', true);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->BelongsTo(
+            MasterBranch::class,
+            'branch_id',
+            'branch_id'
+        );
     }
 }

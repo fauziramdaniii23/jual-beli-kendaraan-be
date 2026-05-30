@@ -104,7 +104,7 @@ export default function StockUnitPage() {
 
     return (
         <>
-            <Head title="Brand" />
+            <Head title="Stock Unit" />
             <div className="m-4 border rounded-md">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>

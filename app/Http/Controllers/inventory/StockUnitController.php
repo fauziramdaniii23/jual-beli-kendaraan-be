@@ -4,16 +4,13 @@ namespace App\Http\Controllers\inventory;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StockUnitRequest;
-use App\Models\Car;
 use App\Models\MasterReference;
 use App\services\StockUnitService;
-use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class StockUnitController extends Controller
 {
-    use ApiResponse;
     public function __construct(protected StockUnitService $stockUnitService) {}
 
     private $optionTypes = [
@@ -110,6 +107,7 @@ class StockUnitController extends Controller
                 'type' => 'success',
                 'message' => 'Stock Unit berhasil dihapus.',
             ]);
+
             return redirect()->route('inventory.stock-unit');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
@@ -118,16 +116,6 @@ class StockUnitController extends Controller
             ]);
 
             return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-    // API Endpoint
-    public function getStockUnit(Request $request)
-    {
-        try {
-            $stockUnit = $this->stockUnitService->getUnitWithPagination($request);
-            return $this->paginateResponse($stockUnit);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 }

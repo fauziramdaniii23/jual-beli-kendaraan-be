@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
 import { ImageUpload } from '@/components/app/image-upload';
 import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
-import type { TFormReviews } from '@/pages/customers/form-reviews';
 import type { TImageProps } from '@/types';
 
 type Props = {
     type: 'detail' | 'create' | 'update';
-    data: TFormReviews;
+    data: TImageProps;
     uploadImage: (file: File) => void;
     removedImage: (id: number) => void;
 };
@@ -20,7 +19,7 @@ export default function FormImage({ type, data, uploadImage, removedImage}: Prop
 
         return [
             {
-                image_id: data.review_id ?? 0,
+                image_id: data.image_id ?? 0,
                 image_name: data.image_name ?? '',
                 image_src: data.image_src ?? '',
             },

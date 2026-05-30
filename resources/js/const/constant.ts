@@ -1,6 +1,7 @@
-import { HandPlatter, HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users } from 'lucide-react';
+import { HandPlatter, HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
@@ -71,38 +72,38 @@ export const menuItems: NavItem[] = [
             },
         ],
     },
-    {
-        title: 'Sales Service',
-        href: '#',
-        icon: HandPlatter,
-        permission: PERMISSIONS.SALES_VIEW,
-        items: [
-            {
-                title: 'order',
-                href: '/inventory/order',
-                permission: '',
-                icon: null,
-            },
-            {
-                title: 'Pre Order',
-                href: '/inventory/pre-order',
-                permission: '',
-                icon: null,
-            },
-            {
-                title: 'Test Drive',
-                href: '/inventory/test-driver',
-                permission: '',
-                icon: null,
-            },
-            {
-                title: 'Tukar Tambah',
-                href: '/inventory/tukar-tambah',
-                permission: '',
-                icon: null,
-            },
-        ]
-    },
+    // {
+    //     title: 'Sales Service',
+    //     href: '#',
+    //     icon: HandPlatter,
+    //     permission: PERMISSIONS.SALES_VIEW,
+    //     items: [
+    //         {
+    //             title: 'order',
+    //             href: '/inventory/order',
+    //             permission: '',
+    //             icon: null,
+    //         },
+    //         {
+    //             title: 'Pre Order',
+    //             href: '/inventory/pre-order',
+    //             permission: '',
+    //             icon: null,
+    //         },
+    //         {
+    //             title: 'Test Drive',
+    //             href: '/inventory/test-driver',
+    //             permission: '',
+    //             icon: null,
+    //         },
+    //         {
+    //             title: 'Tukar Tambah',
+    //             href: '/inventory/tukar-tambah',
+    //             permission: '',
+    //             icon: null,
+    //         },
+    //     ]
+    // },
     {
         title: 'Customers',
         href: '#',
@@ -112,6 +113,12 @@ export const menuItems: NavItem[] = [
             {
                 title: 'Customer List',
                 href: '/customers',
+                permission: '',
+                icon: null,
+            },
+            {
+                title: 'Order',
+                href: '/inventory/order',
                 permission: '',
                 icon: null,
             },
@@ -132,7 +139,7 @@ export const menuItems: NavItem[] = [
     {
         title: 'News',
         href: '#',
-        icon: LayoutGrid,
+        icon: Newspaper,
         permission: PERMISSIONS.NEWS_VIEW,
         items: [
             {
@@ -155,6 +162,12 @@ export const menuItems: NavItem[] = [
         icon: LayoutList,
         permission: PERMISSIONS.MASTER_VIEW,
         items: [
+            {
+                title: 'Cabang',
+                href: indexBranch(),
+                permission: '',
+                icon: null,
+            },
             {
                 title: 'Merek',
                 href: indexBrand(),

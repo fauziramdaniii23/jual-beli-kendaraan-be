@@ -13,17 +13,19 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
+import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
-import { TImageProps } from '@/types';
+import type { TImageProps } from '@/types';
 
 type PageProps = {
     options: TStockUnitOptions;
     stock_unit?: TUnit;
-    type?: 'detail' | 'create' | 'update';
+    type: 'detail' | 'create' | 'update';
 };
 
 export default function FormStockUnitPage() {
     const { options, stock_unit, type } = usePage<PageProps>().props;
+    const label = TYPE_LABEL[type];
     const form = useForm<TUnit>(stock_unit ?? defaultUnit);
     const disable = type === 'detail';
 
@@ -65,7 +67,7 @@ export default function FormStockUnitPage() {
 
     return (
         <>
-            <Head title="Tambah Stock Unit" />
+            <Head title={`${label} Stock Unit`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     { !disable &&
@@ -337,11 +339,6 @@ export default function FormStockUnitPage() {
 }
 
 FormStockUnitPage.layout = (page: React.ReactElement<PageProps>) => {
-    const TYPE_LABEL = {
-        create: 'Tambah',
-        update: 'Update',
-        detail: 'Detail',
-    } as const;
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
     const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
 

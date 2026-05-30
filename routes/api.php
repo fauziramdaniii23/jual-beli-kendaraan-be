@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\inventory\StockUnitController;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,4 +10,5 @@ Route::get('/hello', function () {
     return response()->json(['message' => 'Hello, World!']);
 });
 
-Route::get('/stock-unit', [StockUnitController::class, 'getStockUnit'])->name('stock.unit');
+Route::get('/stock-unit', [ApiController::class, 'getStockUnit'])->name('stock.unit');
+Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');

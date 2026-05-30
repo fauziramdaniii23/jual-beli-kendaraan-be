@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\inventory\StockUnitController;
+use App\Http\Controllers\Master\MasterBranchController;
 use App\Http\Controllers\Master\MasterBrandController;
 use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterReferenceController;
@@ -35,6 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::middleware('can:master.view')->prefix('master')->group(function () {
+
+        Route::get('branch', [MasterBranchController::class, 'index'])->name('master.branch');
+        Route::get('branch/form', [MasterBranchController::class, 'form'])->name('master.branch.form');
+        Route::post('branch', [MasterBranchController::class, 'store'])->name('master.branch.store')->middleware('can:master.create');
+        Route::post('branch/{branch}', [MasterBranchController::class, 'update'])->name('master.branch.update')->middleware('can:master.edit');
+        Route::delete('branch/{branch}', [MasterBranchController::class, 'destroy'])->name('master.branch.destroy')->middleware('can:master.delete');
+
         Route::get('brand', [MasterBrandController::class, 'index'])->name('master.brand');
         Route::post('brand', [MasterBrandController::class, 'store'])->name('master.brand.store')->middleware('can:master.create');
         Route::post('brand/{brand}', [MasterBrandController::class, 'update'])->name('master.brand.update')->middleware('can:master.edit');

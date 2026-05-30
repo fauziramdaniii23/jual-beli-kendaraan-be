@@ -26,8 +26,8 @@ import {
     SelectValue
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import AppLayout from '@/layouts/app-layout';
 import { TYPE_LABEL } from '@/const/constant';
+import AppLayout from '@/layouts/app-layout';
 
 type TUnit = {
     cars_id: number;
@@ -52,8 +52,8 @@ export type TFormReviews = {
     review_text: string;
     is_published: boolean;
     image_file?: File | null | string;
-    image_src?: string | null;
-    image_name?: string | null;
+    image_src?: string;
+    image_name?: string;
 }
 
 type PageProps = {
@@ -72,7 +72,7 @@ const defaultReviews = {
     image_file: null,
 }
 
-export default function FormUserPage() {
+export default function FormReviewPage() {
     const { units, users, reviews, type } = usePage<PageProps>().props;
     const form = useForm<TFormReviews>(reviews ?? defaultReviews);
     const disable = type === 'detail';
@@ -101,7 +101,7 @@ export default function FormUserPage() {
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage
                         type={type}
-                        data={reviews}
+                        data={{image_id: reviews?.review_id, image_name: reviews?.image_name, image_src: reviews?.image_src}}
                         uploadImage={(file) => handleUploadImage(file)}
                         removedImage={(id) => console.log('removedImage', id) }
                     />
@@ -293,7 +293,7 @@ export default function FormUserPage() {
     );
 }
 
-FormUserPage.layout = (page: React.ReactElement<PageProps>) => {
+FormReviewPage.layout = (page: React.ReactElement<PageProps>) => {
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
     const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
 

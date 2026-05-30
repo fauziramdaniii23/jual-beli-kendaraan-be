@@ -31,3 +31,13 @@ export  function formatRupiah(value: number | string): string {
         maximumFractionDigits: 0,
     }).format(Number(value));
 }
+
+export const normalizeUrl = (url: string) => {
+    if (!url) {
+        return ''
+    }
+
+    return /^https?:\/\//i.test(url)
+        ? url
+        : `https://${url}`;
+};

@@ -192,7 +192,7 @@ export default function MasterModelPage() {
 
     return (
         <>
-            <Head title="model" />
+            <Head title="Model" />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">
