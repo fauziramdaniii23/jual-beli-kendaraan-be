@@ -212,6 +212,19 @@ export default function FormStockUnitPage() {
                                     {form.errors.brand_id &&
                                         <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
                                 </Field>
+                                <Field>
+                                    <FieldLabel>Cabang<span className="text-destructive">*</span></FieldLabel>
+                                    <SelectWithClear
+                                        placeholder="Pilih Cabang"
+                                        value={String(form.data.branch_id ?? '')}
+                                        onChange={(val) => form.setData('branch_id', val === '' ? undefined as any : val as any)}
+                                        items={options.branch}
+                                        invalid={!!form.errors.branch_id}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.branch_id &&
+                                        <div className="text-sm text-destructive">{form.errors.branch_id}</div>}
+                                </Field>
 
                                 <Field>
                                     <FieldLabel>Tipe</FieldLabel>

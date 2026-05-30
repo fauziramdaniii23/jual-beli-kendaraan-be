@@ -19,6 +19,7 @@ class StockUnitService
         protected StockUnitRepository $stockUnitRepository,
         protected BrandRepository $brandRepository,
         protected CarModelRepository $carModelRepository,
+        protected BranchService $branchService,
     ) {}
 
     public function getUnit(Request $request)
@@ -26,6 +27,7 @@ class StockUnitService
         $units = $this->stockUnitRepository->getUnit(
             filter: [
                 'brand_id' => $request->brand_id,
+                'branch_id' => $request->branch_id,
                 'model_id' => $request->model_id,
                 'transmission' => $request->transmission,
                 'car_type' => $request->car_type,
@@ -66,6 +68,14 @@ class StockUnitService
                 'value' => strval($item->model_id),
                 'label' => $item->model_name,
                 'brand_id' => $item->brand_id,
+            ]);
+        }
+        if ($type == 'BRANCH') {
+            $data = $this->branchService->get();
+
+            return $data->map(fn ($item) => [
+                'value' => strval($item->branch_id),
+                'label' => $item->name,
             ]);
         }
         if ($type == 'BRAND') {

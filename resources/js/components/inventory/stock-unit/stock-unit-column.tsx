@@ -45,6 +45,10 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         },
     },
     {
+        accessorKey: "branch.name",
+        header: "Cabang"
+    },
+    {
         accessorKey: "year",
         header: ({ column }) => {
             const sorted = column.getIsSorted();

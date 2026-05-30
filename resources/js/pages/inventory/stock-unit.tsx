@@ -5,9 +5,9 @@ import { ChevronDownIcon, Plus, Filter
 import React, { useMemo, useState } from 'react';
 import { index as indexStockUnit, create as createStockUnit, show as showStockUnit, destroy as deleteStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import { SelectWithClear } from '@/components/app/select-with-clear';
 import { getStockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
-import { SelectWithClear } from '@/components/app/select-with-clear';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -23,6 +23,7 @@ export default function StockUnitPage() {
     const { stock_unit, options } = usePage<PageProps>().props;
 
     const [selectBrand, setSelectBrand] = useState<string>('');
+    const [selectBranch, setSelectBranch] = useState<string>('');
     const [selectModel, setSelectModel] = useState<string>('');
     const [selectCarType, setSelectCarType] = useState<string>('');
     const [selectTransmission, setSelectTransmission] = useState<string>('');
@@ -42,6 +43,7 @@ export default function StockUnitPage() {
             indexStockUnit().url,
             {
                 brand_id: selectBrand === '' ? undefined : selectBrand,
+                branch_id: selectBranch === '' ? undefined : selectBranch,
                 model_id: selectModel === '' ? undefined : selectModel,
                 car_type: selectCarType === '' ? undefined : selectCarType,
                 transmission: selectTransmission === '' ? undefined : selectTransmission,
@@ -131,6 +133,17 @@ export default function StockUnitPage() {
                                                 value={selectBrand}
                                                 onChange={handleBrandChange}
                                                 items={options.brand}
+                                            />
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel htmlFor="">
+                                                Cabang
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Cabang"
+                                                value={selectBranch}
+                                                onChange={(val) => setSelectBranch(val)}
+                                                items={options.branch}
                                             />
                                         </Field>
                                         <Field>

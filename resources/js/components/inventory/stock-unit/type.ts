@@ -5,6 +5,7 @@ export type TUnit = {
     name: string;
     description?: string | null;
     brand_id: string | number;
+    branch_id: string | number;
     model_id: string | number;
     type_code?: string | null;
     transmission_code?: string | null;
@@ -33,6 +34,7 @@ export type TOptionItemModel = {
 }
 export type TStockUnitOptions = {
     brand: TOptionItem[];
+    branch: TOptionItem[];
     model: TOptionItemModel[];
     transmission: TOptionItem[];
     fuel_type: TOptionItem[];
@@ -45,6 +47,7 @@ export type TStockUnitOptions = {
 export const defaultUnit: TUnit = {
     name: '',
     brand_id: '',
+    branch_id: '',
     model_id: '',
     is_active: true,
 };

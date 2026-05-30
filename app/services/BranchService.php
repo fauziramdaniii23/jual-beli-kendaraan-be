@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 
 class BranchService
 {
+    public function get()
+    {
+        return MasterBranch::query()->select(['branch_id', 'name', 'address', 'phone', 'image', 'map_link'])->get();
+    }
     public function store(array $data)
     {
         return DB::transaction(function () use ($data) {

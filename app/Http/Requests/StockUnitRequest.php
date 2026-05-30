@@ -29,6 +29,7 @@ class StockUnitRequest extends FormRequest
             'description' => 'nullable|string',
 
             'brand_id' => 'required',
+            'branch_id' => 'required',
             'model_id' => 'required',
 
             'type_code' => 'nullable|string',

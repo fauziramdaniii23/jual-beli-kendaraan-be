@@ -15,6 +15,7 @@ class StockUnitController extends Controller
 
     private $optionTypes = [
         'brand' => 'BRAND',
+        'branch' => 'BRANCH',
         'model' => 'MODEL',
         'transmission' => MasterReference::TYPE_TRANSMISSION,
         'car_type' => MasterReference::TYPE_CAR,

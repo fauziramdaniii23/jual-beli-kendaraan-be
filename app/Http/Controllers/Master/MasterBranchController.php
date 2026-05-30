@@ -7,6 +7,7 @@ use App\Models\MasterBranch;
 use App\services\BranchService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use function Pest\Laravel\get;
 
 class MasterBranchController extends Controller
 {
@@ -14,7 +15,7 @@ class MasterBranchController extends Controller
 
     public function index()
     {
-        $branch = MasterBranch::query()->select(['branch_id', 'name', 'address', 'phone', 'image', 'map_link'])->get();
+        $branch = $this->branchService->get();
 
         return Inertia::render('master/branch', ['branch' => $branch]);
     }
@@ -86,6 +87,14 @@ class MasterBranchController extends Controller
     public function destroy(MasterBranch $branch)
     {
         try {
+            if ($branch->cars()->exists()) {
+                Inertia::flash('toast', [
+                    'type' => 'error',
+                    'message' => 'Data Cabang masih digunakan oleh data mobil.',
+                ]);
+
+                return redirect()->back();
+            }
             $this->branchService->delete($branch);
             Inertia::flash('toast', [
                 'type' => 'success',

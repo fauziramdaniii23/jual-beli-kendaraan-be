@@ -25,6 +25,7 @@ class Car extends Model
         'name',
         'description',
         'brand_id',
+        'branch_id',
         'model_id',
         'type_code',
         'transmission_code',
