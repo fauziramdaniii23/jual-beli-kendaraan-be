@@ -3,7 +3,6 @@
 namespace App\services;
 
 use App\Models\MasterBranch;
-use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -79,11 +78,11 @@ class BranchService
 
     public function getBranchsWithPaginate(Request $request)
     {
-        $reviews = Reviews::query()
-            ->select(['review_id', 'cars_id', 'user_id', 'rating', 'review_text', 'is_published', 'image', 'created_at'])
-            ->with(['unit:cars_id,name', 'user:id,name'])->orderBy('created_at', 'desc');
+        $branch = MasterBranch::query()
+            ->select(['branch_id', 'name', 'address', 'phone', 'image', 'map_link'])
+            ->orderBy('created_at', 'desc');
 
-        return $reviews->paginate($request->per_page ?? 10);
+        return $branch->paginate($request->per_page ?? 10);
     }
 
 }

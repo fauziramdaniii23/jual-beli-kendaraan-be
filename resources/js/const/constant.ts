@@ -1,4 +1,4 @@
-import { HandPlatter, HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
+import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
@@ -142,6 +142,12 @@ export const menuItems: NavItem[] = [
         icon: Newspaper,
         permission: PERMISSIONS.NEWS_VIEW,
         items: [
+            {
+                title: 'FAQ',
+                href: '/news/blog',
+                permission: '',
+                icon: null,
+            },
             {
                 title: 'Blog',
                 href: '/news/blog',

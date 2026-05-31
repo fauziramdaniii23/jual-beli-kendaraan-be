@@ -12,3 +12,4 @@ Route::get('/hello', function () {
 
 Route::get('/stock-unit', [ApiController::class, 'getStockUnit'])->name('stock.unit');
 Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');
+Route::get('/branch', [ApiController::class, 'getBranch'])->name('branch');

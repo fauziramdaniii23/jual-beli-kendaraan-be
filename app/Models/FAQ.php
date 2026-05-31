@@ -4,35 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class MasterReference extends Model
+class FAQ extends Model
 {
-    const TYPE_TRANSMISSION = 'TRANSMISSION';
+    use HasFactory, SoftDeletes;
+    protected $table = 'faqs';
 
-    const TYPE_CAR = 'CAR_TYPE';
-
-    const TYPE_FUEL_TYPE = 'FUEL_TYPE';
-
-    const TYPE_PLATE = 'PLATE_TYPE';
-
-    const TYPE_SEAT = 'SEAT_TYPE';
-
-    const TYPE_STATUS = 'CAR_STATUS';
-
-    use HasFactory;
-
-    protected $table = 'mst_reference';
-
-    protected $primaryKey = 'ref_id';
+    protected $primaryKey = 'faq_id';
 
     protected $fillable = [
-        'ref_type',
-        'ref_code',
-        'ref_value',
-        'is_active',
+        'question',
+        'answer',
+        'category_code',
+        'sort_order',
+        'is_published',
     ];
-
     protected static function booted(): void
     {
         static::creating(function ($brand) {
@@ -54,10 +42,5 @@ class MasterReference extends Model
              */
             $brand->saveQuietly();
         });
-    }
-
-    public function scopeByType($query, string $type)
-    {
-        return $query->where('ref_type', $type);
     }
 }
