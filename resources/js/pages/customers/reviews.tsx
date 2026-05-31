@@ -3,6 +3,7 @@ import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Eye, MoreHorizontal, Plus, SquarePen, Star, Trash } from 'lucide-react';
 import { form } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
+import { destroy as deleteReview } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -13,7 +14,6 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import React from 'react';
-import { destroy as deleteReview } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 
 type TReviews = {

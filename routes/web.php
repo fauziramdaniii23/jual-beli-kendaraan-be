@@ -6,6 +6,7 @@ use App\Http\Controllers\Master\MasterBranchController;
 use App\Http\Controllers\Master\MasterBrandController;
 use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterReferenceController;
+use App\Http\Controllers\News\FAQController;
 use App\Http\Controllers\Otentikasi\RoleAndPermissionController;
 use App\Http\Controllers\Otentikasi\UserController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('reviews', [ReviewsController::class, 'store'])->name('customer.reviews.store')->middleware('can:customer.create');
         Route::post('reviews/{review}', [ReviewsController::class, 'update'])->name('customer.reviews.update')->middleware('can:customer.edit');
         Route::delete('reviews/{review}', [ReviewsController::class, 'destroy'])->name('customer.reviews.destroy')->middleware('can:customer.delete');
+    });
+
+    Route::middleware('can:news.view')->prefix('news')->group(function () {
+        Route::get('faq', [FAQController::class, 'index'])->name('news.faq');
+        Route::post('faq', [FAQController::class, 'store'])->name('news.faq.store')->middleware('can:news.create');
+        Route::post('faq/{faq}', [FAQController::class, 'update'])->name('news.faq.update')->middleware('can:news.edit');
+        Route::delete('faq/{faq}', [FAQController::class, 'destroy'])->name('news.faq.destroy')->middleware('can:news.delete');
     });
 
     Route::middleware('can:master.view')->prefix('master')->group(function () {

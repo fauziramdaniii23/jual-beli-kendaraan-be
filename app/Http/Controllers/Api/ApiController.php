@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\services\BranchService;
+use App\services\FAQService;
 use App\services\ReviewService;
 use App\services\StockUnitService;
 use App\Traits\ApiResponse;
@@ -18,6 +19,7 @@ class ApiController extends Controller
         protected StockUnitService $stockUnitService,
         protected ReviewService $reviewService,
         protected BranchService $branchService,
+        protected FAQService $faqService,
     ) {}
 
     public function getStockUnit(Request $request): JsonResponse
@@ -44,6 +46,15 @@ class ApiController extends Controller
         try {
             $branch = $this->branchService->getBranchsWithPaginate($request);
             return $this->paginateResponse($branch);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+    public function getFaq(Request $request): JsonResponse
+    {
+        try {
+            $faq = $this->faqService->getFaq($request);
+            return $this->successResponse($faq);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

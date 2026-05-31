@@ -1,5 +1,6 @@
 import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
+import { index as indexFAQ } from '@/actions/App/Http/Controllers/News/FAQController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
@@ -144,7 +145,7 @@ export const menuItems: NavItem[] = [
         items: [
             {
                 title: 'FAQ',
-                href: '/news/blog',
+                href: indexFAQ(),
                 permission: '',
                 icon: null,
             },
