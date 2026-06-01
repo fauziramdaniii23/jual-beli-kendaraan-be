@@ -35,7 +35,7 @@ class FAQ extends Model
 
         static::deleting(function ($brand) {
             $brand->deleted_by = Auth::user()?->email;
-            $brand->is_active = false;
+            $brand->is_published = false;
 
             /**
              * supaya deleted_by tersimpan
