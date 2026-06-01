@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import type { TMasterReference, TOptionItem } from '@/types';
 import { SelectWithClear } from '@/components/app/select-with-clear';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type Props = {
     categories: TMasterReference[]
@@ -98,7 +99,9 @@ export default function CreateFaqDialog({categories}: Props) {
                                 </p>
                             )}
                         </Field>
-                        <Field>
+                    </FieldGroup>
+                    <div className="w-full flex gap-4">
+                        <Field className="flex-1">
                             <FieldLabel>Kategori<span className="text-destructive">*</span></FieldLabel>
                             <SelectWithClear
                                 placeholder="Pilih Kategori"
@@ -110,7 +113,19 @@ export default function CreateFaqDialog({categories}: Props) {
                             {errors.category_code &&
                                 <div className="text-sm text-destructive">{errors.category_code}</div>}
                         </Field>
-                    </FieldGroup>
+                        <Field className="flex-1">
+                            <Label>Urutan FAQ</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                value={data.sort_order}
+                                type="number"
+                                onChange={(e) =>
+                                    setData('sort_order', Number(e.target.value))
+                                }
+                            />
+                        </Field>
+                    </div>
 
                     <DialogFooter>
                         <DialogClose asChild>

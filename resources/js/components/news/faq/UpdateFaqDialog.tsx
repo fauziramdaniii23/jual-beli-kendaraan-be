@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import type { TOptionItem } from '@/types';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props {
     faq: TFaq;
@@ -112,6 +113,39 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
                                 <div className="text-sm text-destructive">{errors.category_code}</div>}
                         </Field>
                     </FieldGroup>
+                    <div className="w-full flex gap-4">
+                        <Field className="flex-1">
+                            <Label>Status Published</Label>
+                            <Select
+                                value={data.is_published ? 'true' : 'false'}
+                                onValueChange={(val) =>
+                                    setData('is_published', val === 'true')
+                                }
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Pilih status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="true">Aktif</SelectItem>
+                                        <SelectItem value="false">Tidak Aktif</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </Field>
+                        <Field className="flex-1">
+                            <Label>Urutan FAQ</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                value={data.sort_order}
+                                type="number"
+                                onChange={(e) =>
+                                    setData('sort_order', Number(e.target.value))
+                                }
+                            />
+                        </Field>
+                    </div>
 
                     <DialogFooter>
                         <DialogClose asChild>

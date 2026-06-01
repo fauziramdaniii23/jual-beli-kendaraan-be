@@ -1,7 +1,15 @@
 import { router } from "@inertiajs/react";
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Eye, MoreHorizontal, SquarePen, Trash } from 'lucide-react';
+import {
+    ArrowDownNarrowWide,
+    ArrowUpDown,
+    ArrowUpWideNarrow,
+    Eye,
+    MoreHorizontal,
+    SquarePen,
+    Trash
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { destroy as deleteFaq } from '@/actions/App/Http/Controllers/News/FAQController';
 import { index as indexFAQ } from '@/actions/App/Http/Controllers/News/FAQController';
@@ -80,7 +88,7 @@ export default function ReviewsPage() {
         router.get(
             indexFAQ().url,
             {
-                status: selectCategory === 'all' ? undefined : selectCategory,
+                category: selectCategory === 'all' ? undefined : selectCategory,
             },
             {
                 preserveState: true,
@@ -96,6 +104,28 @@ export default function ReviewsPage() {
         {
             accessorKey: 'category.ref_value',
             header: 'Kategori'
+        },
+        {
+            accessorKey: 'sort_order',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Urutan FAQ
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === "asc" && <ArrowDownNarrowWide />}
+                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+            cell: ({row}) => {
+                return (<div className="text-center">{row.getValue('sort_order')}</div>)
+            }
         },
         {
             accessorKey: 'is_published',
@@ -173,7 +203,7 @@ export default function ReviewsPage() {
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">
-                        Status
+                        Kategori
                     </span>
                     <Select
                         value={selectCategory}

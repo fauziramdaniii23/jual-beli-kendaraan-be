@@ -29,6 +29,7 @@ class FAQService
                 'answer' => $data['answer'],
                 'category_code' => $data['category_code'],
                 'sort_order' => $data['sort_order'],
+                'is_published' => $data['is_published'],
             ];
 
             $faq->update($payload);

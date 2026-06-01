@@ -18,13 +18,9 @@ class FAQController extends Controller
 {
     public function __construct(protected FAQService $faqService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $faqs = FAQ::query()
-            ->with(['category:ref_id,ref_code,ref_value'])
-            ->select(['faq_id', 'question', 'answer', 'category_code', 'sort_order', 'is_published'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $faqs = $this->faqService->getFaq($request);
 
         $category = MasterReference::byType('FAQ_TYPE')->get();
 
@@ -67,6 +63,7 @@ class FAQController extends Controller
                 'answer' => 'required|string',
                 'category_code' => 'required|exists:mst_reference,ref_code',
                 'sort_order' => 'required|numeric',
+                'is_published' => 'required|boolean',
             ]);
             $this->faqService->update($validated, $faq);
             Inertia::flash('toast', [

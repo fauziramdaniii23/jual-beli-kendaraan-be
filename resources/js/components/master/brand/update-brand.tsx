@@ -115,7 +115,7 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                             <Select
                                 value={data.is_active ? 'true' : 'false'}
                                 onValueChange={(val) =>
-                                    setData('is_active', val === 'true' ? true : false)
+                                    setData('is_active', val === 'true')
                                 }
                             >
                                 <SelectTrigger className="w-full">
