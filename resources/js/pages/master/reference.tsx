@@ -32,6 +32,7 @@ import {
 import { MASTER_REFERENCE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TMasterReference } from '@/types';
+import Title from '@/components/app/title';
 
 type PageProps = {
     data_reference: TMasterReference[];
@@ -183,6 +184,7 @@ export default function MasterReferencePage() {
     return (
         <>
             <Head title={label} />
+            <Title title={`Daftar ${label}`} description={`Daftar Semua ${label}`} />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">

@@ -181,4 +181,14 @@ class Car extends Model
             'branch_id'
         );
     }
+
+    public function promos()
+    {
+        return $this->belongsToMany(
+            Promo::class,
+            'car_promos',
+            'car_id',
+            'promo_id'
+        )->withPivot('applied_at');
+    }
 }

@@ -17,6 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Title from '@/components/app/title';
 
 type PageProps = {
     users: TUser[];
@@ -127,7 +128,8 @@ export default function UsersPage() {
 
     return (
         <>
-            <Head title="role" />
+            <Head title="User" />
+            <Title title="Daftar User" description="Daftar Semua User" />
             <div className="mx-4 mt-4">
                 <Button onClick={() => handleAction(undefined, 'create')}>
                     <Plus />

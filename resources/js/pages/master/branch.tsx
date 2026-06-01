@@ -14,6 +14,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { normalizeUrl } from '@/lib/utils';
+import Title from '@/components/app/title';
 
 type TBranch = {
     branch_id: number;
@@ -147,6 +148,7 @@ export default function MasterBranchPage() {
     return (
         <>
             <Head title="Master Cabang" />
+            <Title title="Daftar Master Cabang" description="Daftar Semua Master Cabang" />
             <div className="mx-4 mt-4">
                 <Button onClick={() => handleAction(undefined, 'create')}>
                     <Plus />

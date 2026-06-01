@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/select';
 import type { TMasterReference, TOptionItem } from '@/types';
 import DetailFaqDialog from '@/components/news/faq/detail-faq';
+import Title from '@/components/app/title';
 
 type PageProps = {
     faqs: TFaq[];
@@ -200,6 +201,7 @@ export default function ReviewsPage() {
     return (
         <>
             <Head title="FAQ" />
+            <Title title="Daftar FAQ" description="Daftar Semua FAQ" />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">

@@ -8,6 +8,7 @@ import {
 import React, { useState } from 'react';
 import { indexPermission, destroyRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import Title from '@/components/app/title';
 import CreateRoleDialog from '@/components/otentikasi/role-permission/add-role';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -104,7 +105,8 @@ export default function MasterRolePage() {
 
     return (
         <>
-            <Head title="role" />
+            <Head title="Role" />
+            <Title title="Daftar Role" description="Daftar Semua Role" />
             <div className="mx-4 mt-4">
                 <CreateRoleDialog />
             </div>

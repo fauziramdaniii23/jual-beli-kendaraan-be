@@ -1,7 +1,8 @@
 import { router, Head, usePage } from '@inertiajs/react'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { indexRole, updatePermission } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
+import Title from '@/components/app/title';
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTable } from '@/components/ui/data-table/data-table'
@@ -169,8 +170,8 @@ export default function MasterPermissionPage() {
 
     return (
         <>
-            <Head title="Role Permission" />
-
+            <Head title="Permission" />
+            <Title title={`Permission role ${role.name}`} description={`Permission akse menu untuk role ${role.name}`} />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <h1 className="text-lg font-semibold">
                     Permission {role.name}

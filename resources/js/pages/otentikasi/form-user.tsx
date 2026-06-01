@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
+import Title from '@/components/app/title';
 
 type TRoles = {
     id: number;
@@ -74,6 +75,7 @@ export default function FormUserPage() {
     return (
         <>
             <Head title={`${label} User`} />
+            <Title title={`${label} User`} description={`Form ${label} User`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <div className="flex gap-4 w-full mt-4">

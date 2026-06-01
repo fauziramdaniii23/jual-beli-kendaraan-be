@@ -97,8 +97,8 @@ export default function FormReviewPage() {
 
     return (
         <>
-            <Head title={`${TYPE_LABEL[type]} Rating & Ulasan`} />
-            <Title title={`${TYPE_LABEL[type]} Rating & Ulasan`} description={`Form ${TYPE_LABEL[type]} Rating & Ulasan`} />
+            <Head title={`${TYPE_LABEL[type]} Promo`} />
+            <Title title={`${TYPE_LABEL[type]} Promo`} description={`Form ${TYPE_LABEL[type]} Promo`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage

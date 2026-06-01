@@ -1,11 +1,12 @@
 import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
-import { index as indexFAQ } from '@/actions/App/Http/Controllers/News/FAQController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
+import { index as indexFAQ } from '@/actions/App/Http/Controllers/News/FAQController';
+import { index as indexPromo } from '@/actions/App/Http/Controllers/News/PromoController';
 import { indexRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { index as indexUsers } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import { dashboard } from '@/routes';
@@ -157,7 +158,7 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Promo',
-                href: '/news/promo',
+                href: indexPromo(),
                 permission: '',
                 icon: null,
             },

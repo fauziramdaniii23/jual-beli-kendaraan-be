@@ -13,6 +13,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
+import Title from '@/components/app/title';
 
 type PageProps = {
     stock_unit: TUnit[];
@@ -107,6 +108,7 @@ export default function StockUnitPage() {
     return (
         <>
             <Head title="Stock Unit" />
+            <Title title="Daftar Stock Unit" description="Daftar Semua Stock Unit" />
             <div className="m-4 border rounded-md">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
@@ -200,7 +202,7 @@ export default function StockUnitPage() {
                             <div className="flex gap-2 mt-4">
                                 <CollapsibleTrigger asChild>
                                     <Button type="button" variant="outline">
-                                        Batal
+                                        Tutup
                                     </Button>
                                 </CollapsibleTrigger>
                                 <Button type="submit">Filter</Button>

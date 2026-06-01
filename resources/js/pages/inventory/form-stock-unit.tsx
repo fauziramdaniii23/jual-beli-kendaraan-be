@@ -16,6 +16,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TImageProps } from '@/types';
+import Title from '@/components/app/title';
 
 type PageProps = {
     options: TStockUnitOptions;
@@ -68,6 +69,7 @@ export default function FormStockUnitPage() {
     return (
         <>
             <Head title={`${label} Stock Unit`} />
+            <Title title={`${label} Stock Unit`} description={`Form ${label} Stock Unit`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     { !disable &&

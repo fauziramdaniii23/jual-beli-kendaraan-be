@@ -63,6 +63,7 @@ class StockUnitRepository
                 'status_code',
             ])
             ->with([
+                'promos',
                 'brand:brand_id,brand_name',
                 'model:model_id,model_name',
                 'transmission:ref_code,ref_value',

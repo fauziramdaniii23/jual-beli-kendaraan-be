@@ -5,6 +5,7 @@ namespace App\services;
 use App\Helper\DateHelper;
 use App\Models\Car;
 use App\Models\CarImage;
+use App\Models\Promo;
 use App\repositories\BrandRepository;
 use App\repositories\CarModelRepository;
 use App\repositories\StockUnitRepository;
@@ -219,6 +220,18 @@ class StockUnitService
 
         $unit->primary_image = $primaryImage;
         $unit->primary_image_id = $primaryImage?->image_id;
+
+        if ($unit->promos->isNotEmpty()) {
+            $unit->promos = $unit->promos->map(function ($promo) use ($unit) {
+                $promo->final_price = Promo::calculateFinalPrice(
+                    price: $unit->price,
+                    type: $promo->type,
+                    discountValue: (float) $promo->discount_value
+                );
+
+                return $promo;
+            });
+        }
 
         return $unit;
     }

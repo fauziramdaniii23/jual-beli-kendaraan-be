@@ -10,6 +10,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
+import Title from '@/components/app/title';
 
 
 export type TFormBranch = {
@@ -62,6 +63,7 @@ export default function FormBranchPage() {
     return (
         <>
             <Head title={`${TYPE_LABEL[type]} Cabang`} />
+            <Title title={`${TYPE_LABEL[type]} Cabang`} description={`Form ${TYPE_LABEL[type]} Cabang`} />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage
