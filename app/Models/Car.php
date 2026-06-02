@@ -3,47 +3,32 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Car extends Model
 {
     use SoftDeletes;
 
-    /**
-     * Table Name
-     */
     protected $table = 'cars';
 
-    /**
-     * Primary Key
-     */
     protected $primaryKey = 'cars_id';
 
-    /**
-     * Auto Increment
-     */
     public $incrementing = true;
 
-    /**
-     * Primary Key Type
-     */
     protected $keyType = 'int';
 
-    /**
-     * Timestamps
-     */
     public $timestamps = true;
 
-    /**
-     * Fillable Columns
-     */
     protected $fillable = [
         'name',
         'description',
         'brand_id',
+        'branch_id',
         'model_id',
         'type_code',
-        'transmision_code',
+        'transmission_code',
         'fuel_type_code',
         'plate_code',
         'seat_code',
@@ -60,29 +45,38 @@ class Car extends Model
         'deleted_by',
     ];
 
-    /**
-     * Cast Attributes
-     */
     protected $casts = [
-        'kilometer' => 'decimal:2',
-        'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'stnk_validity_period' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
     protected $appends = ['formatted_price'];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
+    protected static function booted(): void
+    {
+        static::creating(function ($car) {
+            $car->created_by = Auth::user()?->email;
+            $car->updated_by = Auth::user()?->email;
+        });
 
-    /**
-     * MasterBrand Relation
-     */
+        static::updating(function ($car) {
+            $car->updated_by = Auth::user()?->email;
+        });
+
+        static::deleting(function ($car) {
+            $car->deleted_by = Auth::user()?->email;
+            $car->is_active = false;
+
+            /**
+             * supaya deleted_by tersimpan
+             * sebelum soft delete dijalankan
+             */
+            $car->saveQuietly();
+        });
+    }
+
     public function brand()
     {
         return $this->belongsTo(
@@ -92,9 +86,6 @@ class Car extends Model
         );
     }
 
-    /**
-     * Model Relation
-     */
     public function model()
     {
         return $this->belongsTo(
@@ -103,26 +94,15 @@ class Car extends Model
             'model_id'
         );
     }
-    /*
-   |--------------------------------------------------------------------------
-   | Transmission
-   |--------------------------------------------------------------------------
-   */
 
     public function transmission()
     {
         return $this->belongsTo(
             MasterReference::class,
-            'transmision_code',
+            'transmission_code',
             'ref_code'
-        )->where('ref_type', 'TRANSMISSION');
+        )->where('ref_type', MasterReference::TYPE_TRANSMISSION);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Fuel Type
-    |--------------------------------------------------------------------------
-    */
 
     public function fuelType()
     {
@@ -130,14 +110,8 @@ class Car extends Model
             MasterReference::class,
             'fuel_type_code',
             'ref_code'
-        )->where('ref_type', 'FUEL_TYPE');
+        )->where('ref_type', MasterReference::TYPE_FUEL_TYPE);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Plate
-    |--------------------------------------------------------------------------
-    */
 
     public function plate()
     {
@@ -145,14 +119,8 @@ class Car extends Model
             MasterReference::class,
             'plate_code',
             'ref_code'
-        )->where('ref_type', 'PLATE');
+        )->where('ref_type', MasterReference::TYPE_PLATE);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Seat
-    |--------------------------------------------------------------------------
-    */
 
     public function seat()
     {
@@ -160,14 +128,8 @@ class Car extends Model
             MasterReference::class,
             'seat_code',
             'ref_code'
-        )->where('ref_type', 'SEAT');
+        )->where('ref_type', MasterReference::TYPE_SEAT);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Status
-    |--------------------------------------------------------------------------
-    */
 
     public function status()
     {
@@ -175,47 +137,24 @@ class Car extends Model
             MasterReference::class,
             'status_code',
             'ref_code'
-        )->where('ref_type', 'CAR_STATUS');
+        )->where('ref_type', MasterReference::TYPE_STATUS);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Scopes
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Active Cars Scope
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Available Cars Scope
-     */
     public function scopeAvailable($query)
     {
         return $query->where('status_code', 'AVAILABLE');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Accessors
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Format Price
-     */
     public function getFormattedPriceAttribute(): string
     {
         return 'Rp '.number_format($this->price, 0, ',', '.');
     }
-    /**
-     * Car Images Relation
-     */
+
     public function images()
     {
         return $this->hasMany(
@@ -225,9 +164,6 @@ class Car extends Model
         );
     }
 
-    /**
-     * Primary Image Relation
-     */
     public function primaryImage()
     {
         return $this->hasOne(
@@ -235,5 +171,24 @@ class Car extends Model
             'car_id',
             'cars_id'
         )->where('is_primary', true);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->BelongsTo(
+            MasterBranch::class,
+            'branch_id',
+            'branch_id'
+        );
+    }
+
+    public function promos()
+    {
+        return $this->belongsToMany(
+            Promo::class,
+            'car_promos',
+            'car_id',
+            'promo_id'
+        )->withPivot('applied_at');
     }
 }

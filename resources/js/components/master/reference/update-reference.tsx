@@ -22,6 +22,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import type { TMasterReference } from '@/types';
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     label: string;
@@ -112,6 +113,7 @@ export default function UpdateReferenceDialog({ label, reference, isOpen, setIsO
                             </Button>
                         </DialogClose>
                         <Button type="submit" disabled={processing}>
+                            {processing && <Spinner />}
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </Button>
                     </DialogFooter>

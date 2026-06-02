@@ -46,6 +46,8 @@ trait ApiResponse
                 'last_page' => $data->lastPage(),
                 'per_page' => $data->perPage(),
                 'total' => $data->total(),
+                'has_next_page' => $data->hasMorePages(),
+                'has_previous_page' => $data->currentPage() > 1,
             ],
         ]);
     }

@@ -4,19 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class MasterReference extends Model
 {
     const TYPE_TRANSMISSION = 'TRANSMISSION';
+
     const TYPE_CAR = 'CAR_TYPE';
+
     const TYPE_FUEL_TYPE = 'FUEL_TYPE';
+
     const TYPE_PLATE = 'PLATE_TYPE';
+
     const TYPE_SEAT = 'SEAT_TYPE';
+
     const TYPE_STATUS = 'CAR_STATUS';
 
     use HasFactory;
+
     protected $table = 'mst_reference';
 
     protected $primaryKey = 'ref_id';
@@ -50,6 +55,7 @@ class MasterReference extends Model
             $brand->saveQuietly();
         });
     }
+
     public function scopeByType($query, string $type)
     {
         return $query->where('ref_type', $type);

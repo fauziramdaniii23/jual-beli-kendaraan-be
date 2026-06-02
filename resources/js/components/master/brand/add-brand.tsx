@@ -2,6 +2,7 @@ import { useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import React from 'react';
 import { store as storeBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
+import type { TBrand } from '@/components/master/brand/type';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -12,15 +13,17 @@ import {
     DialogTitle,
     DialogTrigger
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function CreateBrandDialog() {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<TBrand>({
         brand_name: '',
+        logo: null
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,6 +71,30 @@ export default function CreateBrandDialog() {
                                 </p>
                             )}
                         </Field>
+                        <Field>
+                            <Label htmlFor="brand_name">Gambar Logo</Label>
+
+                            <Input
+                                id="logo"
+                                name="logo"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0] || null;
+
+                                    setData("logo", file);
+                                }}
+                            />
+
+                            {errors.brand_name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.brand_name}
+                                </p>
+                            )}
+                            <FieldDescription>
+                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB. Gunakan gambar dengan rasio 1:1 untuk hasil tampilan terbaik.
+                            </FieldDescription>
+                        </Field>
                     </FieldGroup>
 
                     <DialogFooter>
@@ -78,6 +105,7 @@ export default function CreateBrandDialog() {
                         </DialogClose>
 
                         <Button type="submit" disabled={processing}>
+                            {processing && <Spinner />}
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </Button>
                     </DialogFooter>

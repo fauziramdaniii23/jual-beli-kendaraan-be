@@ -1,10 +1,11 @@
-import type { TOptionItem, TMasterReference } from '@/types';
+import type { TOptionItem, TMasterReference, TImagesFile } from '@/types';
 
 export type TUnit = {
-    cars_id: number;
+    cars_id?: number;
     name: string;
     description?: string | null;
     brand_id: string | number;
+    branch_id: string | number;
     model_id: string | number;
     type_code?: string | null;
     transmission_code?: string | null;
@@ -20,6 +21,11 @@ export type TUnit = {
     price?: number | null;
     stnk_validity_period?: string | null;
     is_active: boolean;
+    images?: TImagesFile[]
+    primary_image?: TImagesFile | null;
+    upload_images?: File[] | null;
+    deleted_image_ids?: number[] | null;
+    primary_image_id?: number | null;
 }
 export type TOptionItemModel = {
     value: string | number;
@@ -28,24 +34,20 @@ export type TOptionItemModel = {
 }
 export type TStockUnitOptions = {
     brand: TOptionItem[];
+    branch: TOptionItem[];
     model: TOptionItemModel[];
     transmission: TOptionItem[];
     fuel_type: TOptionItem[];
     car_type: TOptionItem[];
     status: TOptionItem[];
+    plate_type?: TOptionItem[];
+    seat_type?: TOptionItem[];
 };
 
 export const defaultUnit: TUnit = {
-    cars_id: 0,
     name: '',
-    description: null,
-    brand_id: 0,
-    model_id: 0,
-    type_code: null,
-    transmission_code: null,
-    fuel_type_code: null,
-    kilometer: 0,
-    year: null,
-    price: 0,
+    brand_id: '',
+    branch_id: '',
+    model_id: '',
     is_active: true,
 };

@@ -4,51 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class CarImage extends Model
 {
     use SoftDeletes;
 
-    /**
-     * Table Name
-     */
     protected $table = 'car_images';
 
-    /**
-     * Primary Key
-     */
     protected $primaryKey = 'image_id';
 
-    /**
-     * Auto Increment
-     */
     public $incrementing = true;
 
-    /**
-     * Key Type
-     */
     protected $keyType = 'int';
 
-    /**
-     * Timestamps
-     */
     public $timestamps = true;
 
-    /**
-     * Fillable
-     */
     protected $fillable = [
         'car_id',
-        'image_url',
+        'path',
         'is_primary',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
 
-    /**
-     * Casts
-     */
     protected $casts = [
         'is_primary' => 'boolean',
         'created_at' => 'datetime',
@@ -56,15 +36,40 @@ class CarImage extends Model
         'deleted_at' => 'datetime',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
+    protected static function booted(): void
+    {
+        static::creating(function ($car) {
+            $car->created_by = Auth::user()?->email;
+            $car->updated_by = Auth::user()?->email;
+        });
 
-    /**
-     * Car Relation
-     */
+        static::updating(function ($car) {
+            $car->updated_by = Auth::user()?->email;
+        });
+
+        static::deleting(function ($car) {
+            $car->deleted_by = Auth::user()?->email;
+
+            /**
+             * supaya deleted_by tersimpan
+             * sebelum soft delete dijalankan
+             */
+            $car->saveQuietly();
+        });
+    }
+
+    protected $appends = ['file_name', 'file_src'];
+
+    public function getFileNameAttribute()
+    {
+        return basename($this->path);
+    }
+
+    public function getFileSrcAttribute()
+    {
+        return asset('storage/'.$this->path);
+    }
+
     public function car()
     {
         return $this->belongsTo(

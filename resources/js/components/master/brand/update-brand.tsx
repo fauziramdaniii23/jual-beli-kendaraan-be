@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -22,6 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
     brand: TBrand;
@@ -30,9 +31,10 @@ interface Props {
 }
 
 export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
-    const { data, setData, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<TBrand>({
         brand_name: '',
-        is_active: 'false',
+        logo: null,
+        is_active: false,
     });
 
     useEffect(() => {
@@ -42,13 +44,13 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
 
         setData({
             brand_name: brand.brand_name,
-            is_active: brand.is_active ? 'true' : 'false',
+            is_active: brand.is_active,
         });
     }, [brand, isOpen, setData]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        put(updateBrand({ brand: brand.brand_id }).url, {
+        post(updateBrand({ brand: brand.brand_id! }).url, {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
@@ -84,11 +86,36 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                         </Field>
 
                         <Field>
+                            <Label htmlFor="brand_name">Gambar Logo</Label>
+
+                            <Input
+                                id="logo"
+                                name="logo"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0] || null;
+
+                                    setData("logo", file);
+                                }}
+                            />
+
+                            {errors.brand_name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.brand_name}
+                                </p>
+                            )}
+                            <FieldDescription>
+                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB. Gunakan gambar dengan rasio 1:1 untuk hasil tampilan terbaik.
+                            </FieldDescription>
+                        </Field>
+
+                        <Field>
                             <Label>Status</Label>
                             <Select
-                                value={data.is_active}
-                                onValueChange={(value) =>
-                                    setData('is_active', value)
+                                value={data.is_active ? 'true' : 'false'}
+                                onValueChange={(val) =>
+                                    setData('is_active', val === 'true')
                                 }
                             >
                                 <SelectTrigger className="w-full">
@@ -111,6 +138,7 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                             </Button>
                         </DialogClose>
                         <Button type="submit" disabled={processing}>
+                            {processing && <Spinner />}
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </Button>
                     </DialogFooter>

@@ -3,16 +3,17 @@ import { Head, usePage } from '@inertiajs/react';
 import { ChevronDownIcon, Plus, Filter
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
-import { stockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
+import { index as indexStockUnit, create as createStockUnit, show as showStockUnit, destroy as deleteStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import { SelectWithClear } from '@/components/app/select-with-clear';
+import { getStockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
-import { defaultUnit } from '@/components/inventory/stock-unit/type';
-import { SelectWithClear } from '@/components/select-with-clear';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
+import Title from '@/components/app/title';
 
 type PageProps = {
     stock_unit: TUnit[];
@@ -21,14 +22,16 @@ type PageProps = {
 
 export default function StockUnitPage() {
     const { stock_unit, options } = usePage<PageProps>().props;
-    const [unit, seTUnit] = useState<TUnit>(defaultUnit);
 
     const [selectBrand, setSelectBrand] = useState<string>('');
+    const [selectBranch, setSelectBranch] = useState<string>('');
     const [selectModel, setSelectModel] = useState<string>('');
     const [selectCarType, setSelectCarType] = useState<string>('');
     const [selectTransmission, setSelectTransmission] = useState<string>('');
     const [selectFuelType, setSelectFuelType] = useState<string>('');
     const [selectStatus, setSelectStatus] = useState<string>('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [stockUnitId, setStockUnitId] = useState<number | undefined>();
 
     const filteredModels = useMemo(() => {
         return options.model.filter(
@@ -41,6 +44,7 @@ export default function StockUnitPage() {
             indexStockUnit().url,
             {
                 brand_id: selectBrand === '' ? undefined : selectBrand,
+                branch_id: selectBranch === '' ? undefined : selectBranch,
                 model_id: selectModel === '' ? undefined : selectModel,
                 car_type: selectCarType === '' ? undefined : selectCarType,
                 transmission: selectTransmission === '' ? undefined : selectTransmission,
@@ -57,10 +61,54 @@ export default function StockUnitPage() {
         setSelectBrand(val);
         setSelectModel(''); // Reset model selection when brand changes
     }
+    const handleAddStockUnit = () => {
+        router.get(createStockUnit().url,
+            {},
+            {
+                preserveState: true,
+                replace: true,
+            }
+            );
+    }
+    const columns = getStockUnitColumns({
+        onDelete: (id) => {
+            setStockUnitId(id);
+            setDeleteDialogOpen(true);
+        },
+        onDetail: (id) => {
+            handleShowAction(id, 'detail');
+        },
+        onEdit: (id) => {
+            handleShowAction(id, 'update');
+        }
+    });
+    const handleShowAction = (id: number | undefined, type: 'detail' | 'update') => {
+        router.get(showStockUnit(id ?? 0).url,
+            {
+                type: type,
+            },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }
+
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const handleDeleteAction = () => {
+        router.delete(deleteStockUnit(stockUnitId ?? 0).url, {
+                preserveState: true,
+                replace: true,
+            onStart: () => {
+                setDeleteLoading(false);
+            },
+        })
+    }
 
     return (
         <>
-            <Head title="Brand" />
+            <Head title="Stock Unit" />
+            <Title title="Daftar Stock Unit" description="Daftar Semua Stock Unit" />
             <div className="m-4 border rounded-md">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
@@ -87,6 +135,17 @@ export default function StockUnitPage() {
                                                 value={selectBrand}
                                                 onChange={handleBrandChange}
                                                 items={options.brand}
+                                            />
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel htmlFor="">
+                                                Cabang
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Cabang"
+                                                value={selectBranch}
+                                                onChange={(val) => setSelectBranch(val)}
+                                                items={options.branch}
                                             />
                                         </Field>
                                         <Field>
@@ -143,7 +202,7 @@ export default function StockUnitPage() {
                             <div className="flex gap-2 mt-4">
                                 <CollapsibleTrigger asChild>
                                     <Button type="button" variant="outline">
-                                        Batal
+                                        Tutup
                                     </Button>
                                 </CollapsibleTrigger>
                                 <Button type="submit">Filter</Button>
@@ -154,14 +213,23 @@ export default function StockUnitPage() {
             </div>
 
             <div className="mx-4">
-                <Button>
+                <Button onClick={handleAddStockUnit}>
                     <Plus />
                     Tambah Stock Unit Baru
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={stockUnitColumns} data={stock_unit} />
+                <DataTable columns={columns} data={stock_unit} />
             </div>
+            <ConfirmDialog
+                title="Hapus Stock Unit"
+                description="Apakah Anda yakin ingin menghapus Stock Unit ini? Tindakan ini tidak dapat dibatalkan dan dapat memengaruhi data yang terkait dengan Stock Unit."
+                confirmText="Hapus"
+                open={deleteDialogOpen}
+                onOpenChange={(val) => setDeleteDialogOpen(val)}
+                onConfirm={handleDeleteAction}
+                loading={deleteLoading}
+            />
         </>
     );
 }

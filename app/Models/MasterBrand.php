@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class MasterBrand extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $table = 'brand';
 
     protected $primaryKey = 'brand_id';
@@ -18,6 +19,7 @@ class MasterBrand extends Model
     protected $fillable = [
         'brand_name',
         'is_active',
+        'logo_path',
     ];
 
     protected static function booted(): void
@@ -43,6 +45,18 @@ class MasterBrand extends Model
         });
     }
 
+    protected $appends = ['file_name', 'file_src'];
+
+    public function getFileNameAttribute()
+    {
+        return basename($this->logo_path);
+    }
+
+    public function getFileSrcAttribute()
+    {
+        return asset('storage/'.$this->logo_path);
+    }
+
     public function cars(): HasMany
     {
         return $this->hasMany(
@@ -51,6 +65,7 @@ class MasterBrand extends Model
             'brand_id'
         );
     }
+
     public function carModels(): HasMany
     {
         return $this->hasMany(

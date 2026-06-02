@@ -2,11 +2,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
-    ArrowUpWideNarrow,
+    ArrowUpWideNarrow, Eye,
     MoreHorizontal,
     SquarePen,
-    Trash,
-} from "lucide-react";
+    Trash
+} from 'lucide-react';
 import React from "react";
 import type { TUnit } from "@/components/inventory/stock-unit/type";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +17,14 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDate } from "@/lib/utils";
 
-export const stockUnitColumns: ColumnDef<TUnit>[] = [
+interface Props {
+    onDetail: (id: number | undefined) => void;
+    onEdit: (id: number | undefined) => void;
+    onDelete: (id: number | undefined) => void;
+}
+
+export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): ColumnDef<TUnit>[] => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -38,6 +43,10 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
                 </Button>
             );
         },
+    },
+    {
+        accessorKey: "branch.name",
+        header: "Cabang"
     },
     {
         accessorKey: "year",
@@ -80,12 +89,7 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
                     {sorted === "desc" && <ArrowUpWideNarrow />}
                 </Button>
             );
-        },
-        cell: ({ row }) => {
-            const value = row.getValue("stnk_validity_period") as string;
-
-            return formatDate(value);
-        },
+        }
     },
     {
         accessorKey: "formatted_price",
@@ -151,7 +155,9 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
         id: "actions",
         header: () => <div className="text-center">Aksi</div>,
         enableHiding: false,
-        cell: () => {
+        cell: ({row}) => {
+            const id = row.original.cars_id;
+
             return (
                 <div className="text-center">
                     <DropdownMenu>
@@ -162,11 +168,18 @@ export const stockUnitColumns: ColumnDef<TUnit>[] = [
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onDetail(id) }
+                            >
+                                <Eye /> Detail
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onEdit(id) }
+                            >
                                 <SquarePen /> Edit
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem className="text-red-500">
+                            <DropdownMenuItem onClick={() => onDelete(id)} className="text-red-500">
                                 <Trash className="text-red-500" /> Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>

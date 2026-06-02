@@ -39,6 +39,7 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
+import Title from '@/components/app/title';
 
 type PageProps = {
     carModels: TModel[];
@@ -192,7 +193,8 @@ export default function MasterModelPage() {
 
     return (
         <>
-            <Head title="model" />
+            <Head title="Model" />
+            <Title title="Daftar Model" description="Daftar Semua Model" />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground">
