@@ -26,6 +26,7 @@ export type TUnit = {
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
     primary_image_id?: number | null;
+    promo_ids?: string[] | null;
 }
 export type TOptionItemModel = {
     value: string | number;
@@ -43,6 +44,12 @@ export type TStockUnitOptions = {
     plate_type?: TOptionItem[];
     seat_type?: TOptionItem[];
 };
+
+export type TPromoOption = {
+    promo_id: number,
+    name: string,
+    code: string,
+}
 
 export const defaultUnit: TUnit = {
     name: '',

@@ -101,6 +101,11 @@ class StockUnitService
         $primaryImage = $stockUnit->images->firstWhere('is_primary', true);
         $stockUnit->primary_image = $primaryImage ?? null;
         $stockUnit->primary_image_id = $primaryImage?->image_id;
+        $stockUnit->promo_ids = $stockUnit->promos
+            ->pluck('promo_id')
+            ->map(fn ($id) => (string) $id)
+            ->values()
+            ->toArray();
 
         return $stockUnit;
     }
@@ -129,6 +134,9 @@ class StockUnitService
             ]);
             if (! empty($data['image'])) {
                 $this->uploadImages($stockUnit, $data['image']);
+            }
+            if (! empty($data['promo_ids'])) {
+                $stockUnit->promos()->attach($data['promo_ids']);
             }
 
             return $stockUnit;
@@ -176,6 +184,7 @@ class StockUnitService
             'public'       // disk → config/filesystems.php
         );
     }
+
     public function deleteUnit(int $id)
     {
         return DB::transaction(function () use ($id) {
@@ -222,6 +231,11 @@ class StockUnitService
         $unit->primary_image_id = $primaryImage?->image_id;
 
         if ($unit->promos->isNotEmpty()) {
+            $unit->promo_ids = $unit->promos
+                ->pluck('promo_id')
+                ->map(fn ($id) => (string) $id)
+                ->values()
+                ->toArray();
             $unit->promos = $unit->promos->map(function ($promo) use ($unit) {
                 $promo->final_price = Promo::calculateFinalPrice(
                     price: $unit->price,

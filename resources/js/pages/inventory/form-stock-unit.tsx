@@ -3,11 +3,12 @@ import React, { useMemo } from 'react';
 import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import DatePicker from '@/components/app/date-picker';
 import { ImageUpload } from '@/components/app/image-upload';
+import { MultiSelect } from '@/components/app/multiple-select';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import TextEditor from '@/components/app/text-editor';
 import Title from '@/components/app/title';
 import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
-import type { TUnit, TStockUnitOptions } from '@/components/inventory/stock-unit/type';
+import type { TUnit, TStockUnitOptions, TPromoOption } from '@/components/inventory/stock-unit/type';
 import { defaultUnit } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
@@ -22,10 +23,11 @@ type PageProps = {
     options: TStockUnitOptions;
     stock_unit?: TUnit;
     type: 'detail' | 'create' | 'update';
+    promos: TPromoOption[];
 };
 
 export default function FormStockUnitPage() {
-    const { options, stock_unit, type } = usePage<PageProps>().props;
+    const { options, stock_unit, type, promos } = usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
     const form = useForm<TUnit>(stock_unit ?? defaultUnit);
     const disable = type === 'detail';
@@ -65,6 +67,10 @@ export default function FormStockUnitPage() {
             image_src: image.file_src
         };
     }) ?? [];
+    const promoOptions = promos.map((promo) => ({
+        value: promo.promo_id.toString(),
+        label: `${promo.name} (${promo.code})`,
+    }));
 
     return (
         <>
@@ -196,6 +202,16 @@ export default function FormStockUnitPage() {
                                     />
                                     {form.errors.kilometer &&
                                         <div className="text-sm text-destructive">{form.errors.kilometer}</div>}
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Tambahkan Promo</FieldLabel>
+                                    <MultiSelect
+                                        options={promoOptions}
+                                        value={form.data.promo_ids ?? []}
+                                        onChange={(selected) => form.setData('promo_ids', selected)}
+                                        placeholder="Pilih promo"
+                                    />
+                                    {form.errors.brand_id && <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
                                 </Field>
                             </FieldGroup>
                         </div>

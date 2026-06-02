@@ -22,6 +22,7 @@ class StockUnitRepository
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
                 'images:image_id,car_id,path,is_primary',
+                'promos:promo_id,name,code,type,discount_value,image',
             ]);
 
         $columns = [
@@ -106,6 +107,7 @@ class StockUnitRepository
                 'plate:ref_code,ref_value',
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
+                'promos:promo_id,name,code,type,discount_value,image',
             ]);
 
         return $query->findOrFail($id);
@@ -130,6 +132,7 @@ class StockUnitRepository
     public function update(int $id, array $data)
     {
         $car = Car::findOrFail($id);
+        $car->promos()->sync($data['promo_ids']);
         $car->update($data);
 
         return $car->fresh();
