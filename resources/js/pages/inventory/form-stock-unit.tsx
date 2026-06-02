@@ -210,6 +210,7 @@ export default function FormStockUnitPage() {
                                         value={form.data.promo_ids ?? []}
                                         onChange={(selected) => form.setData('promo_ids', selected)}
                                         placeholder="Pilih promo"
+                                        disabled={disable}
                                     />
                                     {form.errors.brand_id && <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
                                 </Field>

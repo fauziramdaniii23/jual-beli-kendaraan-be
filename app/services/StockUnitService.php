@@ -229,23 +229,30 @@ class StockUnitService
 
         $unit->primary_image = $primaryImage;
         $unit->primary_image_id = $primaryImage?->image_id;
-
+        $totalDiscount = 0;
         if ($unit->promos->isNotEmpty()) {
             $unit->promo_ids = $unit->promos
                 ->pluck('promo_id')
                 ->map(fn ($id) => (string) $id)
                 ->values()
                 ->toArray();
-            $unit->promos = $unit->promos->map(function ($promo) use ($unit) {
-                $promo->final_price = Promo::calculateFinalPrice(
+            $unit->promos = $unit->promos->map(function ($promo) use ($unit, &$totalDiscount) {
+                $promo->discount_amount = Promo::calculateDiscountAmount(
                     price: $unit->price,
                     type: $promo->type,
                     discountValue: (float) $promo->discount_value
                 );
 
+                $totalDiscount += $promo->discount_amount;
+
                 return $promo;
             });
         }
+        $unit->promo_names = $unit->promos
+            ->pluck('name')
+            ->implode(', ');
+        $unit->total_discount = $totalDiscount;
+        $unit->final_price = max(0, $unit->price - $totalDiscount);
 
         return $unit;
     }

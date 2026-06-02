@@ -26,6 +26,10 @@ export type TUnit = {
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
     primary_image_id?: number | null;
+    promo_names?: string;
+    total_discount?: number;
+    final_price?: number;
+    promos?: TPromo[];
     promo_ids?: string[] | null;
 }
 export type TOptionItemModel = {
@@ -44,6 +48,14 @@ export type TStockUnitOptions = {
     plate_type?: TOptionItem[];
     seat_type?: TOptionItem[];
 };
+
+export type TPromo = {
+    promo_id?: number;
+    name: string;
+    code: string;
+    discount_value: number;
+    final_price: number;
+}
 
 export type TPromoOption = {
     promo_id: number,

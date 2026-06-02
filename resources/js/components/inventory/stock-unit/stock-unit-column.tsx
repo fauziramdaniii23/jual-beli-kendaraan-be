@@ -17,6 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatRupiah } from '@/lib/utils';
 
 interface Props {
     onDetail: (id: number | undefined) => void;
@@ -112,6 +113,34 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         cell: ({ row }) => (
             <div className="text-right w-full">
                 {row.getValue("formatted_price")}
+            </div>
+        ),
+    },
+    {
+        accessorKey: "promo_names",
+        header: 'Promo'
+    },
+    {
+        accessorKey: "final_price",
+        header: ({ column }) => {
+            const sorted = column.getIsSorted();
+
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting()}
+                    className="flex w-full items-center justify-between"
+                >
+                    Harga Diskon
+                    {!sorted && <ArrowUpDown />}
+                    {sorted === "asc" && <ArrowDownNarrowWide />}
+                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="text-right w-full">
+                {formatRupiah(row.getValue("final_price"))}
             </div>
         ),
     },

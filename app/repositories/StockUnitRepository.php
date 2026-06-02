@@ -13,17 +13,11 @@ class StockUnitRepository
         $query = Car::query()
             ->select(['cars_id', 'name', 'year', 'brand_id', 'branch_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
             ->with([
-                'brand:brand_id,brand_name',
                 'branch:branch_id,name',
-                'model:model_id,model_name',
-                'transmission:ref_code,ref_value',
-                'fuelType:ref_code,ref_value',
-                'plate:ref_code,ref_value',
-                'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
-                'images:image_id,car_id,path,is_primary',
-                'promos:promo_id,name,code,type,discount_value,image',
-            ]);
+                'promos:promo_id,name,code,type,discount_value',
+            ])
+        ->whereNot('status_code', 'SOLD');
 
         $columns = [
             'brand_id' => 'brand_id',
@@ -40,10 +34,16 @@ class StockUnitRepository
                 $query->where($column, $filter[$key]);
             }
         }
+        if (! empty($filter['promo_id'])) {
+            $query->whereHas('promos', function ($q) use ($filter) {
+                $q->where('promos.promo_id', $filter['promo_id']);
+            });
+        }
         $query->orderBy('created_at', 'desc');
 
         return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
+
     public function getUnitWithPagination(array $filter = [], int $perPage = 10)
     {
         $query = Car::query()
