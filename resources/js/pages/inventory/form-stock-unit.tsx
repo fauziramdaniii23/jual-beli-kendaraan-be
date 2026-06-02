@@ -5,6 +5,7 @@ import DatePicker from '@/components/app/date-picker';
 import { ImageUpload } from '@/components/app/image-upload';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import TextEditor from '@/components/app/text-editor';
+import Title from '@/components/app/title';
 import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
 import type { TUnit, TStockUnitOptions } from '@/components/inventory/stock-unit/type';
 import { defaultUnit } from '@/components/inventory/stock-unit/type';
@@ -16,7 +17,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TImageProps } from '@/types';
-import Title from '@/components/app/title';
 
 type PageProps = {
     options: TStockUnitOptions;

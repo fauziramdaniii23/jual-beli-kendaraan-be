@@ -1,21 +1,16 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Star } from 'lucide-react';
+import { Percent } from 'lucide-react';
 import React from 'react';
-import { index as indexReviews, store as storeReviews, update as updateReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
+import { index as indexPromo, store as storePromo, update as updatePromo } from '@/actions/App/Http/Controllers/News/PromoController';
+import DatePicker from '@/components/app/date-picker';
 import TextEditor from '@/components/app/text-editor';
+import Title from '@/components/app/title';
 import FormImage from '@/components/customers/reviews/form-image';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Combobox,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxList
-} from '@/components/ui/combobox';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import {
     Select,
     SelectContent,
@@ -23,64 +18,56 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
-} from '@/components/ui/select';
+    SelectValue,
+} from "@/components/ui/select"
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
-import Title from '@/components/app/title';
+import { Label } from '@/components/ui/label';
 
-type TUnit = {
-    cars_id: number;
+type TPromo = {
+    promo_id: number;
     name: string;
-    status: {
-        ref_code: string;
-        ref_value: string;
-    }
-}
-type TCustomer = {
-    id: number;
-    name: string;
-}
-
-export type TFormReviews = {
-    review_id?: number;
-    cars_id: number;
-    user_id: number;
-    user: TCustomer;
-    unit: TUnit;
-    rating: number;
-    review_text: string;
-    is_published: boolean;
-    image_file?: File | null | string;
-    image_src?: string;
-    image_name?: string;
+    code: string;
+    type: string;
+    discount_value: number;
+    description: string;
+    start_date: string;
+    end_date: string;
+    is_active: boolean;
+    image_name: string;
+    image_src: string;
+    image_file: File | null;
 }
 
 type PageProps = {
-    units: TUnit[];
-    users: TCustomer[];
-    reviews: TFormReviews;
+    promo: TPromo;
     type: 'detail' | 'create' | 'update';
 };
 
-const defaultReviews = {
-    review_id: 0,
-    cars_id: 0,
-    user_id: 0,
-    rating: '',
-    review_text: '',
+const defaultPromo = {
+    promo_id: 0,
+    name: '',
+    code: '',
+    type: '',
+    discount_value: 0,
+    description: '',
+    start_date: '',
+    end_date: '',
+    is_active: false,
     image_file: null,
 }
 
-export default function FormReviewPage() {
-    const { units, users, reviews, type } = usePage<PageProps>().props;
-    const form = useForm<TFormReviews>(reviews ?? defaultReviews);
+export default function FormPromoPage() {
+    const { promo, type } = usePage<PageProps>().props;
+    const form = useForm<TPromo>(promo ?? defaultPromo);
+
     const disable = type === 'detail';
+    const [selectType, setSelectType] = React.useState<string>('');
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' ? updateReviews(reviews.review_id!).url : storeReviews().url;
+        const url = type === 'update' ? updatePromo(promo.promo_id!).url : storePromo().url;
 
         form.post(url, {
             forceFormData: true,
@@ -94,6 +81,17 @@ export default function FormReviewPage() {
     const handleUploadImage = (file: File | null) => {
         form.setData('image_file', file)
     }
+    const handleGenerateCode = () => {
+        const promoName = form.data.name || '';
+
+        const code = promoName
+            .toUpperCase()
+            .trim()
+            .replace(/\s+/g, '_')      // spasi -> _
+            .replace(/[^A-Z0-9_]/g, ''); // hapus karakter khusus
+
+        form.setData('code', code);
+    };
 
     return (
         <>
@@ -103,181 +101,139 @@ export default function FormReviewPage() {
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage
                         type={type}
-                        data={{image_id: reviews?.review_id, image_name: reviews?.image_name, image_src: reviews?.image_src}}
+                        data={{image_id: promo?.promo_id, image_name: promo?.image_name, image_src: promo?.image_src}}
                         uploadImage={(file) => handleUploadImage(file)}
-                        removedImage={(id) => console.log('removedImage', id) }
+                        removedImage={() => {} }
                     />
                     <div className="flex gap-4 w-full mt-4">
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Nama<span className="text-destructive">*</span></FieldLabel>
-                                    {type === 'detail' || type === 'update' ? (
-                                        <Input
-                                            name="name"
-                                            value={form.data.user.name || ''}
-                                            className="w-full input"
-                                            disabled={true}
-                                        />
-                                    ) : (
-                                        <Combobox
-                                            items={users}
-                                            itemToStringLabel={(item : TCustomer) => item.name}
-                                            onValueChange={(val : TCustomer | null) => form.setData('user_id', Number(val?.id))}
-                                        >
-                                            <ComboboxInput placeholder="Pilih Customer" showClear/>
-
-                                            <ComboboxContent>
-                                                <ComboboxEmpty>Customer tidak ditemukan.</ComboboxEmpty>
-
-                                                <ComboboxList>
-                                                    {(user) => (
-                                                        <ComboboxItem
-                                                            key={user.id}
-                                                            value={user}
-                                                        >
-                                                            {user.name}
-                                                        </ComboboxItem>
-                                                    )}
-                                                </ComboboxList>
-                                            </ComboboxContent>
-                                        </Combobox>
-                                    )}
+                                    <FieldLabel>Nama Promo<span className="text-destructive">*</span></FieldLabel>
+                                    <Input
+                                        name="name"
+                                        value={form.data.name || ''}
+                                        onChange={(e) => form.setData('name', e.target.value)}
+                                        className="w-full input"
+                                        aria-invalid={!!form.errors.name}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.name && <div className="text-sm text-destructive">{form.errors.name}</div>}
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Tipe Diskon<span className="text-destructive">*</span></FieldLabel>
+                                    <Select
+                                        name="type"
+                                        value={form.data.type || ''}
+                                        onValueChange={(val) => {
+                                            setSelectType(val);
+                                            form.setData('type', val)
+                                        }}
+                                    >
+                                        <SelectTrigger className="w-full input" aria-invalid={!!form.errors.type} disabled={disable}>
+                                            <SelectValue placeholder="Select type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Tipe Diskon</SelectLabel>
+                                                <SelectItem value="percentage">Persentase</SelectItem>
+                                                <SelectItem value="fixed">Fix</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.type && <div className="text-sm text-destructive">{form.errors.type}</div>}
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Tanggal Mulai<span className="text-destructive">*</span></FieldLabel>
+                                    <DatePicker
+                                        value={form.data.start_date || ''}
+                                        onChange={(val) => form.setData('start_date', val)}
+                                        invalid={!!form.errors.start_date}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.start_date && <div className="text-sm text-destructive">{form.errors.start_date}</div>}
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Deskripsi</FieldLabel>
+                                    <TextEditor
+                                        value={form.data.description || ''}
+                                        onChange={(val) => form.setData('description', val)}
+                                        disabled={disable}
+                                    />
                                 </Field>
                             </FieldGroup>
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
-
                                 <Field>
-                                    <FieldLabel>Unit<span className="text-destructive">*</span></FieldLabel>
-                                    {type === 'detail' || type === 'update' ? (
+                                    <FieldLabel>Kode Promo<span className="text-destructive">*</span></FieldLabel>
+                                    <ButtonGroup>
                                         <Input
-                                            name="unit"
-                                            value={form.data.unit.name || ''}
+                                            name="code"
+                                            value={form.data.code || ''}
+                                            onChange={(e) => form.setData('code', e.target.value)}
                                             className="w-full input"
-                                            disabled={true}
+                                            aria-invalid={!!form.errors.code}
+                                            disabled={disable}
                                         />
-                                    ) : (
-                                        <Combobox
-                                            items={units}
-                                            itemToStringLabel={(item : TUnit) => item.name}
-                                            onValueChange={(val : TUnit | null) => form.setData('cars_id', Number(val?.cars_id))}
-                                        >
-                                            <ComboboxInput placeholder="Pilih Unit" showClear/>
-
-                                            <ComboboxContent>
-                                                <ComboboxEmpty>Unit tidak ditemukan.</ComboboxEmpty>
-
-                                                <ComboboxList>
-                                                    {(unit) => (
-                                                        <ComboboxItem
-                                                            key={unit.cars_id}
-                                                            value={unit}
-                                                        >
-                                                            {unit.name}
-                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
-                                                                {unit.status.ref_value}
-                                                            </Badge>
-                                                        </ComboboxItem>
-                                                    )}
-                                                </ComboboxList>
-                                            </ComboboxContent>
-                                        </Combobox>
-                                    )}
+                                        <Button type="button" onClick={handleGenerateCode}>Generate</Button>
+                                    </ButtonGroup>
+                                    {form.errors.code && <div className="text-sm text-destructive">{form.errors.code}</div>}
                                 </Field>
-
+                                <Field>
+                                    <FieldLabel>Nilai Diskon<span className="text-destructive">*</span></FieldLabel>
+                                    <InputGroup className="w-full input">
+                                        <InputGroupInput
+                                            name="discount_value"
+                                            type="number"
+                                            value={form.data.discount_value}
+                                            onChange={(e) => form.setData('discount_value', e.target.value === '' ? undefined as any : Number(e.target.value) as any)}
+                                        />
+                                        { selectType === 'fixed' ? (
+                                            <InputGroupAddon>
+                                                Rp.
+                                            </InputGroupAddon>
+                                        ) : (
+                                            <InputGroupAddon align="inline-end"><Percent /></InputGroupAddon>
+                                        )}
+                                    </InputGroup>
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Tanggal Berakhir</FieldLabel>
+                                    <DatePicker
+                                        value={form.data.end_date || ''}
+                                        onChange={(val) => form.setData('end_date', val)}
+                                        invalid={!!form.errors.end_date}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.end_date && <div className="text-sm text-destructive">{form.errors.end_date}</div>}
+                                </Field>
+                                <Field>
+                                    <Label>Status</Label>
+                                    <Select
+                                        value={form.data.is_active.toString()}
+                                        onValueChange={(val) =>
+                                            form.setData('is_active', val === 'true')
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Pilih status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectItem value="true">Aktif</SelectItem>
+                                                <SelectItem value="false">Tidak Aktif</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </Field>
                             </FieldGroup>
                         </div>
-                        <div className="flex-1">
-                            <Field>
-                                <FieldLabel>Rating</FieldLabel>
-
-                                <Select
-                                    name="rating"
-                                    value={form.data.rating?.toString()}
-                                    onValueChange={(val) =>
-                                        form.setData('rating', Number(val))
-                                    }
-                                    disabled={disable}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select Rating" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Rating</SelectLabel>
-                                            {[1, 2, 3, 4, 5].map((rating) => (
-                                                <SelectItem
-                                                    key={rating}
-                                                    value={rating.toString()}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="flex">
-                                                            {Array.from({ length: 5 }).map((_, index) => (
-                                                                <Star
-                                                                    key={index}
-                                                                    className={`h-4 w-4 ${
-                                                                        index < rating
-                                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                                            : 'text-gray-300'
-                                                                    }`}
-                                                                />
-                                                            ))}
-                                                        </div>
-
-                                                        <span className="text-sm">
-                                                                ({rating})
-                                                            </span>
-                                                    </div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </Field>
-                        </div>
-                        {
-                            type !== 'create' && (
-                                <div className="flex-1">
-                                    <Field>
-                                        <FieldLabel>Status Publish</FieldLabel>
-
-                                        <Select
-                                            name="status"
-                                            value={form.data.is_published.toString()}
-                                            onValueChange={(val) => form.setData('is_published', val === 'true')}
-                                            disabled={disable}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Status</SelectLabel>
-                                                    <SelectItem value="true">Published</SelectItem>
-                                                    <SelectItem value="false">Not Publish</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </Field>
-                                </div>
-                            )
-                        }
                     </div>
-                    <Field>
-                        <FieldLabel>Ulasan</FieldLabel>
-                        <TextEditor
-                            value={form.data.review_text || ''}
-                            onChange={(val) => form.setData('review_text', val)}
-                            disabled={disable}
-                        />
-                    </Field>
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={() => router.get(indexReviews().url, {}, { preserveState: true, replace: true} )}
+                            onClick={() => router.get(indexPromo().url, {}, { preserveState: true, replace: true} )}
                             type="button"
                             variant="outline">
                             {disable ? 'Kembali' : 'Batal'}
@@ -295,16 +251,16 @@ export default function FormReviewPage() {
     );
 }
 
-FormReviewPage.layout = (page: React.ReactElement<PageProps>) => {
+FormPromoPage.layout = (page: React.ReactElement<PageProps>) => {
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
     const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
 
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Customer', href: '#' },
-                { title: 'Rating & Ulasan', href: indexReviews() },
-                { title: `${breadcrumbTitle} Rating & Ulasan`, href: '#' },
+                { title: 'News', href: '#' },
+                { title: 'Promo', href: indexPromo() },
+                { title: `${breadcrumbTitle} Promo`, href: '#' },
             ]}
         >
             {page}

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\News;
 
+use App\Helper\DateHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Car;
 use App\Models\Promo;
-use App\Models\User;
 use App\services\PromoService;
-use App\services\ReviewService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Mockery\Exception;
 
@@ -18,7 +17,7 @@ class PromoController extends Controller
 
     public function index()
     {
-        $promos = Promo::query()->orderBy('created_at', 'desc')->get();
+        $promos = $this->promoService->getPromos();
 
         return Inertia::render('news/promo', ['promos' => $promos]);
     }
@@ -27,17 +26,17 @@ class PromoController extends Controller
     {
         try {
             $type = $request->input('type');
-            $reviewId = $request->input('review_id');
+            $promoId = $request->input('promo_id');
 
-            $reviews = $reviewId ? Promo::with([
-                'unit:cars_id,name',
-                'user:id,name',
-            ])->findOrFail($reviewId) : null;
+            $promo = null;
 
-            $users = $type === 'create' ? User::query()->select(['id', 'name'])->get() : null;
-            $units = $type === 'create' ? Car::query()->with('status:ref_code,ref_value')->select(['cars_id', 'name', 'status_code'])->whereNot('status_code', 'SOLD')->get() : null;
+            if ($promoId) {
+                $promo = Promo::findOrFail($promoId);
+                $promo->start_date = DateHelper::dateFormat($promo->start_date);
+                $promo->end_date = DateHelper::dateFormat($promo->end_date);
+            }
 
-            return Inertia::render('customers/form-reviews', ['units' => $units, 'reviews' => $reviews, 'users' => $users, 'type' => $type]);
+            return Inertia::render('news/form-promo', ['promo' => $promo, 'type' => $type]);
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -52,21 +51,25 @@ class PromoController extends Controller
     {
         try {
             $validated = $request->validate([
-                'cars_id' => 'required|exists:cars,cars_id',
-                'user_id' => 'required|exists:users,id',
-                'rating' => 'required|numeric|min:1|max:5',
-                'review_text' => 'nullable|string',
-                'image_file' => 'nullable|image|mimes:jpeg,png,jpg',
+                'name' => 'required|string|max:200',
+                'code' => 'required|string|max:50|unique:promos,code',
+                'type' => 'required|in:percentage,fixed',
+                'discount_value' => 'required|numeric|min:0',
+                'description' => 'nullable|string',
+                'start_date' => 'required|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+                'is_active' => 'nullable|boolean',
+                'image_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
-            $this->reviewService->store($validated);
+            $this->promoService->store($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Rating & Ulasan Customer berhasil disimpan.',
+                'message' => 'Promo berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.reviews');
+            return redirect()->route('news.promos');
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -77,24 +80,33 @@ class PromoController extends Controller
         }
     }
 
-    public function update(Request $request, Promo $review)
+    public function update(Request $request, Promo $promo)
     {
         try {
             $validated = $request->validate([
-                'cars_id' => 'required|exists:cars,cars_id',
-                'user_id' => 'required|exists:users,id',
-                'rating' => 'required|numeric|min:1|max:5',
-                'review_text' => 'nullable|string',
-                'is_published' => 'nullable|boolean',
-                'image_file' => 'nullable|image|mimes:jpeg,png,jpg',
+                'name' => 'required|string|max:200',
+                'code' => [
+                    'required',
+                    'string',
+                    'max:50',
+                    Rule::unique('promos', 'code')
+                        ->ignore($promo->promo_id, 'promo_id'),
+                ],
+                'type' => 'required|in:percentage,fixed',
+                'discount_value' => 'required|numeric|min:0',
+                'description' => 'nullable|string',
+                'start_date' => 'required|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+                'is_active' => 'nullable|boolean',
+                'image_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
-            $this->reviewService->update($validated, $review);
+            $this->promoService->update($validated, $promo);
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Rating & Ulasan Customer berhasil disimpan.',
+                'message' => 'Promo berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.reviews');
+            return redirect()->route('news.promos');
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -105,16 +117,16 @@ class PromoController extends Controller
         }
     }
 
-    public function destroy(Promo $review)
+    public function destroy(Promo $promo)
     {
         try {
-            $this->reviewService->delete($review);
+            $this->promoService->delete($promo);
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Rating & Ulasan Customer berhasil dihapus.',
+                'message' => 'Promo berhasil dihapus.',
             ]);
 
-            return redirect()->route('customer.reviews');
+            return redirect()->route('news.promos');
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',

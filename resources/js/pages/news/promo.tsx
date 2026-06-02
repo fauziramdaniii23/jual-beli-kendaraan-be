@@ -1,7 +1,16 @@
 import { router } from "@inertiajs/react";
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Eye, MoreHorizontal, Plus, SquarePen, Trash } from 'lucide-react';
+import {
+    ArrowDownNarrowWide,
+    ArrowUpDown,
+    ArrowUpWideNarrow,
+    Eye,
+    MoreHorizontal,
+    Plus,
+    SquarePen,
+    Trash
+} from 'lucide-react';
 import React from 'react';
 import { destroy as deletePromo, form  } from '@/actions/App/Http/Controllers/News/PromoController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
@@ -16,7 +25,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-type TPromo = {
+export type TPromo = {
     promo_id: number;
     name: string;
     code: string;
@@ -70,8 +79,80 @@ export default function PromosPage() {
             header: 'Nama Promo'
         },
         {
-            accessorKey: 'unit.name',
-            header: 'Unit'
+            accessorKey: 'type',
+            header: 'Tipe Promo'
+        },
+        {
+            accessorKey: 'discount_value',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Nilai Diskon
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === "asc" && <ArrowDownNarrowWide />}
+                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+            cell: ({ row }) => {
+                const value = row.original.discount_value;
+                const type = row.original.type;
+
+                const displayValue =
+                    type === 'percentage'
+                        ? `${value}%`
+                        : `Rp. ${Number(value).toLocaleString('id-ID')}`;
+
+                return (
+                    <div className="text-right">
+                        {displayValue}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "start_date",
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Tanggal Mulai
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === "asc" && <ArrowDownNarrowWide />}
+                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            }
+        },
+        {
+            accessorKey: "end_date",
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Tanggal Berakhir
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === "asc" && <ArrowDownNarrowWide />}
+                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            }
         },
         {
             accessorKey: 'is_active',

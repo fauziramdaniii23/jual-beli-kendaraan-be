@@ -2,6 +2,7 @@
 
 namespace App\services;
 
+use App\Helper\DateHelper;
 use App\Models\Promo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +10,15 @@ use Illuminate\Support\Str;
 
 class PromoService
 {
+    public function getPromos()
+    {
+        $promos = Promo::query()->orderBy('created_at', 'desc')->get();
+        $promos->map(function ($promo) {
+            $promo->start_date = DateHelper::dateFormat($promo->start_date);
+            $promo->end_date = DateHelper::dateFormat($promo->end_date);
+        });
+        return $promos;
+    }
     public function store(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -17,11 +27,15 @@ class PromoService
                 $file = $data['image_file'];
                 $image_path = $this->uploadImage($file);
             }
-            Promo::create([
-                'cars_id' => $data['cars_id'],
-                'user_id' => $data['user_id'],
-                'rating' => $data['rating'],
-                'review_text' => $data['review_text'],
+            return Promo::create([
+                'name' => $data['name'],
+                'code' => $data['code'],
+                'type' => $data['type'],
+                'discount_value' => $data['discount_value'],
+                'description' => $data['description'] ?? null,
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'] ?? null,
+                'is_active' => $data['is_active'] ?? true,
                 'image' => $image_path,
             ]);
         });
@@ -36,10 +50,10 @@ class PromoService
                 'code' => $data['code'],
                 'type' => $data['type'],
                 'discount_value' => $data['discount_value'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? null,
                 'start_date' => $data['start_date'],
-                'end_date' => $data['end_date'],
-                'is_active' => $data['is_active'],
+                'end_date' => $data['end_date'] ?? null,
+                'is_active' => $data['is_active'] ?? true,
             ];
 
             if (isset($data['image_file']) && $data['image_file']) {
