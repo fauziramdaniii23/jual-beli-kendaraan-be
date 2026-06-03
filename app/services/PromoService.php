@@ -45,51 +45,53 @@ class PromoService
         });
     }
 
-    public function storePromoToUnit(Promo $promo, array $dataFilter, bool $selectAll, $listUnit): void
+    public function storePromoToUnit(Promo $promo, array $dataFilter, bool $selectAll, bool $unSelectAll, $listUnit): void
     {
-        if (! empty($listUnit)) {
-            $units = Car::query()
-                ->whereIn(
-                    'cars_id',
-                    collect($listUnit)->pluck('id')
-                )
-                ->get()
-                ->keyBy('cars_id');
+        if ($selectAll || $unSelectAll) {
+            $columns = [
+                'brand_id' => 'brand_id',
+                'branch_id' => 'branch_id',
+                'model_id' => 'model_id',
+                'transmission' => 'transmission_code',
+                'car_type' => 'type_code',
+                'fuel_type' => 'fuel_type_code',
+                'status' => 'status_code',
+            ];
 
-            foreach ($listUnit as $item) {
-                if (! isset($units[$item['id']])) {
-                    continue;
+            $query = Car::query()->whereNot('status_code', 'SOLD');
+            foreach ($columns as $key => $column) {
+                if (! empty($dataFilter[$key])) {
+                    $query->where($column, $dataFilter[$key]);
                 }
-
-                if ($item['has_promo']) {
-                    $units[$item['id']]->promos()->syncWithoutDetaching([$promo->promo_id]);
-                } else {
-                    $units[$item['id']]->promos()->detach($promo->promo_id);
-                }
+            }
+            $units = $query->get();
+            foreach ($units as $unit) {
+                $selectAll ? $unit->promos()->attach($promo->promo_id) : $unit->promos()->detach($promo->promo_id);
             }
 
             return;
         }
-        $columns = [
-            'brand_id' => 'brand_id',
-            'branch_id' => 'branch_id',
-            'model_id' => 'model_id',
-            'transmission' => 'transmission_code',
-            'car_type' => 'type_code',
-            'fuel_type' => 'fuel_type_code',
-            'status' => 'status_code',
-        ];
 
-        $query = Car::query()->whereNot('status_code', 'SOLD');
-        foreach ($columns as $key => $column) {
-            if (! empty($dataFilter[$key])) {
-                $query->where($column, $dataFilter[$key]);
+        $units = Car::query()
+            ->whereIn(
+                'cars_id',
+                collect($listUnit)->pluck('cars_id')
+            )
+            ->get()
+            ->keyBy('cars_id');
+
+        foreach ($listUnit as $item) {
+            if (! isset($units[$item['cars_id']])) {
+                continue;
+            }
+
+            if ($item['has_promo']) {
+                $units[$item['cars_id']]->promos()->syncWithoutDetaching([$promo->promo_id]);
+            } else {
+                $units[$item['cars_id']]->promos()->detach($promo->promo_id);
             }
         }
-        $units = $query->get();
-        foreach ($units as $unit) {
-            $selectAll ? $unit->promos()->attach($promo->promo_id) : $unit->promos()->detach($promo->promo_id);
-        }
+
     }
 
     public function update(array $data, $promo)

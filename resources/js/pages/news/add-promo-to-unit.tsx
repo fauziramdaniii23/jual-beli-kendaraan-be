@@ -54,11 +54,6 @@ type PageProps = {
     options: TStockUnitOptions;
 };
 
-type TSelectUnit = {
-    id: number;
-    has_promo: boolean;
-}
-
 export default function AddPromoToUnitPage() {
     const params = new URLSearchParams(window.location.search);
     const { promo, stock_unit, options } = usePage<PageProps>().props;
@@ -69,8 +64,6 @@ export default function AddPromoToUnitPage() {
     const transmissionId = params.get('transmission')?.toString();
     const fuelType = params.get('fuel_type')?.toString();
     const status = params.get('status')?.toString();
-
-    const [selectUnit, setSelectUnit] = useState<TSelectUnit[]>([]);
 
     const [promoUnit, setPromoUnit] = useState<TPromoUnit[]>(
         stock_unit.map((unit) => ({
@@ -95,7 +88,9 @@ export default function AddPromoToUnitPage() {
     const [selectTransmission, setSelectTransmission] = useState<string>(transmissionId ?? '');
     const [selectFuelType, setSelectFuelType] = useState<string>(fuelType ?? '');
     const [selectStatus, setSelectStatus] = useState<string>(status ?? '');
-    const [deleteDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [deleteDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
+    const [availableChange, setAvailableChange] = useState<boolean>(false);
+    const [load, setLoad] = useState<boolean>(false);
 
     const filteredModels = useMemo(() => {
         return options.model.filter(
@@ -125,6 +120,7 @@ export default function AddPromoToUnitPage() {
         setSelectModel('');
     }
     const handleToggleActive =  (id: number, isActive: boolean) => {
+        setAvailableChange(true);
         setPromoUnit((prev) =>
             prev.map((item) =>
                 item.cars_id === id
@@ -135,28 +131,9 @@ export default function AddPromoToUnitPage() {
                     : item
             )
         );
-        setSelectUnit((prev) => {
-            const existingIndex = prev.find((item) => item.id === id);
-
-            if (existingIndex) {
-                return prev.map((item) =>
-                    item.id === id
-                        ? { ...item, has_promo: isActive }
-                        : item
-                );
-            }
-
-            return [
-                ...prev,
-                {
-                    id,
-                    has_promo: isActive,
-                },
-            ];
-        });
     };
     const handleToggleAll = async ( isActive: boolean) => {
-        setSelectUnit([]);
+        setAvailableChange(true);
         setPromoUnit((prev) =>
             prev.map((item) => ({
                 ...item,
@@ -167,8 +144,15 @@ export default function AddPromoToUnitPage() {
 
     const selectAll = useMemo(
         () =>
-            promoUnit.length > 0 ?
-            promoUnit.every((item) => item.has_promo) : false,
+            promoUnit.length > 0 &&
+            promoUnit.every((item) => item.has_promo),
+        [promoUnit]
+    );
+
+    const unSelectAll = useMemo(
+        () =>
+            promoUnit.length > 0 &&
+            promoUnit.every((item) => !item.has_promo),
         [promoUnit]
     );
 
@@ -318,16 +302,18 @@ export default function AddPromoToUnitPage() {
     ];
 
     const handleSavePromoAction = () => {
+        setLoad(true)
         router.post(storePromoToUnit(promo.promo_id!).url, {
             select_all: selectAll,
-            list_unit: selectUnit,
-            brand_id: selectBrand === '' ? undefined : selectBrand,
-            branch_id: selectBranch === '' ? undefined : selectBranch,
-            model_id: selectModel === '' ? undefined : selectModel,
-            car_type: selectCarType === '' ? undefined : selectCarType,
-            transmission: selectTransmission === '' ? undefined : selectTransmission,
-            fuel_type: selectFuelType === '' ? undefined : selectFuelType,
-            status: selectStatus === '' ? undefined : selectStatus,
+            un_select_all: unSelectAll,
+            list_unit: promoUnit,
+            brand_id: brandId,
+            branch_id: branchId,
+            model_id: modelId,
+            car_type: carType,
+            transmission: transmissionId,
+            fuel_type: fuelType,
+            status: status,
         },
         {
             preserveState: true,
@@ -407,9 +393,9 @@ export default function AddPromoToUnitPage() {
                 description="Pilih unit kendaraan yang akan mendapatkan promo ini. Unit yang dipilih akan terhubung dengan promo dan digunakan dalam perhitungan harga serta penawaran."
             />
             <div className="m-4 border rounded-md">
-                <Collapsible className="rounded-md data-[state=open]:bg-muted">
+                <Collapsible defaultOpen className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
-                        <Button variant="ghost" className="group w-full">
+                        <Button variant="ghost" className="group w-full h-12">
                             <Filter /> Filter
                             <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                         </Button>
@@ -510,7 +496,7 @@ export default function AddPromoToUnitPage() {
             </div>
 
             <div className="mx-4">
-                <Button onClick={() => setConfirmDialogOpen(true)}>
+                <Button disabled={promoUnit.length <= 0} onClick={() => setConfirmDialogOpen(true)}>
                     <Plus />
                     Terapkan Promo ke Unit Terpilih
                 </Button>
@@ -520,11 +506,13 @@ export default function AddPromoToUnitPage() {
             </div>
             <ConfirmDialog
                 title="Terapkan Promo"
-                description="Apakah Anda yakin ingin menerapkan Promo ini ke Unit terpilih?."
+                description={availableChange ? "Apakah Anda yakin ingin menerapkan Promo ini ke Unit terpilih?." : "Anda belum melakukan perubahan" }
                 confirmText="Terapkan"
                 open={deleteDialogOpen}
                 onOpenChange={(val) => setConfirmDialogOpen(val)}
                 onConfirm={handleSavePromoAction}
+                disable={!availableChange}
+                loading={load}
             />
         </>
     );

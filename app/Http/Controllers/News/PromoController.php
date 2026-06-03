@@ -92,6 +92,7 @@ class PromoController extends Controller
             $test = $request->all();
             $validate = $request->validate([
                 'select_all' => 'required|boolean',
+                'un_select_all' => 'required|boolean',
                 'list_unit' => 'nullable|array',
                 'brand_id' => 'nullable|numeric',
                 'branch_id' => 'nullable|numeric',
@@ -111,7 +112,12 @@ class PromoController extends Controller
                 'status' => $validate['status'] ?? null,
             ];
 
-            $this->promoService->storePromoToUnit($promo, $filter, $validate['select_all'], $validate['list_unit']);
+            $this->promoService->storePromoToUnit($promo, $filter, $validate['select_all'], $validate['un_select_all'], $validate['list_unit']);
+
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => 'Promo berhasil diterapkan',
+            ]);
 
             return redirect()->route('news.promos');
         } catch (Exception $e) {
