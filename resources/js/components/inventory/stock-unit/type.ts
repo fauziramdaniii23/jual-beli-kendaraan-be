@@ -26,6 +26,7 @@ export type TUnit = {
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
     primary_image_id?: number | null;
+    has_promo?: boolean;
     promo_names?: string;
     total_discount?: number;
     final_price?: number;

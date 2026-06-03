@@ -5,6 +5,7 @@ import { Eye, MoreHorizontal, Plus, SquarePen, Trash } from 'lucide-react';
 import React from 'react';
 import { destroy as deleteBranch, form } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import Title from '@/components/app/title';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
@@ -14,7 +15,6 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { normalizeUrl } from '@/lib/utils';
-import Title from '@/components/app/title';
 
 type TBranch = {
     branch_id: number;

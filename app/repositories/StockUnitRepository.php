@@ -17,7 +17,7 @@ class StockUnitRepository
                 'status:ref_code,ref_value',
                 'promos:promo_id,name,code,type,discount_value',
             ])
-        ->whereNot('status_code', 'SOLD');
+            ->whereNot('status_code', 'SOLD');
 
         $columns = [
             'brand_id' => 'brand_id',

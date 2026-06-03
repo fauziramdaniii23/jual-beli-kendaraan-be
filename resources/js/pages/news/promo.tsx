@@ -9,10 +9,11 @@ import {
     MoreHorizontal,
     Plus,
     SquarePen,
-    Trash
+    Trash,
+    ListPlus
 } from 'lucide-react';
 import React from 'react';
-import { destroy as deletePromo, form  } from '@/actions/App/Http/Controllers/News/PromoController';
+import { destroy as deletePromo, form, addPromoToUnit  } from '@/actions/App/Http/Controllers/News/PromoController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +47,13 @@ export default function PromosPage() {
 
     const [promoId, setPromoId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+
+    const handleAddPromoToUnit = (id: number) => {
+        router.get(addPromoToUnit(id).url, {}, {
+            preserveState: true,
+            replace: true,
+        })
+    }
     const handleAction = (promo_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
             form().url,
@@ -191,7 +199,11 @@ export default function PromosPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
+                                <DropdownMenuItem
+                                    onClick={() => handleAddPromoToUnit(promos.promo_id)}
+                                >
+                                    <ListPlus /> Terapkan ke Unit
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onClick={() => handleAction(promos.promo_id, 'detail')}
                                 >

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\News;
 
 use App\Helper\DateHelper;
 use App\Http\Controllers\Controller;
+use App\Models\MasterReference;
 use App\Models\Promo;
 use App\services\PromoService;
+use App\services\StockUnitService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -13,7 +15,10 @@ use Mockery\Exception;
 
 class PromoController extends Controller
 {
-    public function __construct(protected PromoService $promoService) {}
+    public function __construct(
+        protected PromoService $promoService,
+        protected StockUnitService $stockUnitService
+    ) {}
 
     public function index()
     {
@@ -37,6 +42,78 @@ class PromoController extends Controller
             }
 
             return Inertia::render('news/form-promo', ['promo' => $promo, 'type' => $type]);
+        } catch (Exception $e) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->back();
+        }
+    }
+
+    public function addPromoToUnit(Request $request, Promo $promo)
+    {
+        try {
+            $optionTypes = [
+                'brand' => 'BRAND',
+                'branch' => 'BRANCH',
+                'model' => 'MODEL',
+                'transmission' => MasterReference::TYPE_TRANSMISSION,
+                'car_type' => MasterReference::TYPE_CAR,
+                'fuel_type' => MasterReference::TYPE_FUEL_TYPE,
+                'status' => MasterReference::TYPE_STATUS,
+                'plate_type' => MasterReference::TYPE_PLATE,
+                'seat_type' => MasterReference::TYPE_SEAT,
+            ];
+            $stockUnit = $this->stockUnitService->getUnit($request);
+
+            $mapPromoStokUnit = $this->promoService->mapPromoStockUnit($promo, $stockUnit);
+
+            $options = collect($optionTypes)
+                ->mapWithKeys(fn ($type, $key) => [
+                    $key => $this->stockUnitService->getOptionFilter($type),
+                ]);
+
+            return Inertia::render('news/add-promo-to-unit', ['promo' => $promo, 'stock_unit' => $mapPromoStokUnit, 'options' => $options]);
+        } catch (Exception $e) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->back();
+        }
+    }
+
+    public function storePromoToUnit(Request $request, Promo $promo)
+    {
+        try {
+            $test = $request->all();
+            $validate = $request->validate([
+                'select_all' => 'required|boolean',
+                'list_unit' => 'nullable|array',
+                'brand_id' => 'nullable|numeric',
+                'branch_id' => 'nullable|numeric',
+                'model_id' => 'nullable|numeric',
+                'car_type' => 'nullable|string',
+                'transmission' => 'nullable|string',
+                'fuel_type' => 'nullable|string',
+                'status' => 'nullable|string',
+            ]);
+            $filter = [
+                'brand_id' => $validate['brand_id'] ?? null,
+                'branch_id' => $validate['branch_id'] ?? null,
+                'model_id' => $validate['model_id'] ?? null,
+                'car_type' => $validate['car_type'] ?? null,
+                'transmission' => $validate['transmission'] ?? null,
+                'fuel_type' => $validate['fuel_type'] ?? null,
+                'status' => $validate['status'] ?? null,
+            ];
+
+            $this->promoService->storePromoToUnit($promo, $filter, $validate['select_all'], $validate['list_unit']);
+
+            return redirect()->route('news.promos');
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',

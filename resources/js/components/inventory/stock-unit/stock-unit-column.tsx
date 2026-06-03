@@ -117,8 +117,28 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         ),
     },
     {
-        accessorKey: "promo_names",
-        header: 'Promo'
+        accessorKey: 'total_discount',
+        header: ({ column }) => {
+            const sorted = column.getIsSorted();
+
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting()}
+                    className="flex w-full items-center justify-between"
+                >
+                    Total Diskon
+                    {!sorted && <ArrowUpDown />}
+                    {sorted === "asc" && <ArrowDownNarrowWide />}
+                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="items-center text-end">
+                {formatRupiah(row.getValue('total_discount'))}
+            </div>
+        )
     },
     {
         accessorKey: "final_price",
@@ -131,7 +151,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                     onClick={() => column.toggleSorting()}
                     className="flex w-full items-center justify-between"
                 >
-                    Harga Diskon
+                    Harga Akhir
                     {!sorted && <ArrowUpDown />}
                     {sorted === "asc" && <ArrowDownNarrowWide />}
                     {sorted === "desc" && <ArrowUpWideNarrow />}
