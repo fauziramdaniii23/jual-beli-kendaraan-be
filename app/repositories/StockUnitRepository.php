@@ -16,6 +16,7 @@ class StockUnitRepository
                 'branch:branch_id,name',
                 'status:ref_code,ref_value',
                 'promos:promo_id,name,code,type,discount_value',
+                'images:image_id,car_id,path,is_primary',
             ])
             ->whereNot('status_code', 'SOLD');
 

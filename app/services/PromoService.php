@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 
 class PromoService
 {
+    public function __construct(protected StockUnitService $stockUnitService) {}
+
     public function getPromos()
     {
         $promos = Promo::query()->orderBy('created_at', 'desc')->get();
@@ -26,7 +28,17 @@ class PromoService
     {
         $promos = Promo::with([
             'cars' => function ($query) {
-                $query->where('status_code', '!=', 'SOLD')->limit(10);
+                $query->where('status_code', '!=', 'SOLD')->with([
+                    'promos',
+                    'brand:brand_id,brand_name',
+                    'model:model_id,model_name',
+                    'transmission:ref_code,ref_value',
+                    'fuelType:ref_code,ref_value',
+                    'plate:ref_code,ref_value',
+                    'seat:ref_code,ref_value',
+                    'status:ref_code,ref_value',
+                    'images:image_id,car_id,path,is_primary',
+                ])->limit(10);
             },
         ])->where('start_date', '<=', now())
             ->where(function ($query) {
@@ -36,6 +48,12 @@ class PromoService
         $promos->map(function ($promo) {
             $promo->start_date = DateHelper::dateFormat($promo->start_date);
             $promo->end_date = DateHelper::dateFormat($promo->end_date);
+        });
+        $promos->each(function ($promo) {
+            $promo->setRelation(
+                'cars',
+                $promo->cars->map(fn ($car) => $this->stockUnitService->mapUnit($car))
+            );
         });
 
         return $promos;

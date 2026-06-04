@@ -11,6 +11,8 @@ use App\services\StockUnitService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
@@ -34,37 +36,45 @@ class ApiController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
     public function getReviews(Request $request): JsonResponse
     {
         try {
             $reviews = $this->reviewService->getReviewsWithPaginate($request);
+
             return $this->paginateResponse($reviews);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
     public function getBranch(Request $request): JsonResponse
     {
         try {
             $branch = $this->branchService->getBranchsWithPaginate($request);
+
             return $this->paginateResponse($branch);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
     public function getFaq(Request $request): JsonResponse
     {
         try {
             $faq = $this->faqService->getFaq($request);
+
             return $this->successResponse($faq);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
     public function getPromo(Request $request): JsonResponse
     {
         try {
             $promos = $this->promoService->getPromosApiMainPage();
+
             return $this->successResponse($promos);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);

@@ -95,19 +95,9 @@ class StockUnitService
     {
         $stockUnit = $this->stockUnitRepository->getUnitById($id);
 
-        $stockUnit->stnk_validity_period = DateHelper::dateFormat($stockUnit->stnk_validity_period);
-        $stockUnit->kilometer = (int) $stockUnit->kilometer;
-        $stockUnit->price = (float) $stockUnit->price;
-        $primaryImage = $stockUnit->images->firstWhere('is_primary', true);
-        $stockUnit->primary_image = $primaryImage ?? null;
-        $stockUnit->primary_image_id = $primaryImage?->image_id;
-        $stockUnit->promo_ids = $stockUnit->promos
-            ->pluck('promo_id')
-            ->map(fn ($id) => (string) $id)
-            ->values()
-            ->toArray();
+        $map = $this->mapUnit($stockUnit);
 
-        return $stockUnit;
+        return $map;
     }
 
     public function store(array $data)
@@ -216,7 +206,7 @@ class StockUnitService
         return true;
     }
 
-    private function mapUnit($unit)
+    public function mapUnit($unit)
     {
         $unit->stnk_validity_period = DateHelper::dateFormat(
             $unit->stnk_validity_period
