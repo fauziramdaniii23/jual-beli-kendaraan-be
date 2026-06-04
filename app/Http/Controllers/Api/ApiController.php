@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\services\BranchService;
 use App\services\FAQService;
+use App\services\PromoService;
 use App\services\ReviewService;
 use App\services\StockUnitService;
 use App\Traits\ApiResponse;
@@ -20,6 +21,7 @@ class ApiController extends Controller
         protected ReviewService $reviewService,
         protected BranchService $branchService,
         protected FAQService $faqService,
+        protected PromoService $promoService,
     ) {}
 
     public function getStockUnit(Request $request): JsonResponse
@@ -55,6 +57,15 @@ class ApiController extends Controller
         try {
             $faq = $this->faqService->getFaq($request);
             return $this->successResponse($faq);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+    public function getPromo(Request $request): JsonResponse
+    {
+        try {
+            $promos = $this->promoService->getPromosApiMainPage();
+            return $this->successResponse($promos);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

@@ -189,6 +189,6 @@ class Car extends Model
             'car_promos',
             'car_id',
             'promo_id'
-        )->withPivot('applied_at');
+        );
     }
 }

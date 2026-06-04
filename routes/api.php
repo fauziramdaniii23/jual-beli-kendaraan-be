@@ -14,3 +14,4 @@ Route::get('/stock-unit', [ApiController::class, 'getStockUnit'])->name('stock.u
 Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');
 Route::get('/branch', [ApiController::class, 'getBranch'])->name('branch');
 Route::get('/faq', [ApiController::class, 'getFaq'])->name('faq');
+Route::get('/promo', [ApiController::class, 'getPromo'])->name('promo');

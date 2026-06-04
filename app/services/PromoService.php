@@ -22,6 +22,25 @@ class PromoService
         return $promos;
     }
 
+    public function getPromosApiMainPage()
+    {
+        $promos = Promo::with([
+            'cars' => function ($query) {
+                $query->where('status_code', '!=', 'SOLD')->limit(10);
+            },
+        ])->where('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->where('end_date', '>=', now())->orWhereNull('end_date');
+            })
+            ->orderBy('created_at', 'desc')->get();
+        $promos->map(function ($promo) {
+            $promo->start_date = DateHelper::dateFormat($promo->start_date);
+            $promo->end_date = DateHelper::dateFormat($promo->end_date);
+        });
+
+        return $promos;
+    }
+
     public function store(array $data)
     {
         return DB::transaction(function () use ($data) {

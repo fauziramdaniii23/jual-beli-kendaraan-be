@@ -61,7 +61,7 @@ class Promo extends Model
             'car_id',
             'promo_id',
             'car_id'
-        )->withPivot('applied_at')->withTimestamps();
+        );
     }
 
     /** Scope: promo yang sedang aktif dan belum kadaluarsa */
