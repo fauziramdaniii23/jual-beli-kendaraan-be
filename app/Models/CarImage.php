@@ -75,7 +75,7 @@ class CarImage extends Model
         return $this->belongsTo(
             Car::class,
             'car_id',
-            'cars_id'
+            'car_id'
         );
     }
 }

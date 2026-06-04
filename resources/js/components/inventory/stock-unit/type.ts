@@ -1,7 +1,7 @@
 import type { TOptionItem, TMasterReference, TImagesFile } from '@/types';
 
 export type TUnit = {
-    cars_id?: number;
+    car_id?: number;
     name: string;
     description?: string | null;
     brand_id: string | number;

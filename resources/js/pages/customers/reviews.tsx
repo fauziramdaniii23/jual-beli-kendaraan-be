@@ -6,6 +6,7 @@ import React from 'react';
 import { form } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { destroy as deleteReview } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import Title from '@/components/app/title';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -15,18 +16,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import Title from '@/components/app/title';
 
 type TReviews = {
     review_id: number;
-    cars_id: number;
+    car_id: number;
     user_id: number;
     rating: number;
     review_text: string;
     is_published: boolean;
     image: string;
     unit: {
-        cars_id: number;
+        car_id: number;
         name: string;
     }
     user: {

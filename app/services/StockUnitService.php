@@ -169,7 +169,7 @@ class StockUnitService
         foreach ($images as $image) {
             $path = $this->uploadImage($image, 'stock-units');
 
-            $this->stockUnitRepository->storeImage($stockUnit->cars_id, $path);
+            $this->stockUnitRepository->storeImage($stockUnit->car_id, $path);
         }
     }
 
@@ -189,7 +189,7 @@ class StockUnitService
     {
         return DB::transaction(function () use ($id) {
             $stockUnit = Car::findOrFail($id);
-            $images = CarImage::where('cars_id', $id)->get();
+            $images = CarImage::where('car_id', $id)->get();
             foreach ($images as $image) {
                 $this->deleteImage($image->image_id);
             }

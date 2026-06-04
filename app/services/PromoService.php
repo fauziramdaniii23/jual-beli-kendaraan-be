@@ -73,22 +73,19 @@ class PromoService
         }
 
         $units = Car::query()
-            ->whereIn(
-                'cars_id',
-                collect($listUnit)->pluck('cars_id')
-            )
+            ->whereIn('car_id', collect($listUnit)->pluck('car_id'))
             ->get()
-            ->keyBy('cars_id');
+            ->keyBy('car_id');
 
         foreach ($listUnit as $item) {
-            if (! isset($units[$item['cars_id']])) {
+            if (! isset($units[$item['car_id']])) {
                 continue;
             }
 
             if ($item['has_promo']) {
-                $units[$item['cars_id']]->promos()->syncWithoutDetaching([$promo->promo_id]);
+                $units[$item['car_id']]->promos()->syncWithoutDetaching([$promo->promo_id]);
             } else {
-                $units[$item['cars_id']]->promos()->detach($promo->promo_id);
+                $units[$item['car_id']]->promos()->detach($promo->promo_id);
             }
         }
 

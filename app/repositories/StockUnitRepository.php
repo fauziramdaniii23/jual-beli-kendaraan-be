@@ -11,7 +11,7 @@ class StockUnitRepository
     public function getUnit(array $filter = [])
     {
         $query = Car::query()
-            ->select(['cars_id', 'name', 'year', 'brand_id', 'branch_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
+            ->select(['car_id', 'name', 'year', 'brand_id', 'branch_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
             ->with([
                 'branch:branch_id,name',
                 'status:ref_code,ref_value',
@@ -41,14 +41,14 @@ class StockUnitRepository
         }
         $query->orderBy('created_at', 'desc');
 
-        return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
+        return $query->get(['car_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
 
     public function getUnitWithPagination(array $filter = [], int $perPage = 10)
     {
         $query = Car::query()
             ->select([
-                'cars_id',
+                'car_id',
                 'name',
                 'year',
                 'brand_id',
@@ -148,14 +148,14 @@ class StockUnitRepository
         ]);
     }
 
-    public function setPrimaryImage($cars_id, $id): void
+    public function setPrimaryImage($car_id, $id): void
     {
-        CarImage::where('car_id', $cars_id)
+        CarImage::where('car_id', $car_id)
             ->update([
                 'is_primary' => false,
             ]);
 
-        CarImage::where('car_id', $cars_id)
+        CarImage::where('car_id', $car_id)
             ->where('image_id', $id)
             ->update([
                 'is_primary' => true,

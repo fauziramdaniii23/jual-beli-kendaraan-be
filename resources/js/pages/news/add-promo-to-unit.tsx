@@ -35,7 +35,7 @@ type TPromo = {
 }
 
 type TPromoUnit = {
-    cars_id: number;
+    car_id: number;
     name: string;
     price?: number | null;
     stnk_validity_period?: string | null;
@@ -67,7 +67,7 @@ export default function AddPromoToUnitPage() {
 
     const [promoUnit, setPromoUnit] = useState<TPromoUnit[]>(
         stock_unit.map((unit) => ({
-            cars_id: unit.cars_id!,
+            car_id: unit.car_id!,
             name: unit.name,
             price: unit.price!,
             stnk_validity_period: unit.stnk_validity_period,
@@ -123,7 +123,7 @@ export default function AddPromoToUnitPage() {
         setAvailableChange(true);
         setPromoUnit((prev) =>
             prev.map((item) =>
-                item.cars_id === id
+                item.car_id === id
                     ? {
                         ...item,
                         has_promo: isActive,
@@ -175,7 +175,7 @@ export default function AddPromoToUnitPage() {
                         checked={row.original.has_promo}
                         onCheckedChange={(checked) =>
                             handleToggleActive(
-                                row.original.cars_id,
+                                row.original.car_id,
                                 Boolean(checked)
                             )
                         }

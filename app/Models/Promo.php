@@ -60,7 +60,7 @@ class Promo extends Model
             'promo_id',
             'car_id',
             'promo_id',
-            'cars_id'
+            'car_id'
         )->withPivot('applied_at')->withTimestamps();
     }
 

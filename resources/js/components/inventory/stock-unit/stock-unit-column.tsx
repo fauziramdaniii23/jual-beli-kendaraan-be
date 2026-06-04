@@ -205,7 +205,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         header: () => <div className="text-center">Aksi</div>,
         enableHiding: false,
         cell: ({row}) => {
-            const id = row.original.cars_id;
+            const id = row.original.car_id;
 
             return (
                 <div className="text-center">

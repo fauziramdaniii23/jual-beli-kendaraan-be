@@ -43,7 +43,7 @@ export default function FormStockUnitPage() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' && stock_unit ? updateUnit(stock_unit.cars_id!).url : storeUnit.url();
+        const url = type === 'update' && stock_unit ? updateUnit(stock_unit.car_id!).url : storeUnit.url();
 
         form.post(url, {
             forceFormData: true,

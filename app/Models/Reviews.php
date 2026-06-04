@@ -17,7 +17,7 @@ class Reviews extends Model
     protected $primaryKey = 'review_id';
 
     protected $fillable = [
-        'cars_id',
+        'car_id',
         'user_id',
         'rating',
         'review_text',
@@ -64,8 +64,8 @@ class Reviews extends Model
     {
         return $this->BelongsTo(
             Car::class,
-            'cars_id',
-            'cars_id'
+            'car_id',
+            'car_id'
         );
     }
 

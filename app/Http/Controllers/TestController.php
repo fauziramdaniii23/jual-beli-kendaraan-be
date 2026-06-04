@@ -25,7 +25,7 @@ class TestController extends Controller
     {
         $data = Car::query()
             ->get()
-            ->keyBy('cars_id');
+            ->keyBy('car_id');
 
 
         return $this->successResponse($data);

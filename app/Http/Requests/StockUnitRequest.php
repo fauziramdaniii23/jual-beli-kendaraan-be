@@ -23,7 +23,7 @@ class StockUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cars_id' => 'nullable|integer',
+            'car_id' => 'nullable|integer',
 
             'name' => 'required|string',
             'description' => 'nullable|string',

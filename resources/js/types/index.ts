@@ -15,7 +15,7 @@ export type TOptionItem = {
 };
 export type TImagesFile = {
     image_id: number;
-    cars_id: number;
+    car_id: number;
     file_name: string;
     path: string;
     file_src: string;

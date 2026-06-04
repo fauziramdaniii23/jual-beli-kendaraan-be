@@ -18,7 +18,7 @@ class ReviewsController extends Controller
     public function index()
     {
         $data = Reviews::with([
-            'unit:cars_id,name',
+            'unit:car_id,name',
             'user:id,name',
         ])->orderBy('created_at', 'desc')->get();
 
@@ -32,12 +32,12 @@ class ReviewsController extends Controller
             $reviewId = $request->input('review_id');
 
             $reviews = $reviewId ? Reviews::with([
-                'unit:cars_id,name',
+                'unit:car_id,name',
                 'user:id,name',
             ])->findOrFail($reviewId) : null;
 
             $users = $type === 'create' ? User::query()->select(['id', 'name'])->get() : null;
-            $units = $type === 'create' ? Car::query()->with('status:ref_code,ref_value')->select(['cars_id', 'name', 'status_code'])->whereNot('status_code', 'SOLD')->get() : null;
+            $units = $type === 'create' ? Car::query()->with('status:ref_code,ref_value')->select(['car_id', 'name', 'status_code'])->whereNot('status_code', 'SOLD')->get() : null;
 
             return Inertia::render('customers/form-reviews', ['units' => $units, 'reviews' => $reviews, 'users' => $users, 'type' => $type]);
         } catch (Exception $e) {
@@ -54,7 +54,7 @@ class ReviewsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'cars_id' => 'required|exists:cars,cars_id',
+                'car_id' => 'required|exists:cars,car_id',
                 'user_id' => 'required|exists:users,id',
                 'rating' => 'required|numeric|min:1|max:5',
                 'review_text' => 'nullable|string',
@@ -83,7 +83,7 @@ class ReviewsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'cars_id' => 'required|exists:cars,cars_id',
+                'car_id' => 'required|exists:cars,car_id',
                 'user_id' => 'required|exists:users,id',
                 'rating' => 'required|numeric|min:1|max:5',
                 'review_text' => 'nullable|string',

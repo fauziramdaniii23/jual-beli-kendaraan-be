@@ -13,7 +13,7 @@ class Car extends Model
 
     protected $table = 'cars';
 
-    protected $primaryKey = 'cars_id';
+    protected $primaryKey = 'car_id';
 
     public $incrementing = true;
 
@@ -160,7 +160,7 @@ class Car extends Model
         return $this->hasMany(
             CarImage::class,
             'car_id',
-            'cars_id'
+            'car_id'
         );
     }
 
@@ -169,7 +169,7 @@ class Car extends Model
         return $this->hasOne(
             CarImage::class,
             'car_id',
-            'cars_id'
+            'car_id'
         )->where('is_primary', true);
     }
 
