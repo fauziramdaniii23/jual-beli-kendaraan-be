@@ -115,13 +115,15 @@ class StockUnitRepository
 
     public function getOptionFilter(string $type)
     {
-        return MasterReference::query()
-            ->byType($type)
-            ->get()
-            ->map(fn ($item) => [
-                'value' => $item->ref_code,
-                'label' => $item->ref_value,
-            ]);
+        $option = MasterReference::query()->byType($type);
+        if ($type === 'CAR_STATUS') {
+            $option->whereNot('ref_code', 'SOLD');
+        }
+
+        return $option->get()->map(fn ($item) => [
+            'value' => $item->ref_code,
+            'label' => $item->ref_value,
+        ]);
     }
 
     public function store(array $data)
