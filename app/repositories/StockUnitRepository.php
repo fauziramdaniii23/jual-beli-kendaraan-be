@@ -63,10 +63,13 @@ class StockUnitRepository
                 'plate_code',
                 'seat_code',
                 'status_code',
+                'year',
+                'engine_cc',
+                'color',
             ])
             ->with([
                 'promos',
-                'brand:brand_id,brand_name',
+                'brand:brand_id,brand_name,logo_path',
                 'model:model_id,model_name',
                 'transmission:ref_code,ref_value',
                 'fuelType:ref_code,ref_value',
@@ -74,7 +77,7 @@ class StockUnitRepository
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
                 'images:image_id,car_id,path,is_primary',
-            ]);
+            ])->whereNot('status_code', 'SOLD');
 
         $columns = [
             'brand_id' => 'brand_id',

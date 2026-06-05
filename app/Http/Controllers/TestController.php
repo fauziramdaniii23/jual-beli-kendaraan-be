@@ -23,7 +23,7 @@ class TestController extends Controller
     public function test(Request $request)
     {
         DB::enableQueryLog();
-        $data = $this->stockUnitService->getUnit($request);
+        $data = $this->stockUnitService->getUnitWithPagination($request);
 
         $queries = DB::getQueryLog();
 

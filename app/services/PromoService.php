@@ -5,6 +5,7 @@ namespace App\services;
 use App\Helper\DateHelper;
 use App\Models\Car;
 use App\Models\Promo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ class PromoService
 {
     public function __construct(protected StockUnitService $stockUnitService) {}
 
-    public function getPromos()
+    public function getPromos(): Collection
     {
         $promos = Promo::query()->orderBy('created_at', 'desc')->get();
         $promos->map(function ($promo) {
@@ -24,13 +25,13 @@ class PromoService
         return $promos;
     }
 
-    public function getPromosApiMainPage()
+    public function getPromosApiMainPage(): Collection
     {
         $promos = Promo::with([
             'cars' => function ($query) {
                 $query->where('status_code', '!=', 'SOLD')->with([
                     'promos',
-                    'brand:brand_id,brand_name',
+                    'brand:brand_id,brand_name,logo_path',
                     'model:model_id,model_name',
                     'transmission:ref_code,ref_value',
                     'fuelType:ref_code,ref_value',
@@ -39,16 +40,13 @@ class PromoService
                     'status:ref_code,ref_value',
                     'images:image_id,car_id,path,is_primary',
                 ])->limit(10);
-            },
-        ])->where('start_date', '<=', now())
+            }])
+            ->where('start_date', '<=', now())
             ->where(function ($query) {
                 $query->where('end_date', '>=', now())->orWhereNull('end_date');
             })
             ->orderBy('created_at', 'desc')->get();
-        $promos->map(function ($promo) {
-            $promo->start_date = DateHelper::dateFormat($promo->start_date);
-            $promo->end_date = DateHelper::dateFormat($promo->end_date);
-        });
+
         $promos->each(function ($promo) {
             $promo->setRelation(
                 'cars',
