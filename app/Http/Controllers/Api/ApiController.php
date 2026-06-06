@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Car;
 use App\services\BranchService;
 use App\services\FAQService;
 use App\services\PromoService;
@@ -11,8 +12,6 @@ use App\services\StockUnitService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
@@ -32,6 +31,37 @@ class ApiController extends Controller
             $stockUnit = $this->stockUnitService->getUnitWithPagination($request);
 
             return $this->paginateResponse($stockUnit);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function detailUnit(Request $request, Car $car): JsonResponse
+    {
+        try {
+            $car->load([
+                'promos',
+                'brand:brand_id,brand_name,logo_path',
+                'model:model_id,model_name',
+                'transmission:ref_code,ref_value',
+                'fuelType:ref_code,ref_value',
+                'plate:ref_code,ref_value',
+                'seat:ref_code,ref_value',
+                'status:ref_code,ref_value',
+                'images:image_id,car_id,path,is_primary',
+            ]);
+
+            $unit = $this->stockUnitService->mapUnit($car);
+            $recomendation = $this->stockUnitService->getRecommendationCars($car);
+            $recomendation->map(function ($unit) {
+                $this->stockUnitService->mapUnit($unit);
+            });
+            $data = [
+                'unit' => $unit,
+                'recomendation' => $recomendation,
+            ];
+
+            return $this->successResponse($data);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

@@ -66,6 +66,7 @@ class StockUnitRepository
                 'year',
                 'engine_cc',
                 'color',
+                'slug'
             ])
             ->with([
                 'promos',

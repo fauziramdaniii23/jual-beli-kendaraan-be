@@ -10,7 +10,10 @@ Route::get('/hello', function () {
     return response()->json(['message' => 'Hello, World!']);
 });
 
-Route::get('/stock-unit', [ApiController::class, 'getStockUnit'])->name('stock.unit');
+Route::prefix('unit')->group(function () {
+    Route::get('', [ApiController::class, 'getStockUnit'])->name('unit');
+    Route::get('/{car}', [ApiController::class, 'detailUnit'])->name('detail.unit');
+});
 Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');
 Route::get('/branch', [ApiController::class, 'getBranch'])->name('branch');
 Route::get('/faq', [ApiController::class, 'getFaq'])->name('faq');

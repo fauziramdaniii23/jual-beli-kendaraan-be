@@ -256,4 +256,68 @@ class StockUnitService
 
         return $primary_image;
     }
+
+    public function getRecommendationCars(Car $car, int $limit = 10)
+    {
+        return Car::query()
+            ->select('cars.*')
+            ->selectRaw('
+            (
+                CASE
+                    WHEN model_id = ? THEN 50
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN brand_id = ? THEN 30
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN transmission_code = ? THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN fuel_type_code = ? THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN ABS(year - ?) <= 2 THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN price BETWEEN ? AND ? THEN 20
+                    ELSE 0
+                END
+            ) AS recommendation_score
+        ', [
+                $car->model_id,
+                $car->brand_id,
+                $car->transmission_code,
+                $car->fuel_type_code,
+                $car->year,
+                $car->price * 0.8,
+                $car->price * 1.2,
+            ])
+            ->with([
+                'promos',
+                'brand:brand_id,brand_name,logo_path',
+                'model:model_id,model_name',
+                'transmission:ref_code,ref_value',
+                'fuelType:ref_code,ref_value',
+                'plate:ref_code,ref_value',
+                'seat:ref_code,ref_value',
+                'status:ref_code,ref_value',
+                'images:image_id,car_id,path,is_primary',
+            ])
+            ->whereNot('status_code', 'SOLD')
+            ->where('is_active', true)
+            ->where('car_id', '!=', $car->car_id)
+            ->orderByDesc('recommendation_score')
+            ->limit($limit)
+            ->get();
+    }
 }
