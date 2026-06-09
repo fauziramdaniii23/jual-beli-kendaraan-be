@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
+use App\Models\MasterReference;
 use App\services\BranchService;
 use App\services\FAQService;
 use App\services\PromoService;
@@ -103,9 +104,45 @@ class ApiController extends Controller
     public function getPromo(Request $request): JsonResponse
     {
         try {
+            $promos = $this->promoService->getPromosApi();
+
+            return $this->successResponse($promos);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function getAllPromoWithUnit(Request $request): JsonResponse
+    {
+        try {
             $promos = $this->promoService->getPromosApiMainPage();
 
             return $this->successResponse($promos);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function getOptionFilters(Request $request): JsonResponse
+    {
+        try {
+            $optionTypes = [
+                'brand' => 'BRAND',
+                'branch' => 'BRANCH',
+                'model' => 'MODEL',
+                'transmission' => MasterReference::TYPE_TRANSMISSION,
+                'car_type' => MasterReference::TYPE_CAR,
+                'fuel_type' => MasterReference::TYPE_FUEL_TYPE,
+                'status' => MasterReference::TYPE_STATUS,
+                'plate_type' => MasterReference::TYPE_PLATE,
+                'seat_type' => MasterReference::TYPE_SEAT,
+            ];
+            $options = collect($optionTypes)
+                ->mapWithKeys(fn ($type, $key) => [
+                    $key => $this->stockUnitService->getOptionFilter($type),
+                ]);
+
+            return $this->successResponse($options);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

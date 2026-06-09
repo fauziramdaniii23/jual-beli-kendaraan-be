@@ -56,6 +56,17 @@ class PromoService
 
         return $promos;
     }
+    public function getPromosApi(): Collection
+    {
+        $promos = Promo::select(['promo_id', 'name', 'code', 'image', 'start_date', 'end_date'])
+            ->where('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->where('end_date', '>=', now())->orWhereNull('end_date');
+            })
+            ->orderBy('created_at', 'desc')->get();
+
+        return $promos;
+    }
 
     public function store(array $data)
     {

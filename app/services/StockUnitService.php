@@ -85,6 +85,8 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => (string) $item->brand_id,
                 'label' => $item->brand_name,
+                'img_src' => $item->file_src,
+                'img_name' => $item->file_name,
             ]);
         }
 

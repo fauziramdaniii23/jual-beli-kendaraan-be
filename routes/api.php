@@ -18,3 +18,5 @@ Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');
 Route::get('/branch', [ApiController::class, 'getBranch'])->name('branch');
 Route::get('/faq', [ApiController::class, 'getFaq'])->name('faq');
 Route::get('/promo', [ApiController::class, 'getPromo'])->name('promo');
+Route::get('/all-promo-with-unit', [ApiController::class, 'getAllPromoWithUnit'])->name('all.promo.with.unit');
+Route::get('/option-filters', [ApiController::class, 'getOptionFilters'])->name('option.filters');
