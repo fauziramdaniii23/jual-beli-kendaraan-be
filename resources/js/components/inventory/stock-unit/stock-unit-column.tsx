@@ -17,6 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatRupiah } from '@/lib/utils';
 
 interface Props {
     onDetail: (id: number | undefined) => void;
@@ -116,6 +117,54 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         ),
     },
     {
+        accessorKey: 'total_discount',
+        header: ({ column }) => {
+            const sorted = column.getIsSorted();
+
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting()}
+                    className="flex w-full items-center justify-between"
+                >
+                    Total Diskon
+                    {!sorted && <ArrowUpDown />}
+                    {sorted === "asc" && <ArrowDownNarrowWide />}
+                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="items-center text-end">
+                {formatRupiah(row.getValue('total_discount'))}
+            </div>
+        )
+    },
+    {
+        accessorKey: "final_price",
+        header: ({ column }) => {
+            const sorted = column.getIsSorted();
+
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting()}
+                    className="flex w-full items-center justify-between"
+                >
+                    Harga Akhir
+                    {!sorted && <ArrowUpDown />}
+                    {sorted === "asc" && <ArrowDownNarrowWide />}
+                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="text-right w-full">
+                {formatRupiah(row.getValue("final_price"))}
+            </div>
+        ),
+    },
+    {
         accessorKey: "status.ref_value",
         header: ({ column }) => {
             const sorted = column.getIsSorted();
@@ -156,7 +205,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
         header: () => <div className="text-center">Aksi</div>,
         enableHiding: false,
         cell: ({row}) => {
-            const id = row.original.cars_id;
+            const id = row.original.car_id;
 
             return (
                 <div className="text-center">

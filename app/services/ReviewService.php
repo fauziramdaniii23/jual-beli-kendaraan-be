@@ -19,7 +19,7 @@ class ReviewService
                 $image_path = $this->uploadImage($file);
             }
             Reviews::create([
-                'cars_id' => $data['cars_id'],
+                'car_id' => $data['car_id'],
                 'user_id' => $data['user_id'],
                 'rating' => $data['rating'],
                 'review_text' => $data['review_text'],
@@ -74,8 +74,8 @@ class ReviewService
     public function getReviewsWithPaginate(Request $request)
     {
         $reviews = Reviews::query()
-            ->select(['review_id', 'cars_id', 'user_id', 'rating', 'review_text', 'is_published', 'image', 'created_at'])
-            ->with(['unit:cars_id,name', 'user:id,name'])->orderBy('created_at', 'desc');
+            ->select(['review_id', 'car_id', 'user_id', 'rating', 'review_text', 'is_published', 'image', 'created_at'])
+            ->with(['unit:car_id,name', 'user:id,name'])->orderBy('created_at', 'desc');
 
         return $reviews->paginate($request->per_page ?? 10);
     }

@@ -85,6 +85,8 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => (string) $item->brand_id,
                 'label' => $item->brand_name,
+                'img_src' => $item->file_src,
+                'img_name' => $item->file_name,
             ]);
         }
 
@@ -95,14 +97,9 @@ class StockUnitService
     {
         $stockUnit = $this->stockUnitRepository->getUnitById($id);
 
-        $stockUnit->stnk_validity_period = DateHelper::dateFormat($stockUnit->stnk_validity_period);
-        $stockUnit->kilometer = (int) $stockUnit->kilometer;
-        $stockUnit->price = (float) $stockUnit->price;
-        $primaryImage = $stockUnit->images->firstWhere('is_primary', true);
-        $stockUnit->primary_image = $primaryImage ?? null;
-        $stockUnit->primary_image_id = $primaryImage?->image_id;
+        $map = $this->mapUnit($stockUnit);
 
-        return $stockUnit;
+        return $map;
     }
 
     public function store(array $data)
@@ -129,6 +126,9 @@ class StockUnitService
             ]);
             if (! empty($data['image'])) {
                 $this->uploadImages($stockUnit, $data['image']);
+            }
+            if (! empty($data['promo_ids'])) {
+                $stockUnit->promos()->attach($data['promo_ids']);
             }
 
             return $stockUnit;
@@ -161,7 +161,7 @@ class StockUnitService
         foreach ($images as $image) {
             $path = $this->uploadImage($image, 'stock-units');
 
-            $this->stockUnitRepository->storeImage($stockUnit->cars_id, $path);
+            $this->stockUnitRepository->storeImage($stockUnit->car_id, $path);
         }
     }
 
@@ -176,11 +176,12 @@ class StockUnitService
             'public'       // disk → config/filesystems.php
         );
     }
+
     public function deleteUnit(int $id)
     {
         return DB::transaction(function () use ($id) {
             $stockUnit = Car::findOrFail($id);
-            $images = CarImage::where('cars_id', $id)->get();
+            $images = CarImage::where('car_id', $id)->get();
             foreach ($images as $image) {
                 $this->deleteImage($image->image_id);
             }
@@ -207,7 +208,7 @@ class StockUnitService
         return true;
     }
 
-    private function mapUnit($unit)
+    public function mapUnit($unit)
     {
         $unit->stnk_validity_period = DateHelper::dateFormat(
             $unit->stnk_validity_period
@@ -220,18 +221,30 @@ class StockUnitService
 
         $unit->primary_image = $primaryImage;
         $unit->primary_image_id = $primaryImage?->image_id;
-
+        $totalDiscount = 0;
         if ($unit->promos->isNotEmpty()) {
-            $unit->promos = $unit->promos->map(function ($promo) use ($unit) {
-                $promo->final_price = Promo::calculateFinalPrice(
+            $unit->promo_ids = $unit->promos
+                ->pluck('promo_id')
+                ->map(fn ($id) => (string) $id)
+                ->values()
+                ->toArray();
+            $unit->promos = $unit->promos->map(function ($promo) use ($unit, &$totalDiscount) {
+                $promo->discount_amount = Promo::calculateDiscountAmount(
                     price: $unit->price,
                     type: $promo->type,
                     discountValue: (float) $promo->discount_value
                 );
 
+                $totalDiscount += $promo->discount_amount;
+
                 return $promo;
             });
         }
+        $unit->promo_names = $unit->promos
+            ->pluck('name')
+            ->implode(', ');
+        $unit->total_discount = $totalDiscount;
+        $unit->final_price = max(0, $unit->price - $totalDiscount);
 
         return $unit;
     }
@@ -244,5 +257,69 @@ class StockUnitService
         }
 
         return $primary_image;
+    }
+
+    public function getRecommendationCars(Car $car, int $limit = 10)
+    {
+        return Car::query()
+            ->select('cars.*')
+            ->selectRaw('
+            (
+                CASE
+                    WHEN model_id = ? THEN 50
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN brand_id = ? THEN 30
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN transmission_code = ? THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN fuel_type_code = ? THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN ABS(year - ?) <= 2 THEN 10
+                    ELSE 0
+                END +
+
+                CASE
+                    WHEN price BETWEEN ? AND ? THEN 20
+                    ELSE 0
+                END
+            ) AS recommendation_score
+        ', [
+                $car->model_id,
+                $car->brand_id,
+                $car->transmission_code,
+                $car->fuel_type_code,
+                $car->year,
+                $car->price * 0.8,
+                $car->price * 1.2,
+            ])
+            ->with([
+                'promos',
+                'brand:brand_id,brand_name,logo_path',
+                'model:model_id,model_name',
+                'transmission:ref_code,ref_value',
+                'fuelType:ref_code,ref_value',
+                'plate:ref_code,ref_value',
+                'seat:ref_code,ref_value',
+                'status:ref_code,ref_value',
+                'images:image_id,car_id,path,is_primary',
+            ])
+            ->whereNot('status_code', 'SOLD')
+            ->where('is_active', true)
+            ->where('car_id', '!=', $car->car_id)
+            ->orderByDesc('recommendation_score')
+            ->limit($limit)
+            ->get();
     }
 }

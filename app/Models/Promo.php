@@ -39,15 +39,16 @@ class Promo extends Model
         return asset('storage/'.$this->image);
     }
 
-    public static function calculateFinalPrice(float $price, string $type, float $discountValue): float
-    {
-        $discount = match ($type) {
+    public static function calculateDiscountAmount(
+        float $price,
+        string $type,
+        float $discountValue
+    ): float {
+        return match ($type) {
             self::TYPE_PERCENT => ($price * $discountValue) / 100,
             self::TYPE_FIXED => $discountValue,
             default => 0,
         };
-
-        return max(0, $price - $discount);
     }
 
     /** Semua mobil yang mendapat promo ini */
@@ -59,8 +60,8 @@ class Promo extends Model
             'promo_id',
             'car_id',
             'promo_id',
-            'cars_id'
-        )->withPivot('applied_at')->withTimestamps();
+            'car_id'
+        );
     }
 
     /** Scope: promo yang sedang aktif dan belum kadaluarsa */

@@ -2,6 +2,7 @@ import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React from 'react';
 import { index as indexUser, store as storeUser, update as updateUser } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import ImagePreview from '@/components/app/image-preview';
+import Title from '@/components/app/title';
 import { AvatarUpload } from '@/components/otentikasi/user/avatar-upload';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
-import Title from '@/components/app/title';
+import type { TImageProps } from '@/types';
 
 type TRoles = {
     id: number;
@@ -30,7 +31,7 @@ export type TFormUser = {
     password_confirmation: string;
     phone_number?: string;
     avatar?: File | null | string;
-    avatar_src?: string | null;
+    avatar_src?: string;
     data_roles?: string[];
 }
 
@@ -71,6 +72,13 @@ export default function FormUserPage() {
     };
 
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
+    const imagePreview: TImageProps[] = [
+        {
+            image_id: form.data.id,
+            image_src: form.data.avatar_src,
+            image_name: form.data.name
+        }
+    ]
 
     return (
         <>
@@ -227,8 +235,8 @@ export default function FormUserPage() {
                 </form>
             </div>
             <ImagePreview
-                image_src={form.data.avatar_src!}
-                file_name={form.data.name}
+                currentIndex={0}
+                images={imagePreview}
                 isOpen={isPreviewOpen}
                 onClose={() => setIsPreviewOpen(false)}
             />

@@ -46,7 +46,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('promos', [PromoController::class, 'index'])->name('news.promos');
         Route::get('promos/form', [PromoController::class, 'form'])->name('news.promos.form');
         Route::post('promos', [PromoController::class, 'store'])->name('news.promos.store')->middleware('can:news.create');
+        Route::get('promos/add-to-unit/{promo}', [PromoController::class, 'addPromoToUnit'])->name('news.promos.addtounit');
         Route::post('promos/{promo}', [PromoController::class, 'update'])->name('news.promos.update')->middleware('can:news.edit');
+        Route::post('promos/{promo}/add-to-unit', [PromoController::class, 'storePromoToUnit'])->name('news.promos.posttounit')->middleware('can:news.edit');
         Route::delete('promos/{promo}', [PromoController::class, 'destroy'])->name('news.promos.destroy')->middleware('can:news.delete');
     });
 

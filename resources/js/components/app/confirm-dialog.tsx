@@ -19,6 +19,7 @@ interface Props {
     cancelText?: string;
     onConfirm: () => void;
     loading?: boolean;
+    disable?: boolean;
 }
 
 export function ConfirmDialog({
@@ -30,6 +31,7 @@ export function ConfirmDialog({
     cancelText = "Batal",
     onConfirm,
     loading = false,
+    disable = false,
 }: Readonly<Props>) {
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -51,7 +53,7 @@ export function ConfirmDialog({
 
                     <AlertDialogAction
                         onClick={onConfirm}
-                        disabled={loading}
+                        disabled={loading || disable}
                     >
                         {loading && <Spinner />}
                         {confirmText}

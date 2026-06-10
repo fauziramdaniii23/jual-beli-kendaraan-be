@@ -25,23 +25,21 @@ export function ExistingImage({images, removeImage, type}: Props) {
         removeImage(selectedImageId!);
         setIsDialogOpen(false);
     }
-    const [imageSrc, setImageSrc] = useState('');
-    const [fileName, setFileName] = useState('');
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-    const openPreview = (src: string, name: string) => {
-        setImageSrc(src);
-        setFileName(name);
+    const openPreview = (src: string, name: string, index: number) => {
+        setSelectedIndex(index);
         setIsPreviewOpen(true);
     };
 
     return (
         <>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {existingImages.map((image) => (
+                {existingImages.map((image, index) => (
                     <div
                         key={image.image_id}
-                        onClick={() => openPreview(image.image_src, image.image_name)}
+                        onClick={() => openPreview(image.image_src!, image.image_name!, index)}
                         className="group relative overflow-hidden rounded-lg border border-muted-foreground/25"
                     >
                         {/* Image */}
@@ -60,7 +58,7 @@ export function ExistingImage({images, removeImage, type}: Props) {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleDeleteClick(image.image_id)
+                                        handleDeleteClick(image.image_id!)
                                     }}
                                     className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
                                     aria-label={`Hapus ${image.image_name}`}
@@ -87,7 +85,7 @@ export function ExistingImage({images, removeImage, type}: Props) {
                 onConfirm={handleConfirmDelete}
             />
 
-            <ImagePreview image_src={imageSrc} file_name={fileName} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+            <ImagePreview images={existingImages} currentIndex={selectedIndex} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
         </>
     );
 }

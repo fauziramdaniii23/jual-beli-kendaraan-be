@@ -11,18 +11,14 @@ class StockUnitRepository
     public function getUnit(array $filter = [])
     {
         $query = Car::query()
-            ->select(['cars_id', 'name', 'year', 'brand_id', 'branch_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
+            ->select(['car_id', 'name', 'year', 'brand_id', 'branch_id', 'model_id', 'stnk_validity_period', 'price', 'transmission_code', 'type_code', 'fuel_type_code', 'plate_code', 'seat_code', 'status_code'])
             ->with([
-                'brand:brand_id,brand_name',
                 'branch:branch_id,name',
-                'model:model_id,model_name',
-                'transmission:ref_code,ref_value',
-                'fuelType:ref_code,ref_value',
-                'plate:ref_code,ref_value',
-                'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
+                'promos:promo_id,name,code,type,discount_value',
                 'images:image_id,car_id,path,is_primary',
-            ]);
+            ])
+            ->whereNot('status_code', 'SOLD');
 
         $columns = [
             'brand_id' => 'brand_id',
@@ -39,15 +35,21 @@ class StockUnitRepository
                 $query->where($column, $filter[$key]);
             }
         }
+        if (! empty($filter['promo_id'])) {
+            $query->whereHas('promos', function ($q) use ($filter) {
+                $q->where('promos.promo_id', $filter['promo_id']);
+            });
+        }
         $query->orderBy('created_at', 'desc');
 
-        return $query->get(['cars_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
+        return $query->get(['car_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
+
     public function getUnitWithPagination(array $filter = [], int $perPage = 10)
     {
         $query = Car::query()
             ->select([
-                'cars_id',
+                'car_id',
                 'name',
                 'year',
                 'brand_id',
@@ -61,10 +63,14 @@ class StockUnitRepository
                 'plate_code',
                 'seat_code',
                 'status_code',
+                'year',
+                'engine_cc',
+                'color',
+                'slug'
             ])
             ->with([
                 'promos',
-                'brand:brand_id,brand_name',
+                'brand:brand_id,brand_name,logo_path',
                 'model:model_id,model_name',
                 'transmission:ref_code,ref_value',
                 'fuelType:ref_code,ref_value',
@@ -72,7 +78,7 @@ class StockUnitRepository
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
                 'images:image_id,car_id,path,is_primary',
-            ]);
+            ])->whereNot('status_code', 'SOLD');
 
         $columns = [
             'brand_id' => 'brand_id',
@@ -106,6 +112,7 @@ class StockUnitRepository
                 'plate:ref_code,ref_value',
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
+                'promos:promo_id,name,code,type,discount_value,image',
             ]);
 
         return $query->findOrFail($id);
@@ -113,13 +120,15 @@ class StockUnitRepository
 
     public function getOptionFilter(string $type)
     {
-        return MasterReference::query()
-            ->byType($type)
-            ->get()
-            ->map(fn ($item) => [
-                'value' => $item->ref_code,
-                'label' => $item->ref_value,
-            ]);
+        $option = MasterReference::query()->byType($type);
+        if ($type === 'CAR_STATUS') {
+            $option->whereNot('ref_code', 'SOLD');
+        }
+
+        return $option->get()->map(fn ($item) => [
+            'value' => $item->ref_code,
+            'label' => $item->ref_value,
+        ]);
     }
 
     public function store(array $data)
@@ -130,6 +139,7 @@ class StockUnitRepository
     public function update(int $id, array $data)
     {
         $car = Car::findOrFail($id);
+        $car->promos()->sync($data['promo_ids']);
         $car->update($data);
 
         return $car->fresh();
@@ -143,14 +153,14 @@ class StockUnitRepository
         ]);
     }
 
-    public function setPrimaryImage($cars_id, $id): void
+    public function setPrimaryImage($car_id, $id): void
     {
-        CarImage::where('car_id', $cars_id)
+        CarImage::where('car_id', $car_id)
             ->update([
                 'is_primary' => false,
             ]);
 
-        CarImage::where('car_id', $cars_id)
+        CarImage::where('car_id', $car_id)
             ->where('image_id', $id)
             ->update([
                 'is_primary' => true,

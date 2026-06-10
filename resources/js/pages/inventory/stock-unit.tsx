@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { index as indexStockUnit, create as createStockUnit, show as showStockUnit, destroy as deleteStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
+import Title from '@/components/app/title';
 import { getStockUnitColumns } from '@/components/inventory/stock-unit/stock-unit-column';
 import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
-import Title from '@/components/app/title';
 
 type PageProps = {
     stock_unit: TUnit[];
@@ -219,7 +219,7 @@ export default function StockUnitPage() {
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={stock_unit} />
+                <DataTable className="max-h-[600px]" columns={columns} data={stock_unit} />
             </div>
             <ConfirmDialog
                 title="Hapus Stock Unit"

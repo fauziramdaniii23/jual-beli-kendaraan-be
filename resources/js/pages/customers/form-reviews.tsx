@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import React from 'react';
 import { index as indexReviews, store as storeReviews, update as updateReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import TextEditor from '@/components/app/text-editor';
+import Title from '@/components/app/title';
 import FormImage from '@/components/customers/reviews/form-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,10 +29,9 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
-import Title from '@/components/app/title';
 
 type TUnit = {
-    cars_id: number;
+    car_id: number;
     name: string;
     status: {
         ref_code: string;
@@ -45,7 +45,7 @@ type TCustomer = {
 
 export type TFormReviews = {
     review_id?: number;
-    cars_id: number;
+    car_id: number;
     user_id: number;
     user: TCustomer;
     unit: TUnit;
@@ -66,7 +66,7 @@ type PageProps = {
 
 const defaultReviews = {
     review_id: 0,
-    cars_id: 0,
+    car_id: 0,
     user_id: 0,
     rating: '',
     review_text: '',
@@ -162,7 +162,7 @@ export default function FormReviewPage() {
                                         <Combobox
                                             items={units}
                                             itemToStringLabel={(item : TUnit) => item.name}
-                                            onValueChange={(val : TUnit | null) => form.setData('cars_id', Number(val?.cars_id))}
+                                            onValueChange={(val : TUnit | null) => form.setData('car_id', Number(val?.car_id))}
                                         >
                                             <ComboboxInput placeholder="Pilih Unit" showClear/>
 
@@ -172,7 +172,7 @@ export default function FormReviewPage() {
                                                 <ComboboxList>
                                                     {(unit) => (
                                                         <ComboboxItem
-                                                            key={unit.cars_id}
+                                                            key={unit.car_id}
                                                             value={unit}
                                                         >
                                                             {unit.name}

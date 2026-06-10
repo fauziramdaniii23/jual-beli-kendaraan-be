@@ -15,7 +15,7 @@ export type TOptionItem = {
 };
 export type TImagesFile = {
     image_id: number;
-    cars_id: number;
+    car_id: number;
     file_name: string;
     path: string;
     file_src: string;
@@ -26,4 +26,9 @@ export type TImageProps = {
     image_id?: number;
     image_name?: string;
     image_src?: string;
+}
+
+export type TDateRange = {
+    from?: string;
+    to?: string;
 }

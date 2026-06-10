@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\SlugHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ class Car extends Model
 
     protected $table = 'cars';
 
-    protected $primaryKey = 'cars_id';
+    protected $primaryKey = 'car_id';
 
     public $incrementing = true;
 
@@ -40,6 +41,7 @@ class Car extends Model
         'price',
         'stnk_validity_period',
         'is_active',
+        'slug',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -51,17 +53,34 @@ class Car extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     protected $appends = ['formatted_price'];
 
     protected static function booted(): void
     {
         static::creating(function ($car) {
+            $car->slug = SlugHelper::generate(
+                name: $car->name,
+                modelClass: self::class,
+                primaryKey: 'car_id'
+            );
             $car->created_by = Auth::user()?->email;
             $car->updated_by = Auth::user()?->email;
         });
 
         static::updating(function ($car) {
+            if ($car->isDirty('name')) {
+                $car->slug = SlugHelper::generate(
+                    name: $car->name,
+                    modelClass: self::class,
+                    primaryKey: 'car_id',
+                    ignoreId: $car->car_id,
+                );
+            }
             $car->updated_by = Auth::user()?->email;
         });
 
@@ -160,7 +179,7 @@ class Car extends Model
         return $this->hasMany(
             CarImage::class,
             'car_id',
-            'cars_id'
+            'car_id'
         );
     }
 
@@ -169,7 +188,7 @@ class Car extends Model
         return $this->hasOne(
             CarImage::class,
             'car_id',
-            'cars_id'
+            'car_id'
         )->where('is_primary', true);
     }
 
@@ -189,6 +208,6 @@ class Car extends Model
             'car_promos',
             'car_id',
             'promo_id'
-        )->withPivot('applied_at');
+        );
     }
 }

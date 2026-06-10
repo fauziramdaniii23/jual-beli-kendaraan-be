@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import ImagePreview from '@/components/app/image-preview';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import type { TImageProps } from '@/types';
 
 interface ImageFile {
     id: string;
@@ -16,12 +17,9 @@ interface ImageUploadProps {
     maxFileSize?: number; // in MB
 }
 
-export function ImageUpload({
-        onImagesSelected,
-        maxImages = 10,
-        maxFileSize = 5,
-    }: ImageUploadProps) {
+export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5, }: ImageUploadProps) {
     const [images, setImages] = useState<ImageFile[]>([]);
+    const [previewImages, setPreviewImages] = useState<TImageProps[]>([]);
     const [isDragActive, setIsDragActive] = useState(false);
     const [error, setError] = useState<string>('');
 
@@ -50,6 +48,7 @@ export function ImageUpload({
             setError('');
 
             const newImages: ImageFile[] = [];
+            const newPreviewImages: TImageProps[] = [];
 
             // Convert FileList to Array and filter
             Array.from(files).forEach((file) => {
@@ -66,11 +65,17 @@ export function ImageUpload({
 
                 // Create preview URL
                 const preview = URL.createObjectURL(file);
+                const imageId = Date.now() + Math.floor(Math.random() * 1000);
                 newImages.push({
-                    id: `${file.name}-${Date.now()}`,
+                    id: imageId.toString(),
                     file,
                     preview,
                 });
+                newPreviewImages.push({
+                    image_id: imageId,
+                    image_name: file.name,
+                    image_src: preview
+                })
             });
 
             // Check total limit
@@ -81,7 +86,9 @@ export function ImageUpload({
             }
 
             const updatedImages = [...images, ...newImages];
+            const updatedPreviewImages = [...previewImages, ...newPreviewImages];
             setImages(updatedImages);
+            setPreviewImages(updatedPreviewImages);
 
             // Call callback with files
             if (onImagesSelected) {
@@ -147,13 +154,11 @@ export function ImageUpload({
             onImagesSelected([]);
         }
     };
-    const [imageSrc, setImageSrc] = useState('');
-    const [fileName, setFileName] = useState('');
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-    const openPreview = (src: string, name: string) => {
-        setImageSrc(src);
-        setFileName(name);
+    const openPreview = (src: string, name: string, index:number) => {
+        setSelectedIndex(index);
         setIsPreviewOpen(true);
     };
 
@@ -232,10 +237,10 @@ export function ImageUpload({
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {images.map((image) => (
+                        {images.map((image, i) => (
                             <div
                                 key={image.id}
-                                onClick={() => openPreview(image.preview, image.file.name)}
+                                onClick={() => openPreview(image.preview, image.file.name, i)}
                                 className="group relative overflow-hidden rounded-lg border border-muted-foreground/25"
                             >
                                 {/* Image */}
@@ -270,7 +275,7 @@ export function ImageUpload({
                     </div>
                 </div>
             )}
-            <ImagePreview image_src={imageSrc} file_name={fileName} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+            <ImagePreview currentIndex={selectedIndex} images={previewImages} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
         </div>
     );
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StockUnitRequest;
 use App\Models\MasterReference;
+use App\Models\Promo;
 use App\services\StockUnitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -43,8 +44,9 @@ class StockUnitController extends Controller
             ->mapWithKeys(fn ($type, $key) => [
                 $key => $this->stockUnitService->getOptionFilter($type),
             ]);
+        $promos = Promo::query()->select(['promo_id', 'name', 'code'])->get();
 
-        return Inertia::render('inventory/form-stock-unit', ['options' => $options, 'type' => 'create']);
+        return Inertia::render('inventory/form-stock-unit', ['options' => $options, 'type' => 'create', 'promos' => $promos]);
     }
 
     public function store(StockUnitRequest $request)
@@ -75,8 +77,9 @@ class StockUnitController extends Controller
             ->mapWithKeys(fn ($type, $key) => [
                 $key => $this->stockUnitService->getOptionFilter($type),
             ]);
+        $promos = Promo::query()->select(['promo_id', 'name', 'code'])->get();
 
-        return Inertia::render('inventory/form-stock-unit', ['stock_unit' => $stockUnit, 'options' => $options, 'type' => $type]);
+        return Inertia::render('inventory/form-stock-unit', ['stock_unit' => $stockUnit, 'options' => $options, 'type' => $type, 'promos' => $promos]);
     }
 
     public function update(StockUnitRequest $request, $id)

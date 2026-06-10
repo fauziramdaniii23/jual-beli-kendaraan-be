@@ -4,11 +4,12 @@ import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
-    ArrowUpWideNarrow, Eye,
+    ArrowUpWideNarrow,
     MoreHorizontal, SquarePen, Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
+import Title from '@/components/app/title';
 import type { TBrand } from '@/components/master/brand/type';
 import CreateModelDialog from '@/components/master/model/add-model';
 import { ConfirmDeleteModel } from '@/components/master/model/delete-confirm';
@@ -39,7 +40,6 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import Title from '@/components/app/title';
 
 type PageProps = {
     carModels: TModel[];

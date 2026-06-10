@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/table';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 
 // ======================================================
@@ -34,22 +35,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 // ======================================================
 
 interface DataTableProps<TData, TValue> {
+    className?: string;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     showPagination?: boolean;
     showRowPerPage?: boolean;
     showRowNumber?: boolean;
     pageSizeOptions?: number[];
+    onRowSelectionChange?: (row: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>(
     {
+        className,
         columns,
         data,
         showPagination = true,
         showRowPerPage = true,
         showRowNumber = true,
         pageSizeOptions = [10, 20, 30, 50, 100],
+        onRowSelectionChange
     }: DataTableProps<TData, TValue>) {
 
     const rowNumberColumn: ColumnDef<TData> = {
@@ -100,6 +105,7 @@ export function DataTable<TData, TValue>(
     const table = useReactTable({
         data,
         columns: mergedColumns,
+        autoResetPageIndex: false,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onPaginationChange: setPagination,
@@ -110,17 +116,26 @@ export function DataTable<TData, TValue>(
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange:
         setColumnVisibility,
-        onRowSelectionChange:
-        setRowSelection,
+        onRowSelectionChange: setRowSelection,
+        enableRowSelection: true,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
             pagination,
-            globalFilter
+            globalFilter,
         }
     });
+
+    React.useEffect(() => {
+        const selectedRows = table
+            .getSelectedRowModel()
+            .rows
+            .map((row) => row.original);
+
+        onRowSelectionChange?.(selectedRows);
+    }, [rowSelection]);
 
     return (
         <div className="w-full space-y-4">
@@ -178,51 +193,57 @@ export function DataTable<TData, TValue>(
             )}
 
             <div className="rounded-md border">
-                <Table className="border-collapse border border-border">
-                    <TableHeader className="bg-muted">
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id} className="sticky top-0 z-10 border border-border">
-                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                {/* overflow dipindah ke sini, langsung membungkus Table */}
+                <div className={cn("overflow-auto", className)}>
+                    <Table className="border-collapse border border-border">
+                        <TableHeader className="bg-muted h-12">
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead
+                                            key={header.id}
+                                            className="sticky top-0 z-10 border border-border bg-muted" // ← tambah bg-muted
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() &&
-                                        'selected'
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="border border-border">
-                                            {flexRender( cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
                                     ))}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={mergedColumns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
+                            ))}
+                        </TableHeader>
 
-                </Table>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() &&
+                                            'selected'
+                                        }
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="border border-border">
+                                                {flexRender( cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={mergedColumns.length}
+                                        className="h-24 text-center"
+                                    >
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+
+                    </Table>
+                </div>
             </div>
 
             {/* ====================================================== */}

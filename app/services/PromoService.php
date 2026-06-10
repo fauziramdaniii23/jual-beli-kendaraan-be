@@ -2,13 +2,72 @@
 
 namespace App\services;
 
+use App\Helper\DateHelper;
+use App\Models\Car;
 use App\Models\Promo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PromoService
 {
+    public function __construct(protected StockUnitService $stockUnitService) {}
+
+    public function getPromos(): Collection
+    {
+        $promos = Promo::query()->orderBy('created_at', 'desc')->get();
+        $promos->map(function ($promo) {
+            $promo->start_date = DateHelper::dateFormat($promo->start_date);
+            $promo->end_date = DateHelper::dateFormat($promo->end_date);
+        });
+
+        return $promos;
+    }
+
+    public function getPromosApiMainPage(): Collection
+    {
+        $promos = Promo::with([
+            'cars' => function ($query) {
+                $query->where('status_code', '!=', 'SOLD')->with([
+                    'promos',
+                    'brand:brand_id,brand_name,logo_path',
+                    'model:model_id,model_name',
+                    'transmission:ref_code,ref_value',
+                    'fuelType:ref_code,ref_value',
+                    'plate:ref_code,ref_value',
+                    'seat:ref_code,ref_value',
+                    'status:ref_code,ref_value',
+                    'images:image_id,car_id,path,is_primary',
+                ])->limit(10);
+            }])
+            ->where('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->where('end_date', '>=', now())->orWhereNull('end_date');
+            })
+            ->orderBy('created_at', 'desc')->get();
+
+        $promos->each(function ($promo) {
+            $promo->setRelation(
+                'cars',
+                $promo->cars->map(fn ($car) => $this->stockUnitService->mapUnit($car))
+            );
+        });
+
+        return $promos;
+    }
+    public function getPromosApi(): Collection
+    {
+        $promos = Promo::select(['promo_id', 'name', 'code', 'image', 'start_date', 'end_date'])
+            ->where('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->where('end_date', '>=', now())->orWhereNull('end_date');
+            })
+            ->orderBy('created_at', 'desc')->get();
+
+        return $promos;
+    }
+
     public function store(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -17,14 +76,65 @@ class PromoService
                 $file = $data['image_file'];
                 $image_path = $this->uploadImage($file);
             }
-            Promo::create([
-                'cars_id' => $data['cars_id'],
-                'user_id' => $data['user_id'],
-                'rating' => $data['rating'],
-                'review_text' => $data['review_text'],
+
+            return Promo::create([
+                'name' => $data['name'],
+                'code' => $data['code'],
+                'type' => $data['type'],
+                'discount_value' => $data['discount_value'],
+                'description' => $data['description'] ?? null,
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'] ?? null,
+                'is_active' => $data['is_active'] ?? true,
                 'image' => $image_path,
             ]);
         });
+    }
+
+    public function storePromoToUnit(Promo $promo, array $dataFilter, bool $selectAll, bool $unSelectAll, $listUnit): void
+    {
+        if ($selectAll || $unSelectAll) {
+            $columns = [
+                'brand_id' => 'brand_id',
+                'branch_id' => 'branch_id',
+                'model_id' => 'model_id',
+                'transmission' => 'transmission_code',
+                'car_type' => 'type_code',
+                'fuel_type' => 'fuel_type_code',
+                'status' => 'status_code',
+            ];
+
+            $query = Car::query()->whereNot('status_code', 'SOLD');
+            foreach ($columns as $key => $column) {
+                if (! empty($dataFilter[$key])) {
+                    $query->where($column, $dataFilter[$key]);
+                }
+            }
+            $units = $query->get();
+            foreach ($units as $unit) {
+                $selectAll ? $unit->promos()->attach($promo->promo_id) : $unit->promos()->detach($promo->promo_id);
+            }
+
+            return;
+        }
+
+        $units = Car::query()
+            ->whereIn('car_id', collect($listUnit)->pluck('car_id'))
+            ->get()
+            ->keyBy('car_id');
+
+        foreach ($listUnit as $item) {
+            if (! isset($units[$item['car_id']])) {
+                continue;
+            }
+
+            if ($item['has_promo']) {
+                $units[$item['car_id']]->promos()->syncWithoutDetaching([$promo->promo_id]);
+            } else {
+                $units[$item['car_id']]->promos()->detach($promo->promo_id);
+            }
+        }
+
     }
 
     public function update(array $data, $promo)
@@ -36,10 +146,10 @@ class PromoService
                 'code' => $data['code'],
                 'type' => $data['type'],
                 'discount_value' => $data['discount_value'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? null,
                 'start_date' => $data['start_date'],
-                'end_date' => $data['end_date'],
-                'is_active' => $data['is_active'],
+                'end_date' => $data['end_date'] ?? null,
+                'is_active' => $data['is_active'] ?? true,
             ];
 
             if (isset($data['image_file']) && $data['image_file']) {
@@ -75,4 +185,12 @@ class PromoService
         return $avatarPath;
     }
 
+    public function mapPromoStockUnit(Promo $promo, $stockUnit)
+    {
+        return $stockUnit->map(function ($unit) use ($promo) {
+            $unit->has_promo = $unit->promos->contains('promo_id', $promo->promo_id);
+
+            return $unit;
+        });
+    }
 }
