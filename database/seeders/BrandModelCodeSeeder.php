@@ -26,7 +26,7 @@ class BrandModelCodeSeeder extends Seeder
 
         foreach ($brand as $b) {
             $b->update([
-                'brand_code' => Str::snake($b->model_name),
+                'brand_code' => Str::snake($b->brand_name),
             ]);
         }
     }
