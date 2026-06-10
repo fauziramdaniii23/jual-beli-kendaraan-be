@@ -17,6 +17,7 @@ class CarModelRepository
             ->select([
                 'model_id',
                 'model_name',
+                'model_code',
                 'brand_id',
                 'is_active',
             ])

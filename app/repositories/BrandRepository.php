@@ -14,6 +14,7 @@ class BrandRepository
             ->select([
                 'brand_id',
                 'brand_name',
+                'brand_code',
                 'is_active',
                 'logo_path',
             ])

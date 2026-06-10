@@ -68,6 +68,7 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => strval($item->model_id),
                 'label' => $item->model_name,
+                'code' => $item->model_code,
                 'brand_id' => $item->brand_id,
             ]);
         }
@@ -85,6 +86,7 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => (string) $item->brand_id,
                 'label' => $item->brand_name,
+                'code' => $item->brand_code,
                 'img_src' => $item->file_src,
                 'img_name' => $item->file_name,
             ]);
