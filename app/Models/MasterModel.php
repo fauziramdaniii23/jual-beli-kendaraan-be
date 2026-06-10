@@ -18,6 +18,7 @@ class MasterModel extends Model
 
     protected $fillable = [
         'model_name',
+        'model_code',
         'brand_id',
         'is_active',
     ];

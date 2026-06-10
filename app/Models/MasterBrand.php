@@ -18,6 +18,7 @@ class MasterBrand extends Model
 
     protected $fillable = [
         'brand_name',
+        'brand_code',
         'is_active',
         'logo_path',
     ];
