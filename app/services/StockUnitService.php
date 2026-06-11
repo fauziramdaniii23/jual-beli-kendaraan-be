@@ -51,7 +51,6 @@ class StockUnitService
                 'fuel_type' => $request->fuel_type,
                 'status' => $request->status,
             ],
-            perPage: (int) $request->per_page
         );
         $units->getCollection()->transform(
             fn ($unit) => $this->mapUnit($unit)
