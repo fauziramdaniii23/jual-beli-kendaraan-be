@@ -45,7 +45,7 @@ class StockUnitRepository
         return $query->get(['car_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
 
-    public function getUnitWithPagination(array $filter = [], int $perPage = 10)
+    public function getUnitWithPagination(array $filter = [])
     {
         $query = Car::query()
             ->select([
@@ -97,7 +97,7 @@ class StockUnitRepository
 
         $query->orderBy('created_at', 'desc');
 
-        return $query->paginate($perPage);
+        return $query->paginate(10);
     }
 
     public function getUnitById($id)
@@ -139,7 +139,9 @@ class StockUnitRepository
     public function update(int $id, array $data)
     {
         $car = Car::findOrFail($id);
-        $car->promos()->sync($data['promo_ids']);
+        if (! empty($data['promo_ids'])) {
+            $car->promos()->sync($data['promo_ids']);
+        }
         $car->update($data);
 
         return $car->fresh();

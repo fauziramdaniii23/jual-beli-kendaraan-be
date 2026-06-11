@@ -51,7 +51,6 @@ class StockUnitService
                 'fuel_type' => $request->fuel_type,
                 'status' => $request->status,
             ],
-            perPage: (int) $request->per_page
         );
         $units->getCollection()->transform(
             fn ($unit) => $this->mapUnit($unit)
@@ -68,6 +67,7 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => strval($item->model_id),
                 'label' => $item->model_name,
+                'code' => $item->model_code,
                 'brand_id' => $item->brand_id,
             ]);
         }
@@ -85,6 +85,7 @@ class StockUnitService
             return $data->map(fn ($item) => [
                 'value' => (string) $item->brand_id,
                 'label' => $item->brand_name,
+                'code' => $item->brand_code,
                 'img_src' => $item->file_src,
                 'img_name' => $item->file_name,
             ]);
@@ -210,10 +211,6 @@ class StockUnitService
 
     public function mapUnit($unit)
     {
-        $unit->stnk_validity_period = DateHelper::dateFormat(
-            $unit->stnk_validity_period
-        );
-
         $unit->kilometer = (int) $unit->kilometer;
         $unit->price = (float) $unit->price;
 
