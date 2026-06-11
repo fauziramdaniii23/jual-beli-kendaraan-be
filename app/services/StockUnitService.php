@@ -44,12 +44,17 @@ class StockUnitService
     {
         $units = $this->stockUnitRepository->getUnitWithPagination(
             filter: [
-                'brand_id' => $request->brand_id,
-                'model_id' => $request->model_id,
-                'transmission' => $request->transmission,
-                'car_type' => $request->car_type,
-                'fuel_type' => $request->fuel_type,
-                'status' => $request->status,
+                'promo' => $request->promo,
+                'min_price' => $request->min_price,
+                'max_price' => $request->max_price,
+                'brands' => $request->brands,
+                'models' => $request->models,
+                'types' => $request->types,
+                'min_year' => $request->min_year,
+                'max_year' => $request->max_year,
+                'transmissions' => $request->transmissions,
+                'fuel_types' => $request->fuel_types,
+                'order_by' => $request->order_by,
             ],
         );
         $units->getCollection()->transform(

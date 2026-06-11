@@ -70,32 +70,79 @@ class StockUnitRepository
             ])
             ->with([
                 'promos',
-                'brand:brand_id,brand_name,logo_path',
-                'model:model_id,model_name',
+                'brand:brand_id,brand_code,brand_name,logo_path',
+                'model:model_id,model_code,model_name',
                 'transmission:ref_code,ref_value',
                 'fuelType:ref_code,ref_value',
                 'plate:ref_code,ref_value',
                 'seat:ref_code,ref_value',
                 'status:ref_code,ref_value',
                 'images:image_id,car_id,path,is_primary',
-            ])->whereNot('status_code', 'SOLD');
+            ])
+            ->where('status_code', '!=', 'SOLD')
 
-        $columns = [
-            'brand_id' => 'brand_id',
-            'model_id' => 'model_id',
-            'transmission' => 'transmission_code',
-            'car_type' => 'type_code',
-            'fuel_type' => 'fuel_type_code',
-            'status' => 'status_code',
-        ];
+            // Promo
+            ->when(! empty($filter['promo']),
+                fn ($q) => $q->whereHas('promos', fn ($promoQuery) => $promoQuery->whereIn('promos.code', $filter['promo'])
+                )
+            )
 
-        foreach ($columns as $key => $column) {
-            if (! empty($filter[$key])) {
-                $query->where($column, $filter[$key]);
-            }
-        }
+            // Brand
+            ->when(! empty($filter['brands']),
+                fn ($q) => $q->whereHas('brand', fn ($brandQuery) => $brandQuery->whereIn('brand_code', $filter['brands'])
+                )
+            )
 
-        $query->orderBy('created_at', 'desc');
+            // Model
+            ->when(! empty($filter['models']),
+                fn ($q) => $q->whereHas('model', fn ($modelQuery) => $modelQuery->whereIn('model_code', $filter['models'])
+                )
+            )
+
+            // Type
+            ->when(! empty($filter['types']),
+                fn ($q) => $q->whereIn('type_code', $filter['types'])
+            )
+
+            // Transmission
+            ->when(! empty($filter['transmissions']),
+                fn ($q) => $q->whereIn('transmission_code', $filter['transmissions'])
+            )
+
+            // Fuel Type
+            ->when(! empty($filter['fuel_types']),
+                fn ($q) => $q->whereIn('fuel_type_code', $filter['fuel_types'])
+            )
+
+            // Min Price
+            ->when(! empty($filter['min_price']),
+                fn ($q) => $q->where('price', '>=', $filter['min_price']
+                )
+            )
+
+            // Max Price
+            ->when(! empty($filter['max_price']),
+                fn ($q) => $q->where('price', '<=', $filter['max_price'])
+            )
+
+            // Min Year
+            ->when(! empty($filter['min_year']),
+                fn ($q) => $q->where('year', '>=', $filter['min_year'])
+            )
+
+            // Max Year
+            ->when(! empty($filter['max_year']),
+                fn ($q) => $q->where('year', '<=', $filter['max_year'])
+            );
+
+        // Sorting
+        match ($filter['order_by'] ?? 'latest_stock') {
+            'year_desc' => $query->orderByDesc('year'),
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            'km_asc' => $query->orderBy('kilometer'),
+            default => $query->orderByDesc('created_at'),
+        };
 
         return $query->paginate(10);
     }
