@@ -139,7 +139,9 @@ class StockUnitRepository
     public function update(int $id, array $data)
     {
         $car = Car::findOrFail($id);
-        $car->promos()->sync($data['promo_ids']);
+        if (! empty($data['promo_ids'])) {
+            $car->promos()->sync($data['promo_ids']);
+        }
         $car->update($data);
 
         return $car->fresh();

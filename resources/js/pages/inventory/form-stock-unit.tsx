@@ -212,7 +212,7 @@ export default function FormStockUnitPage() {
                                         placeholder="Pilih promo"
                                         disabled={disable}
                                     />
-                                    {form.errors.brand_id && <div className="text-sm text-destructive">{form.errors.brand_id}</div>}
+                                    {form.errors.promo_ids && <div className="text-sm text-destructive">{form.errors.promo_ids}</div>}
                                 </Field>
                             </FieldGroup>
                         </div>

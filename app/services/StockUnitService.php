@@ -211,10 +211,6 @@ class StockUnitService
 
     public function mapUnit($unit)
     {
-        $unit->stnk_validity_period = DateHelper::dateFormat(
-            $unit->stnk_validity_period
-        );
-
         $unit->kilometer = (int) $unit->kilometer;
         $unit->price = (float) $unit->price;
 

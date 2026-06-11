@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-
 import {
     Popover,
     PopoverContent,
@@ -21,32 +20,17 @@ interface Props {
     invalid?: boolean;
 }
 
-export default function DatePicker({
-   value,
-   onChange,
-   placeholder = 'Pilih Tanggal',
-   startMonth,
-   endMonth,
-    disabled,
-    invalid,
-}: Props) {
+export default function DatePicker({ value, onChange, placeholder = 'Pilih Tanggal', startMonth, endMonth, disabled, invalid, }: Props) {
+    console.log(value);
     const [open, setOpen] = React.useState(false);
-    const [label, setLabel] = React.useState(value);
 
-    // derived state
-    const date = value
-        ? parse(value, 'dd-MM-yyyy', new Date())
-        : undefined;
+    // value dari backend: yyyy-MM-dd
+    const date = value ? parse(value, 'yyyy-MM-dd', new Date()) : undefined;
 
-    const handleSelectDate = (
-        date: Date | undefined
-    ) => {
-        const formatted = date
-            ? format(date, 'dd-MM-yyyy')
-            : '';
+    const handleSelectDate = (date: Date | undefined) => {
+        const formatted = date ? format(date, 'yyyy-MM-dd') : '';
 
         onChange?.(formatted);
-        setLabel(formatted);
         setOpen(false);
     };
 
@@ -58,7 +42,7 @@ export default function DatePicker({
                     className="w-52 justify-between font-normal"
                     disabled={disabled}
                 >
-                    {label || placeholder}
+                    {date ? format(date, 'dd-MM-yyyy') : placeholder}
 
                     <ChevronDownIcon className="h-4 w-4" />
                 </Button>
@@ -73,7 +57,10 @@ export default function DatePicker({
                     selected={date}
                     captionLayout="dropdown"
                     defaultMonth={date}
-                    onSelect={handleSelectDate}
+                    onSelect={(selectedDate) => {
+                        console.log('selectedDate', selectedDate);
+                        handleSelectDate(selectedDate);
+                    }}
                     startMonth={startMonth}
                     endMonth={endMonth}
                 />
