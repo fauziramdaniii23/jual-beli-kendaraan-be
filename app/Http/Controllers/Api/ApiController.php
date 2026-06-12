@@ -48,6 +48,7 @@ class ApiController extends Controller
                 'fuelType:ref_code,ref_value',
                 'plate:ref_code,ref_value',
                 'seat:ref_code,ref_value',
+                'type:ref_code,ref_value',
                 'status:ref_code,ref_value',
                 'images:image_id,car_id,path,is_primary',
             ]);

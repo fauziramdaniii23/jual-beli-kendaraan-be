@@ -149,6 +149,14 @@ class Car extends Model
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_SEAT);
     }
+    public function type()
+    {
+        return $this->belongsTo(
+            MasterReference::class,
+            'type_code',
+            'ref_code'
+        )->where('ref_type', MasterReference::TYPE_CAR);
+    }
 
     public function status()
     {

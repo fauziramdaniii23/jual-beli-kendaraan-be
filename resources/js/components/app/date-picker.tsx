@@ -21,7 +21,6 @@ interface Props {
 }
 
 export default function DatePicker({ value, onChange, placeholder = 'Pilih Tanggal', startMonth, endMonth, disabled, invalid, }: Props) {
-    console.log(value);
     const [open, setOpen] = React.useState(false);
 
     // value dari backend: yyyy-MM-dd
@@ -58,7 +57,6 @@ export default function DatePicker({ value, onChange, placeholder = 'Pilih Tangg
                     captionLayout="dropdown"
                     defaultMonth={date}
                     onSelect={(selectedDate) => {
-                        console.log('selectedDate', selectedDate);
                         handleSelectDate(selectedDate);
                     }}
                     startMonth={startMonth}
