@@ -33,7 +33,7 @@ class BrandService
 
             return $this->brandRepository->store([
                 'brand_name' => $data['brand_name'],
-                'brand_code' => Str::snake($data['brand_code']),
+                'brand_code' => Str::snake($data['brand_name']),
                 'logo' => $data['logo'] ?? null,
                 'is_active' => true,
             ]);
@@ -49,6 +49,7 @@ class BrandService
                 brand: $brand,
                 data: [
                     'brand_name' => $data['brand_name'],
+                    'brand_code' => Str::snake($data['brand_name']),
                     'logo' => $data['logo'] ?? null,
                     'is_active' => $data['is_active'] ?? $brand->is_active,
                 ]

@@ -7,6 +7,7 @@ use App\Models\MasterModel;
 use App\services\BrandService;
 use App\services\CarModelService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MasterModelController extends Controller
@@ -56,7 +57,12 @@ class MasterModelController extends Controller
                 'is_active' => ['sometimes', 'boolean'],
             ]);
 
-            $carModel->update($validated);
+            $carModel->update([
+                'model_name' => $validated['model_name'],
+                'model_code' => Str::snake($validated['model_name']),
+                'brand_id' => $validated['brand_id'],
+                'is_active' => $validated['is_active'],
+            ]);
 
             Inertia::flash('toast', [
                 'type' => 'success',
