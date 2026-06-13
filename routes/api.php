@@ -13,6 +13,7 @@ Route::get('/hello', function () {
 Route::prefix('unit')->group(function () {
     Route::get('', [ApiController::class, 'getStockUnit'])->name('unit');
     Route::get('/{car}', [ApiController::class, 'detailUnit'])->name('detail.unit');
+    Route::post('/order/{car}', [ApiController::class, 'orderUnit'])->name('order.unit');
 });
 Route::get('/reviews', [ApiController::class, 'getReviews'])->name('reviews');
 Route::get('/branch', [ApiController::class, 'getBranch'])->name('branch');

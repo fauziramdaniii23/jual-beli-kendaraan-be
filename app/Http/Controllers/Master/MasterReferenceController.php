@@ -32,7 +32,7 @@ class MasterReferenceController extends Controller
     {
         try {
             $validated = $request->validate([
-                'ref_code' => ['required', 'string', 'max:255', 'unique:mst_reference,ref_code'],
+                'ref_code' => ['required', 'string', 'max:255'],
                 'ref_value' => ['required', 'string', 'max:255'],
             ]);
             MasterReference::create([
@@ -46,7 +46,7 @@ class MasterReferenceController extends Controller
                 'message' => 'Transmisi berhasil ditambahkan.',
             ]);
 
-            return redirect()->route('master.reference');
+            return redirect()->route('master.reference', ['type' => $type]);
 
         } catch (\Exception $e) {
             Inertia::flash('toast', [
@@ -61,20 +61,20 @@ class MasterReferenceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $transmission = MasterReference::findOrFail($id);
+            $reference = MasterReference::findOrFail($id);
             $validated = $request->validate([
                 'ref_value' => ['required', 'string', 'max:255'],
             ]);
-            $transmission->update([
+            $reference->update([
                 'ref_value' => $validated['ref_value'],
-                'is_active' => $request->has('is_active') ? filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN) : $transmission->is_active,
+                'is_active' => $request->has('is_active') ? filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN) : $reference->is_active,
             ]);
             Inertia::flash('toast', [
                 'type' => 'success',
                 'message' => 'Transmisi berhasil diperbarui.',
             ]);
 
-            return redirect()->route('master.reference');
+            return redirect()->route('master.reference', ['type' => $reference->ref_type]);
 
         } catch (\Exception $e) {
             Inertia::flash('toast', [

@@ -20,6 +20,10 @@ class MasterReference extends Model
 
     const TYPE_STATUS = 'CAR_STATUS';
 
+    const STATUS_ORDER = 'STATUS_ORDER';
+
+    const TYPE_PAID_ORDER = 'PAID_ORDER';
+
     use HasFactory;
 
     protected $table = 'mst_reference';

@@ -34,7 +34,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                     {hasChildren ? (
                                         <Collapsible
                                             asChild
-                                            defaultOpen
+                                            defaultOpen={item.title !== 'Master' && item.title !== 'Otentikasi'}
                                             className="group/collapsible"
                                         >
                                             <div>

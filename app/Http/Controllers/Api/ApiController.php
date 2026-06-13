@@ -69,6 +69,17 @@ class ApiController extends Controller
         }
     }
 
+    public function orderUnit(Request $request, Car $car): JsonResponse
+    {
+        try {
+            $test = $request->all();
+            return $this->successResponse($car);
+
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
     public function getReviews(Request $request): JsonResponse
     {
         try {

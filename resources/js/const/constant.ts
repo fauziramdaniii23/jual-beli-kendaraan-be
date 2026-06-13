@@ -19,6 +19,8 @@ export const MASTER_REFERENCE_TYPE = {
     CAR_TYPE: 'CAR_TYPE',
     SEAT_TYPE: 'SEAT_TYPE',
     PLATE_TYPE: 'PLATE_TYPE',
+    STATUS_ORDER: 'STATUS_ORDER',
+    TYPE_PAID_ORDER: 'TYPE_PAID_ORDER',
 } as const;
 
 export const MASTER_REFERENCE_LABEL = {
@@ -27,6 +29,8 @@ export const MASTER_REFERENCE_LABEL = {
     CAR_TYPE: 'Jenis Mobil',
     SEAT_TYPE: 'Jumlah Kursi',
     PLATE_TYPE: 'Jenis Plat',
+    STATUS_ORDER: 'Status Pemesanan',
+    TYPE_PAID_ORDER: 'Tipe Pembayaran',
 } as const;
 
 export const TYPE_LABEL = {
@@ -120,7 +124,13 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Order',
-                href: '/inventory/order',
+                href: '/customers/order',
+                permission: '',
+                icon: null,
+            },
+            {
+                title: 'Test Drive',
+                href: '/customers/test-driver',
                 permission: '',
                 icon: null,
             },
@@ -215,6 +225,18 @@ export const menuItems: NavItem[] = [
             {
                 title: 'Jenis Plat',
                 href: indexReference({type: MASTER_REFERENCE_TYPE.PLATE_TYPE}),
+                permission: '',
+                icon: null,
+            },
+            {
+                title: 'Status Order',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.STATUS_ORDER}),
+                permission: '',
+                icon: null,
+            },
+            {
+                title: 'Tipe Pembayaran',
+                href: indexReference({type: MASTER_REFERENCE_TYPE.TYPE_PAID_ORDER}),
                 permission: '',
                 icon: null,
             }

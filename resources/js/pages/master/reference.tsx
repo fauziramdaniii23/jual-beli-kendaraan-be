@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
+import Title from '@/components/app/title';
 import CreatereferenceDialog from '@/components/master/reference/add-reference';
 import { ConfirmDeleteReference } from '@/components/master/reference/delete-confirm';
 import UpdateReferenceDialog from '@/components/master/reference/update-reference';
@@ -32,7 +33,6 @@ import {
 import { MASTER_REFERENCE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TMasterReference } from '@/types';
-import Title from '@/components/app/title';
 
 type PageProps = {
     data_reference: TMasterReference[];
