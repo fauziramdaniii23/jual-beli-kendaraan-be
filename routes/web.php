@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBranchController;
@@ -30,6 +32,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::middleware('can:customer.view')->prefix('customer')->group(function () {
+        Route::get('', [CustomerController::class, 'index'])->name('customer');
+        Route::post('', [CustomerController::class, 'store'])->name('customer.store')->middleware('can:customer.create');
+        Route::put('{customer}', [CustomerController::class, 'update'])->name('customer.update')->middleware('can:customer.edit');
+        Route::delete('{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy')->middleware('can:customer.delete');
+
+        Route::get('orders', [OrderController::class, 'index'])->name('customer.orders');
+
         Route::get('reviews', [ReviewsController::class, 'index'])->name('customer.reviews');
         Route::get('reviews/form', [ReviewsController::class, 'form'])->name('customer.reviews.form');
         Route::post('reviews', [ReviewsController::class, 'store'])->name('customer.reviews.store')->middleware('can:customer.create');

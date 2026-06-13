@@ -5,6 +5,7 @@ namespace App\services;
 use App\repositories\CarModelRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CarModelService
 {
@@ -26,6 +27,7 @@ class CarModelService
                 return $this->carModelRepository
                     ->store([
                         'model_name' => $data['model_name'],
+                        'model_code' => Str::snake($data['model_name']),
                         'brand_id' => $data['brand_id'],
                         'is_active' => true,
                     ]);

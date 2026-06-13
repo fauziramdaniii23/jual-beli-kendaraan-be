@@ -1,4 +1,6 @@
 import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
+import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
+import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
@@ -78,38 +80,6 @@ export const menuItems: NavItem[] = [
             },
         ],
     },
-    // {
-    //     title: 'Sales Service',
-    //     href: '#',
-    //     icon: HandPlatter,
-    //     permission: PERMISSIONS.SALES_VIEW,
-    //     items: [
-    //         {
-    //             title: 'order',
-    //             href: '/inventory/order',
-    //             permission: '',
-    //             icon: null,
-    //         },
-    //         {
-    //             title: 'Pre Order',
-    //             href: '/inventory/pre-order',
-    //             permission: '',
-    //             icon: null,
-    //         },
-    //         {
-    //             title: 'Test Drive',
-    //             href: '/inventory/test-driver',
-    //             permission: '',
-    //             icon: null,
-    //         },
-    //         {
-    //             title: 'Tukar Tambah',
-    //             href: '/inventory/tukar-tambah',
-    //             permission: '',
-    //             icon: null,
-    //         },
-    //     ]
-    // },
     {
         title: 'Customers',
         href: '#',
@@ -117,14 +87,20 @@ export const menuItems: NavItem[] = [
         permission: PERMISSIONS.CUSTOMER_VIEW,
         items: [
             {
-                title: 'Customer List',
-                href: '/customers',
+                title: 'Customer',
+                href: indexCustomer(),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Order',
-                href: '/customers/order',
+                href: indexOrder(),
+                permission: '',
+                icon: null,
+            },
+            {
+                title: 'Pre Order',
+                href: '/customers/preorder',
                 permission: '',
                 icon: null,
             },

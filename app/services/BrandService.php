@@ -6,6 +6,7 @@ use App\Models\MasterBrand;
 use App\repositories\BrandRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class BrandService
 {
@@ -32,6 +33,7 @@ class BrandService
 
             return $this->brandRepository->store([
                 'brand_name' => $data['brand_name'],
+                'brand_code' => Str::snake($data['brand_code']),
                 'logo' => $data['logo'] ?? null,
                 'is_active' => true,
             ]);
