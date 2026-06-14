@@ -14,6 +14,7 @@ import {
 import React from 'react';
 import { index as indexOrder, form, destroy } from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
+import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import type { TOrder } from '@/components/customers/orders/types';
 import { Badge } from '@/components/ui/badge';
@@ -27,19 +28,9 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { formatDate } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
-import { SelectWithClear } from '@/components/app/select-with-clear';
 
 type PageProps = {
     orders: TOrder[];
