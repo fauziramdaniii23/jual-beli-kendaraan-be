@@ -39,6 +39,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { formatDate } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
+import { SelectWithClear } from '@/components/app/select-with-clear';
 
 type PageProps = {
     orders: TOrder[];
@@ -219,23 +220,15 @@ export default function OrderPage() {
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
-                                            <FieldLabel>Status</FieldLabel>
-                                            <Select
+                                            <FieldLabel htmlFor="">
+                                                Status
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Status"
                                                 value={statusCode}
-                                                onValueChange={(val) => setStatusCode(val)}
-                                            >
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select Status" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Status</SelectLabel>
-                                                        {status.map((item) =>
-                                                            <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
-                                                        )}
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                                onChange={(val) => setStatusCode(val)}
+                                                items={status.map((item) => ({label: item.ref_value, value: item.ref_code}))}
+                                            />
                                         </Field>
                                     </FieldGroup>
                                 </div>
@@ -243,23 +236,15 @@ export default function OrderPage() {
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
-                                            <FieldLabel>Tipe Pembayaran</FieldLabel>
-                                            <Select
+                                            <FieldLabel htmlFor="">
+                                                Tipe Pembayaran
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Tipe Pembayaran"
                                                 value={typePaidCode}
-                                                onValueChange={(val) => setTypePaidCode(val)}
-                                            >
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Pilih Tipe Pembayaran" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Tipe Pembayaran</SelectLabel>
-                                                        {typePaid.map((item) =>
-                                                            <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
-                                                        )}
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                                onChange={(val) => setTypePaidCode(val)}
+                                                items={typePaid.map((item) => ({label: item.ref_value, value: item.ref_code}))}
+                                            />
                                         </Field>
                                     </FieldGroup>
                                 </div>
