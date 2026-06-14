@@ -58,7 +58,7 @@ class Order extends Model
         });
     }
 
-    public function car()
+    public function unit()
     {
         return $this->belongsTo(Car::class, 'car_id');
     }

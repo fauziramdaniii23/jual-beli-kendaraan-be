@@ -7,6 +7,7 @@ import { form } from '@/actions/App/Http/Controllers/Customer/ReviewsController'
 import { destroy as deleteReview } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
+import type { TCustomer } from '@/components/customers/customer/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -20,7 +21,7 @@ import {
 type TReviews = {
     review_id: number;
     car_id: number;
-    user_id: number;
+    customer_id: number;
     rating: number;
     review_text: string;
     is_published: boolean;
@@ -29,10 +30,7 @@ type TReviews = {
         car_id: number;
         name: string;
     }
-    user: {
-        id: number;
-        name: string;
-    }
+    customer: TCustomer
 }
 type PageProps = {
     reviews: TReviews[];
@@ -71,7 +69,7 @@ export default function ReviewsPage() {
 
     const columns: ColumnDef<TReviews>[] = [
         {
-            accessorKey: 'user.name',
+            accessorKey: 'customer.name',
             header: 'Nama Customer'
         },
         {

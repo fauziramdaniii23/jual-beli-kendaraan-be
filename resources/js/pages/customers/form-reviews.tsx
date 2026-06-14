@@ -4,6 +4,7 @@ import React from 'react';
 import { index as indexReviews, store as storeReviews, update as updateReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import TextEditor from '@/components/app/text-editor';
 import Title from '@/components/app/title';
+import type { TCustomer } from '@/components/customers/customer/type';
 import FormImage from '@/components/customers/reviews/form-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -38,16 +39,12 @@ type TUnit = {
         ref_value: string;
     }
 }
-type TCustomer = {
-    id: number;
-    name: string;
-}
 
 export type TFormReviews = {
     review_id?: number;
     car_id: number;
-    user_id: number;
-    user: TCustomer;
+    customer_id: number;
+    customer: TCustomer;
     unit: TUnit;
     rating: number;
     review_text: string;
@@ -59,7 +56,7 @@ export type TFormReviews = {
 
 type PageProps = {
     units: TUnit[];
-    users: TCustomer[];
+    customers: TCustomer[];
     reviews: TFormReviews;
     type: 'detail' | 'create' | 'update';
 };
@@ -74,7 +71,7 @@ const defaultReviews = {
 }
 
 export default function FormReviewPage() {
-    const { units, users, reviews, type } = usePage<PageProps>().props;
+    const { units, customers, reviews, type } = usePage<PageProps>().props;
     const form = useForm<TFormReviews>(reviews ?? defaultReviews);
     const disable = type === 'detail';
 
@@ -115,15 +112,15 @@ export default function FormReviewPage() {
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="name"
-                                            value={form.data.user.name || ''}
+                                            value={form.data.customer.name || ''}
                                             className="w-full input"
                                             disabled={true}
                                         />
                                     ) : (
                                         <Combobox
-                                            items={users}
+                                            items={customers}
                                             itemToStringLabel={(item : TCustomer) => item.name}
-                                            onValueChange={(val : TCustomer | null) => form.setData('user_id', Number(val?.id))}
+                                            onValueChange={(val : TCustomer | null) => form.setData('customer_id', Number(val?.customer_id))}
                                         >
                                             <ComboboxInput placeholder="Pilih Customer" showClear/>
 
@@ -131,12 +128,12 @@ export default function FormReviewPage() {
                                                 <ComboboxEmpty>Customer tidak ditemukan.</ComboboxEmpty>
 
                                                 <ComboboxList>
-                                                    {(user) => (
+                                                    {(customer) => (
                                                         <ComboboxItem
-                                                            key={user.id}
-                                                            value={user}
+                                                            key={customer.id}
+                                                            value={customer}
                                                         >
-                                                            {user.name}
+                                                            {customer.name}
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>

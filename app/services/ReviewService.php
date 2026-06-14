@@ -20,7 +20,7 @@ class ReviewService
             }
             Reviews::create([
                 'car_id' => $data['car_id'],
-                'user_id' => $data['user_id'],
+                'customer_id' => $data['customer_id'],
                 'rating' => $data['rating'],
                 'review_text' => $data['review_text'],
                 'image' => $image_path,
@@ -74,8 +74,8 @@ class ReviewService
     public function getReviewsWithPaginate(Request $request)
     {
         $reviews = Reviews::query()
-            ->select(['review_id', 'car_id', 'user_id', 'rating', 'review_text', 'is_published', 'image', 'created_at'])
-            ->with(['unit:car_id,name', 'user:id,name'])->orderBy('created_at', 'desc');
+            ->select(['review_id', 'car_id', 'customer_id', 'rating', 'review_text', 'is_published', 'image', 'created_at'])
+            ->with(['unit:car_id,name', 'customer:customer_id,name'])->orderBy('created_at', 'desc');
 
         return $reviews->paginate($request->per_page ?? 10);
     }

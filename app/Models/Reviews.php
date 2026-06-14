@@ -69,12 +69,12 @@ class Reviews extends Model
         );
     }
 
-    public function user(): BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->BelongsTo(
-            User::class,
-            'user_id',
-            'id'
+            Customer::class,
+            'customer_id',
+            'customer_id'
         );
     }
 }

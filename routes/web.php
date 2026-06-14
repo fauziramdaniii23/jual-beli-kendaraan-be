@@ -38,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy')->middleware('can:customer.delete');
 
         Route::get('orders', [OrderController::class, 'index'])->name('customer.orders');
+        Route::get('orders/form', [OrderController::class, 'form'])->name('customer.orders.form');
+        Route::post('orders', [OrderController::class, 'store'])->name('customer.orders.store')->middleware('can:customer.create');
+        Route::post('orders/{order}', [OrderController::class, 'update'])->name('customer.orders.update')->middleware('can:customer.edit');
+        Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('customer.orders.destroy')->middleware('can:customer.delete');
 
         Route::get('reviews', [ReviewsController::class, 'index'])->name('customer.reviews');
         Route::get('reviews/form', [ReviewsController::class, 'form'])->name('customer.reviews.form');

@@ -22,7 +22,7 @@ class MasterReference extends Model
 
     const STATUS_ORDER = 'STATUS_ORDER';
 
-    const TYPE_PAID_ORDER = 'PAID_ORDER';
+    const TYPE_PAID_ORDER = 'TYPE_PAID_ORDER';
 
     use HasFactory;
 
@@ -39,29 +39,29 @@ class MasterReference extends Model
 
     protected static function booted(): void
     {
-        static::creating(function ($brand) {
-            $brand->created_by = Auth::user()?->email;
-            $brand->updated_by = Auth::user()?->email;
+        static::creating(function ($reference) {
+            $reference->created_by = Auth::user()?->email;
+            $reference->updated_by = Auth::user()?->email;
         });
 
-        static::updating(function ($brand) {
-            $brand->updated_by = Auth::user()?->email;
+        static::updating(function ($reference) {
+            $reference->updated_by = Auth::user()?->email;
         });
 
-        static::deleting(function ($brand) {
-            $brand->deleted_by = Auth::user()?->email;
-            $brand->is_active = false;
+        static::deleting(function ($reference) {
+            $reference->deleted_by = Auth::user()?->email;
+            $reference->is_active = false;
 
             /**
              * supaya deleted_by tersimpan
              * sebelum soft delete dijalankan
              */
-            $brand->saveQuietly();
+            $reference->saveQuietly();
         });
     }
 
     public function scopeByType($query, string $type)
     {
-        return $query->where('ref_type', $type);
+        return $query->where('ref_type', $type)->where('is_active', true);
     }
 }
