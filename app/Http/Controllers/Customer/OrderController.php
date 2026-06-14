@@ -39,8 +39,8 @@ class OrderController extends Controller
 
             $customers = $type !== 'detail' ? Customer::query()->select(['customer_id', 'name', 'email', 'phone'])->get() : null;
             $units = $type !== 'detail' ? Car::query()->with('status:ref_code,ref_value')->select(['car_id', 'name', 'status_code'])->get() : null;
-            $typePaid = $type !== 'detail' ? MasterReference::byType(MasterReference::TYPE_PAID_ORDER)->get() : null;
-            $status = $type !== 'detail' ? MasterReference::byType(MasterReference::STATUS_ORDER)->get() : null;
+            $typePaid = MasterReference::byType(MasterReference::TYPE_PAID_ORDER)->get();
+            $status = MasterReference::byType(MasterReference::STATUS_ORDER)->get();
 
             return Inertia::render('customers/form-order', [
                 'type' => $type,

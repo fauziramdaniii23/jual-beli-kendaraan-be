@@ -90,12 +90,12 @@ export default function FormOrderPage() {
                                                 <ComboboxEmpty>Customer tidak ditemukan.</ComboboxEmpty>
 
                                                 <ComboboxList>
-                                                    {(user) => (
+                                                    {(customer) => (
                                                         <ComboboxItem
-                                                            key={user.id}
-                                                            value={user}
+                                                            key={customer.customer_id}
+                                                            value={customer}
                                                         >
-                                                            {user.name}
+                                                            {customer.name}
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>
@@ -116,8 +116,8 @@ export default function FormOrderPage() {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Tipe Pembayaran</SelectLabel>
-                                                {typePaid.map((item) =>
-                                                    <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
+                                                {typePaid.map((item, index) =>
+                                                    <SelectItem key={index} value={item.ref_code}>{item.ref_value}</SelectItem>
                                                 )}
                                             </SelectGroup>
                                         </SelectContent>
@@ -178,8 +178,8 @@ export default function FormOrderPage() {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Status</SelectLabel>
-                                                {status.map((item) =>
-                                                    <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
+                                                {status.map((item, index) =>
+                                                    <SelectItem key={index} value={item.ref_code}>{item.ref_value}</SelectItem>
                                                 )}
                                             </SelectGroup>
                                         </SelectContent>
@@ -216,9 +216,9 @@ FormOrderPage.layout = (page: React.ReactElement<PageProps>) => {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Inventory', href: '#' },
-                { title: 'Stock Unit', href: indexOrder() },
-                { title: `${breadcrumbTitle} Unit`, href: '#' },
+                { title: 'Customer', href: '#' },
+                { title: 'Orders', href: indexOrder() },
+                { title: `${breadcrumbTitle} Order`, href: '#' },
             ]}
         >
             {page}
