@@ -8,7 +8,7 @@ export type TOrder = {
     car_id: number
     customer_id: number
     status_code: string;
-    type_paid: string;
+    type_paid_code: string;
     unit?: TUnit;
     customer?: TCustomer;
     status?: TMasterReference;
@@ -21,5 +21,5 @@ export const defaultOrder: TOrder = {
     car_id: 0,
     customer_id: 0,
     status_code: '',
-    type_paid: '',
+    type_paid_code: '',
 }

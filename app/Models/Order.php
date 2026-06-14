@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -23,7 +24,7 @@ class Order extends Model
         'car_id',
         'customer_id',
         'status_code',
-        'type_paid',
+        'type_paid_code',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -38,6 +39,7 @@ class Order extends Model
     protected static function booted(): void
     {
         static::creating(function ($order) {
+            $order->order_uuid = self::generateOrderUuid();
             $order->created_by = Auth::user()?->email;
             $order->updated_by = Auth::user()?->email;
         });
@@ -48,7 +50,6 @@ class Order extends Model
 
         static::deleting(function ($order) {
             $order->deleted_by = Auth::user()?->email;
-            $order->is_active = false;
 
             /**
              * supaya deleted_by tersimpan
@@ -56,6 +57,17 @@ class Order extends Model
              */
             $order->saveQuietly();
         });
+    }
+
+    public static function generateOrderUuid(): string
+    {
+        do {
+            $uuid = 'ORDER-'.strtoupper(Str::random(12));
+        } while (
+            self::query()->where('order_uuid', $uuid)->exists()
+        );
+
+        return $uuid;
     }
 
     public function unit()
@@ -81,7 +93,7 @@ class Order extends Model
     {
         return $this->belongsTo(
             MasterReference::class,
-            'type_paid',
+            'type_paid_code',
             'ref_code'
         )->where('ref_type', MasterReference::TYPE_PAID_ORDER);
     }

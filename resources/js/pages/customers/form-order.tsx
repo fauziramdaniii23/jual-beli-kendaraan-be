@@ -104,14 +104,14 @@ export default function FormOrderPage() {
                                     )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Status Publish</FieldLabel>
+                                    <FieldLabel>Tipe Pembayaran</FieldLabel>
                                     <Select
-                                        value={form.data.type_paid.toString()}
-                                        onValueChange={(val) => form.setData('type_paid', val)}
+                                        value={form.data.type_paid_code}
+                                        onValueChange={(val) => form.setData('type_paid_code', val)}
                                         disabled={disable}
                                     >
                                         <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Select Status" />
+                                            <SelectValue placeholder="Pilih Tipe" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -168,7 +168,7 @@ export default function FormOrderPage() {
                                 <Field>
                                     <FieldLabel>Status</FieldLabel>
                                     <Select
-                                        value={form.data.status_code.toString()}
+                                        value={form.data.status_code}
                                         onValueChange={(val) => form.setData('status_code', val)}
                                         disabled={disable}
                                     >

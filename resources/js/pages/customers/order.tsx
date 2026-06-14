@@ -1,12 +1,22 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ChevronDownIcon, Eye, Filter, MoreHorizontal, Plus, SquarePen, Star, Trash } from 'lucide-react';
+import {
+    ArrowDownNarrowWide,
+    ArrowUpDown, ArrowUpWideNarrow,
+    ChevronDownIcon,
+    Eye,
+    Filter,
+    MoreHorizontal,
+    Plus,
+    SquarePen,
+    Trash
+} from 'lucide-react';
 import React from 'react';
 import { index as indexOrder, form, destroy } from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
-import type { TCustomer } from '@/components/customers/customer/type';
 import type { TOrder } from '@/components/customers/orders/types';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
@@ -17,19 +27,32 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { formatDate } from '@/lib/utils';
+import type { TMasterReference } from '@/types';
 
 type PageProps = {
     orders: TOrder[];
-    customers: TCustomer[];
+    status: TMasterReference[];
+    typePaid: TMasterReference[];
 }
 
 export default function OrderPage() {
-    const { orders, customers} = usePage<PageProps>().props;
+    const { orders, status, typePaid} = usePage<PageProps>().props;
     const [reviewId, setReviewId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
-    const [selectedCustomers, setSelectedCustomers] = React.useState<TCustomer>();
+    const [statusCode, setStatusCode] = React.useState<string>('');
+    const [typePaidCode, setTypePaidCode] = React.useState<string>('')
     const handleAction = (order_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
             form().url,
@@ -48,7 +71,8 @@ export default function OrderPage() {
         router.get(
             indexOrder().url,
             {
-                customer_id: selectedCustomers?.customer_id,
+                status_code: statusCode === '' ? undefined : statusCode,
+                type_paid: typePaidCode === '' ? undefined : typePaidCode,
             },
             {
                 preserveState: true,
@@ -73,7 +97,58 @@ export default function OrderPage() {
     const columns: ColumnDef<TOrder>[] = [
         {
             accessorKey: 'order_uuid',
-            header: 'Nama Customer'
+            header: 'Order ID',
+        },
+        {
+            accessorKey: 'customer.name',
+            header: 'Nama Customer',
+        },
+        {
+            accessorKey: 'unit.name',
+            header: 'Unit',
+        },
+        {
+            accessorKey: 'status.ref_value',
+            header: 'Status',
+            cell: ({ row }) => {
+                const status = row.original.status;
+
+                return (
+                    <div className="text-center">
+                        <Badge variant="outline">
+                            {status?.ref_value}
+                        </Badge>
+                    </div>
+                );
+            },
+        },
+        {
+          accessorKey: 'type_paid.ref_value',
+          header: 'Tipe Pembayaran',
+        },
+        {
+            accessorKey: 'updated_at',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
+
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Update Terbaru
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === "asc" && <ArrowDownNarrowWide />}
+                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+            cell: ({row}) => {
+                const date = row.getValue('updated_at');
+
+                return formatDate(date)
+            }
         },
         {
             id: 'actions',
@@ -143,13 +218,49 @@ export default function OrderPage() {
                             <div className="flex gap-4 w-full mt-4">
                                 <div className="flex-1">
                                     <FieldGroup>
-
+                                        <Field>
+                                            <FieldLabel>Status</FieldLabel>
+                                            <Select
+                                                value={statusCode}
+                                                onValueChange={(val) => setStatusCode(val)}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select Status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Status</SelectLabel>
+                                                        {status.map((item) =>
+                                                            <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
+                                                        )}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </Field>
                                     </FieldGroup>
                                 </div>
 
                                 <div className="flex-1">
                                     <FieldGroup>
-
+                                        <Field>
+                                            <FieldLabel>Tipe Pembayaran</FieldLabel>
+                                            <Select
+                                                value={typePaidCode}
+                                                onValueChange={(val) => setTypePaidCode(val)}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Pilih Tipe Pembayaran" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Tipe Pembayaran</SelectLabel>
+                                                        {typePaid.map((item) =>
+                                                            <SelectItem value={item.ref_code}>{item.ref_value}</SelectItem>
+                                                        )}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </Field>
                                     </FieldGroup>
                                 </div>
                             </div>
