@@ -2,6 +2,7 @@ import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, New
 import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
 import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
+import { index as indexTestDrive } from '@/actions/App/Http/Controllers/Customer/TestDriveController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
@@ -106,7 +107,7 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Test Drive',
-                href: '/customers/test-driver',
+                href: indexTestDrive(),
                 permission: '',
                 icon: null,
             },

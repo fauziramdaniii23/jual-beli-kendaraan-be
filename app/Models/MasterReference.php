@@ -23,6 +23,7 @@ class MasterReference extends Model
     const STATUS_ORDER = 'STATUS_ORDER';
 
     const TYPE_PAID_ORDER = 'TYPE_PAID_ORDER';
+    const STATUS_TEST_DRIVE = 'STATUS_TEST_DRIVE';
 
     use HasFactory;
 
