@@ -12,7 +12,11 @@ class CustomerService
     public function __construct(protected CustomerRepository $customerRepository) {}
     public function getCustomer(Request $request)
     {
-        return $this->customerRepository->getCustomers();
+        return $this->customerRepository->getCustomers(
+            filters: [
+                'is_active' => $request->is_active,
+            ]
+        );
     }
     public function store(array $data)
     {

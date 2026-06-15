@@ -62,7 +62,7 @@ export default function CustomerPage() {
         router.get(
             indexCustomer().url,
             {
-                status: selectStatus === "all" ? undefined : selectStatus,
+                is_active: selectStatus === "all" ? undefined : selectStatus,
             },
             {
                 preserveState: true,
