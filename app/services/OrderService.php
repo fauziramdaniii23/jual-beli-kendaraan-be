@@ -13,7 +13,12 @@ class OrderService
 
     public function getOrders(Request $request)
     {
-        return $this->orderRepository->getOrders([]);
+        return $this->orderRepository->getOrders(
+            filters: [
+                'status_code' => $request->status_code,
+                'type_paid' => $request->type_paid,
+            ]
+        );
     }
 
     public function store(array $data)

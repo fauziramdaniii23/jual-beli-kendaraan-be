@@ -100,21 +100,6 @@ export default function OrderPage() {
             header: 'Unit',
         },
         {
-            accessorKey: 'status.ref_value',
-            header: 'Status',
-            cell: ({ row }) => {
-                const status = row.original.status;
-
-                return (
-                    <div className="text-center">
-                        <Badge variant="outline">
-                            {status?.ref_value}
-                        </Badge>
-                    </div>
-                );
-            },
-        },
-        {
           accessorKey: 'type_paid.ref_value',
           header: 'Tipe Pembayaran',
         },
@@ -141,6 +126,22 @@ export default function OrderPage() {
 
                 return formatDate(date)
             }
+        },
+
+        {
+            accessorKey: 'status.ref_value',
+            header: 'Status',
+            cell: ({ row }) => {
+                const status = row.original.status;
+
+                return (
+                    <div className="text-center">
+                        <Badge variant="outline">
+                            {status?.ref_value}
+                        </Badge>
+                    </div>
+                );
+            },
         },
         {
             id: 'actions',
