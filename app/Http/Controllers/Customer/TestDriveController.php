@@ -66,17 +66,7 @@ class TestDriveController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate([
-                'customer_id' => 'required|exists:customers,customer_id',
-                'car_id' => 'required|exists:cars,car_id',
-                'branch_id' => 'required|exists:branch,branch_id',
-                'date' => 'required|string',
-                'time' => 'required|string',
-                'status_code' => 'required|string',
-            ]);
-            $validated['test_drive_date'] = Carbon::parse(
-                "{$validated['date']} {$validated['time']}"
-            );
+            $validated = $this->validate($request);
 
             $this->testDriveService->store($validated);
 
@@ -99,11 +89,14 @@ class TestDriveController extends Controller
     public function update(Request $request, TestDrive $testDrive)
     {
         try {
-            $validated = $request->validate([
-                'type_paid_code' => 'required|string',
-                'status_code' => 'required|string',
+            $validated = $this->validate($request);
+            $testDrive->update([
+                'customer_id' => $validated['customer_id'],
+                'car_id' => $validated['car_id'],
+                'branch_id' => $validated['branch_id'],
+                'status_code' => $validated['status_code'],
+                'test_drive_date' => $validated['test_drive_date'],
             ]);
-            $testDrive->update($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
@@ -139,5 +132,22 @@ class TestDriveController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    public function validate(Request $request): array
+    {
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,customer_id',
+            'car_id' => 'required|exists:cars,car_id',
+            'branch_id' => 'required|exists:branch,branch_id',
+            'date' => 'required|string',
+            'time' => 'required|string',
+            'status_code' => 'required|string',
+        ]);
+        $validated['test_drive_date'] = Carbon::parse(
+            "{$validated['date']} {$validated['time']}"
+        );
+
+        return $validated;
     }
 }
