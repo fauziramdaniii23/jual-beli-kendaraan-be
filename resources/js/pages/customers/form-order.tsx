@@ -121,7 +121,7 @@ export default function FormOrderPage() {
                                                             }
                                                             value={customer}
                                                         >
-                                                            {customer.name} -{' '}<span className="italic">(+{customer.phone})</span>
+                                                            {customer.name} <span className="italic">(+{customer.phone})</span>
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>
