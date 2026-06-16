@@ -121,6 +121,7 @@ class OrderController extends Controller
                 'type' => 'success',
                 'message' => 'Order berhasil dihapus.',
             ]);
+            return redirect()->route('customer.orders');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
