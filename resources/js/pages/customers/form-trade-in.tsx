@@ -1,6 +1,7 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React, { useMemo } from 'react';
 import { index, store, update } from '@/actions/App/Http/Controllers/Customer/TradeInController';
+import DatePicker from '@/components/app/date-picker';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import {
@@ -67,7 +68,7 @@ export default function FormTradeInPage() {
         if(!order) {
             setUnitName("")
             setCustomerName("")
-            form.setData('order_id', 0);
+            form.setData('order_id', undefined);
 
             return;
         }
@@ -75,6 +76,7 @@ export default function FormTradeInPage() {
         setUnitName(order.unit!.name)
         setCustomerName(order.customer!.name)
         form.setData('order_id', order.order_id)
+        form.setData('car_id', order.unit!.car_id)
     }
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -192,6 +194,32 @@ export default function FormTradeInPage() {
                                 </Field>
                                 <Field>
                                     <FieldLabel>
+                                        Varian
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
+                                    <Input
+                                        name="name"
+                                        value={form.data.variant || ''}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'variant',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="input w-full"
+                                        aria-invalid={!!form.errors.variant}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.variant && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.variant}
+                                        </div>
+                                    )}
+                                </Field>
+                                <Field>
+                                    <FieldLabel>
                                         Tahun
                                         <span className="text-red-600">*</span>
                                     </FieldLabel>
@@ -304,6 +332,22 @@ export default function FormTradeInPage() {
                                         type="number"
                                         required
                                     />
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Tanggal Inspeksi</FieldLabel>
+                                    <DatePicker
+                                        value={form.data.inspection_date || ''}
+                                        onChange={(val) =>
+                                            form.setData('inspection_date', val)
+                                        }
+                                        invalid={!!form.errors.inspection_date}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.inspection_date && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.inspection_date}
+                                        </div>
+                                    )}
                                 </Field>
                             </FieldGroup>
                         </div>

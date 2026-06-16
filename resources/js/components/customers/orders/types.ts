@@ -46,6 +46,6 @@ export const defaultOrder: TOrder = {
 
 export const defaultTradeIn: TTradeIn = {
     variant: '',
-    status_code: '',
+    status_code: 'NEW',
     inspection_date: ''
 }

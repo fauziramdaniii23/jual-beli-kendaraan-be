@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\MasterBrand;
-use App\Models\MasterModel;
 use App\Models\MasterReference;
 use App\Models\Order;
 use App\Models\TradeIn;
-use App\repositories\BrandRepository;
-use App\repositories\CarModelRepository;
 use App\services\StockUnitService;
 use App\services\TradeInService;
 use Illuminate\Http\Request;
@@ -69,19 +65,24 @@ class TradeInController extends Controller
     {
         try {
             $validated = $request->validate([
-                'customer_id' => 'required|exists:customers,customer_id',
                 'car_id' => 'required|exists:cars,car_id',
-                'type_paid_code' => 'required|string',
+                'brand_id' => 'required|exists:brand,brand_id',
+                'model_id' => 'required|exists:model,model_id',
+                'order_id' => 'required|exists:orders,order_id',
+                'variant' => 'required|string',
                 'status_code' => 'required|string',
+                'year' => 'required|integer',
+                'kilometer' => 'required|integer',
+                'inspection_date' => 'required|string',
             ]);
-            $this->orderService->storeOrder($validated);
+            $this->tradeInService->store($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Order berhasil disimpan.',
+                'message' => 'Data Tukar Tambah berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.orders');
+            return redirect()->route('customer.trade-in');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -106,7 +107,7 @@ class TradeInController extends Controller
                 'message' => 'Order berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.orders');
+            return redirect()->route('customer.trade-in');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
