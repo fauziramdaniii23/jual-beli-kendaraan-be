@@ -40,7 +40,7 @@ type PageProps = {
 
 export default function OrderPage() {
     const { orders, status, typePaid} = usePage<PageProps>().props;
-    const [reviewId, setReviewId] = React.useState<number | null>(null);
+    const [orderId, setOrderId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
@@ -73,7 +73,7 @@ export default function OrderPage() {
         );
     };
     const handleDelete = () => {
-        router.delete(destroy(reviewId!).url, {
+        router.delete(destroy(orderId!).url, {
             preserveScroll: true,
             onSuccess: () => {
                 setDeleteConfirmOpen(false);
@@ -82,7 +82,7 @@ export default function OrderPage() {
     };
 
     const handleConfirmDelete = (review: TOrder) => {
-        setReviewId(review.order_id)
+        setOrderId(review.order_id)
         setDeleteConfirmOpen(true);
     }
 
