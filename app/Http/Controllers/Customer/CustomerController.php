@@ -60,6 +60,7 @@ class CustomerController extends Controller
                 'address' => ['required', 'string', 'max:255'],
                 'is_active' => ['sometimes', 'boolean'],
             ]);
+            $validated['phone'] = Utils::normalizePhone($validated['phone']);
 
             $customer->update($validated);
 
