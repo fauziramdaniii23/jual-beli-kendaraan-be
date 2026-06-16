@@ -393,7 +393,7 @@ export default function AddPromoToUnitPage() {
                 description="Pilih unit kendaraan yang akan mendapatkan promo ini. Unit yang dipilih akan terhubung dengan promo dan digunakan dalam perhitungan harga serta penawaran."
             />
             <div className="m-4 border rounded-md">
-                <Collapsible defaultOpen className="rounded-md data-[state=open]:bg-muted">
+                <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="group w-full h-12">
                             <Filter /> Filter
@@ -494,15 +494,15 @@ export default function AddPromoToUnitPage() {
                     </CollapsibleContent>
                 </Collapsible>
             </div>
-
             <div className="mx-4">
+                <DataTable className="max-h-150" showRowNumber={false} columns={columns} data={promoUnit} />
+            </div>
+
+            <div className="m-4">
                 <Button disabled={promoUnit.length <= 0} onClick={() => setConfirmDialogOpen(true)}>
                     <Plus />
                     Terapkan Promo ke Unit Terpilih
                 </Button>
-            </div>
-            <div className="m-4">
-                <DataTable className="max-h-[600px]" showRowNumber={false} columns={columns} data={promoUnit} />
             </div>
             <ConfirmDialog
                 title="Terapkan Promo"
