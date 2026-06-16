@@ -4,6 +4,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\Customer\TestDriveController;
+use App\Http\Controllers\Customer\TradeInController;
 use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBranchController;
 use App\Http\Controllers\Master\MasterBrandController;
@@ -43,6 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('orders', [OrderController::class, 'store'])->name('customer.orders.store')->middleware('can:customer.create');
         Route::post('orders/{order}', [OrderController::class, 'update'])->name('customer.orders.update')->middleware('can:customer.edit');
         Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('customer.orders.destroy')->middleware('can:customer.delete');
+
+        Route::get('trade-in', [TradeInController::class, 'index'])->name('customer.trade-in');
+        Route::get('trade-in/form', [TradeInController::class, 'form'])->name('customer.trade-in.form');
+        Route::post('trade-in', [TradeInController::class, 'store'])->name('customer.trade-in.store')->middleware('can:customer.create');
+        Route::post('trade-in/{trade_in}', [TradeInController::class, 'update'])->name('customer.trade-in.update')->middleware('can:customer.edit');
+        Route::delete('trade-in/{trade_in}', [TradeInController::class, 'destroy'])->name('customer.trade-in.destroy')->middleware('can:customer.delete');
 
         Route::get('test-drive', [TestDriveController::class, 'index'])->name('customer.test-drive');
         Route::get('test-drive/form', [TestDriveController::class, 'form'])->name('customer.test-drive.form');

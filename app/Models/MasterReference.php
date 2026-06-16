@@ -8,24 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class MasterReference extends Model
 {
+    use HasFactory;
     const TYPE_TRANSMISSION = 'TRANSMISSION';
-
     const TYPE_CAR = 'CAR_TYPE';
-
     const TYPE_FUEL_TYPE = 'FUEL_TYPE';
-
     const TYPE_PLATE = 'PLATE_TYPE';
-
     const TYPE_SEAT = 'SEAT_TYPE';
-
     const TYPE_STATUS = 'CAR_STATUS';
-
     const STATUS_ORDER = 'STATUS_ORDER';
-
     const TYPE_PAID_ORDER = 'TYPE_PAID_ORDER';
     const STATUS_TEST_DRIVE = 'STATUS_TEST_DRIVE';
+    const STATUS_TRADE_IN = 'STATUS_TRADE_IN';
 
-    use HasFactory;
 
     protected $table = 'mst_reference';
 

@@ -12,11 +12,11 @@ import {
     Trash
 } from 'lucide-react';
 import React from 'react';
-import { index as indexOrder, form, destroy } from '@/actions/App/Http/Controllers/Customer/OrderController';
+import { index as indexTradeIn, form, destroy } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
-import type { TOrder } from '@/components/customers/orders/types';
+import type { TTradeIn } from '@/components/customers/orders/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -33,23 +33,21 @@ import { formatDate } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
 
 type PageProps = {
-    orders: TOrder[];
+    tradeIns: TTradeIn[];
     status: TMasterReference[];
-    typePaid: TMasterReference[];
 }
 
-export default function OrderPage() {
-    const { orders, status, typePaid} = usePage<PageProps>().props;
-    const [reviewId, setreviewId] = React.useState<number | null>(null);
+export default function TradeInPage() {
+    const { tradeIns, status} = usePage<PageProps>().props;
+    const [tradeInId, setTradeInId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
-    const [typePaidCode, setTypePaidCode] = React.useState<string>('')
-    const handleAction = (order_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const handleAction = (trade_in_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
             form().url,
             {
-                order_id: order_id,
+                trade_in_id: trade_in_id,
                 type: type
             },
             {
@@ -61,10 +59,9 @@ export default function OrderPage() {
 
     const submitFilter = () => {
         router.get(
-            indexOrder().url,
+            indexTradeIn().url,
             {
                 status_code: statusCode === '' ? undefined : statusCode,
-                type_paid: typePaidCode === '' ? undefined : typePaidCode,
             },
             {
                 preserveState: true,
@@ -73,7 +70,7 @@ export default function OrderPage() {
         );
     };
     const handleDelete = () => {
-        router.delete(destroy(reviewId!).url, {
+        router.delete(destroy(tradeInId!).url, {
             preserveScroll: true,
             onSuccess: () => {
                 setDeleteConfirmOpen(false);
@@ -81,27 +78,15 @@ export default function OrderPage() {
         });
     };
 
-    const handleConfirmDelete = (review: TOrder) => {
-        setreviewId(review.order_id)
+    const handleConfirmDelete = (tradeIn: TTradeIn) => {
+        setTradeInId(tradeIn.trade_in_id)
         setDeleteConfirmOpen(true);
     }
 
-    const columns: ColumnDef<TOrder>[] = [
+    const columns: ColumnDef<TTradeIn>[] = [
         {
-            accessorKey: 'order_uuid',
-            header: 'Order ID',
-        },
-        {
-            accessorKey: 'customer.name',
-            header: 'Nama Customer',
-        },
-        {
-            accessorKey: 'unit.name',
-            header: 'Unit',
-        },
-        {
-          accessorKey: 'type_paid.ref_value',
-          header: 'Tipe Pembayaran',
+            accessorKey: 'year',
+            header: 'Tahun',
         },
         {
             accessorKey: 'updated_at',
@@ -152,7 +137,7 @@ export default function OrderPage() {
             ),
             enableHiding: false,
             cell: ({ row }) => {
-                const order = row.original;
+                const tradeIn = row.original;
 
                 return (
                     <div className="text-center">
@@ -166,18 +151,18 @@ export default function OrderPage() {
                             <DropdownMenuContent align="end">
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(order.order_id, 'detail')}
+                                    onClick={() => handleAction(tradeIn.trade_in_id, 'detail')}
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(order.order_id, 'update')}
+                                    onClick={() => handleAction(tradeIn.trade_in_id, 'update')}
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleConfirmDelete(order)}
+                                    onClick={() => handleConfirmDelete(tradeIn)}
                                     className="text-red-500"
                                 >
                                     <Trash className="text-red-500"/> Delete
@@ -192,8 +177,8 @@ export default function OrderPage() {
 
     return (
         <>
-            <Head title="Orders" />
-            <Title title="Daftar Orders" description="Daftar Semua Order" />
+            <Head title="Tukar Tambah" />
+            <Title title="Daftar Tukar Tambah" description="Daftar Semua Unit yang diajukan Tukar Tambah" />
             <div className="m-4 border rounded-md">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
@@ -227,17 +212,7 @@ export default function OrderPage() {
 
                                 <div className="flex-1">
                                     <FieldGroup>
-                                        <Field>
-                                            <FieldLabel htmlFor="">
-                                                Tipe Pembayaran
-                                            </FieldLabel>
-                                            <SelectWithClear
-                                                placeholder="Pilih Tipe Pembayaran"
-                                                value={typePaidCode}
-                                                onChange={(val) => setTypePaidCode(val)}
-                                                items={typePaid.map((item) => ({label: item.ref_value, value: item.ref_code}))}
-                                            />
-                                        </Field>
+
                                     </FieldGroup>
                                 </div>
                             </div>
@@ -256,11 +231,11 @@ export default function OrderPage() {
             <div className="mx-4 mt-4">
                 <Button onClick={() => handleAction(undefined, 'create')}>
                     <Plus />
-                    Tambah Order Baru
+                    Tambah Data Tukar Tambah
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={orders} />
+                <DataTable columns={columns} data={tradeIns} />
             </div>
             <ConfirmDialog
                 confirmText="Hapus"
@@ -274,14 +249,14 @@ export default function OrderPage() {
     )
 }
 
-OrderPage.layout = {
+TradeInPage.layout = {
     breadcrumbs: [
         {
             title: 'Customer',
         },
         {
-            title: 'Orders',
-            href: indexOrder(),
+            title: 'Tukar Tambah',
+            href: indexTradeIn(),
         },
     ],
 };

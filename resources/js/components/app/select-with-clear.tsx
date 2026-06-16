@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 
 type SelectWithClearProps = {
-    value: string;
+    value?: string;
     onChange: (val: string) => void;
     placeholder?: string;
     name?: string

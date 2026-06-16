@@ -3,51 +3,55 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Car;
-use App\Models\Customer;
+use App\Models\MasterBrand;
+use App\Models\MasterModel;
 use App\Models\MasterReference;
 use App\Models\Order;
-use App\services\OrderService;
+use App\Models\TradeIn;
+use App\repositories\BrandRepository;
+use App\repositories\CarModelRepository;
+use App\services\StockUnitService;
+use App\services\TradeInService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class OrderController extends Controller
+class TradeInController extends Controller
 {
-    public function __construct(protected OrderService $orderService) {}
+    public function __construct(
+        protected TradeInService $tradeInService,
+        protected StockUnitService $stockUnitService,
+    ) {}
 
     public function index(Request $request)
     {
-        $orders = $this->orderService->getOrders($request);
-        $status = MasterReference::byType(MasterReference::STATUS_ORDER)->get();
-        $typePaid = MasterReference::byType(MasterReference::TYPE_PAID_ORDER)->get();
+        $tradeIns = $this->tradeInService->getTradeIn($request);
+        $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
 
-        return Inertia::render('customers/order', ['orders' => $orders, 'status' => $status, 'typePaid' => $typePaid]);
+        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status]);
     }
 
     public function form(Request $request)
     {
         try {
             $type = $request->input('type');
-            $orderId = $request->input('order_id');
+            $tradeInId = $request->input('trade_in_id');
 
-            $order = $orderId ? Order::with([
+            $tradeIn = $tradeInId ? TradeIn::with([
                 'customer',
                 'unit',
-                'status',
-                'typePaid',
-            ])->findOrFail($orderId) : null;
+            ])->findOrFail($tradeInId) : null;
 
-            $customers = $type !== 'detail' ? Customer::query()->select(['customer_id', 'name', 'email', 'phone'])->get() : null;
-            $units = $type !== 'detail' ? Car::query()->with('status:ref_code,ref_value')->select(['car_id', 'name', 'status_code'])->get() : null;
-            $typePaid = MasterReference::byType(MasterReference::TYPE_PAID_ORDER)->get();
-            $status = MasterReference::byType(MasterReference::STATUS_ORDER)->get();
+            $orders = $type !== 'detail' ? Order::query()->with(['unit', 'customer'])->get() : null;
+            $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
+            $brands = $this->stockUnitService->getOptionFilter('BRAND');
+            $models = $this->stockUnitService->getOptionFilter('MODEL');
 
-            return Inertia::render('customers/form-order', [
+            return Inertia::render('customers/form-trade-in', [
                 'type' => $type,
-                'order' => $order,
-                'customers' => $customers,
-                'units' => $units,
-                'typePaid' => $typePaid,
+                'tradeIn' => $tradeIn,
+                'orders' => $orders,
+                'brands' => $brands,
+                'models' => $models,
                 'status' => $status,
             ]);
         } catch (\Exception $e) {
@@ -121,6 +125,7 @@ class OrderController extends Controller
                 'type' => 'success',
                 'message' => 'Order berhasil dihapus.',
             ]);
+
             return redirect()->route('customer.orders');
         } catch (\Exception $e) {
             Inertia::flash('toast', [

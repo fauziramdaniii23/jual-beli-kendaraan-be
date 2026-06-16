@@ -1,6 +1,7 @@
 import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
 import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
 import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
+import { index as indexTradeIn } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexTestDrive } from '@/actions/App/Http/Controllers/Customer/TestDriveController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
@@ -96,6 +97,13 @@ export const menuItems: NavItem[] = [
             {
                 title: 'Order',
                 href: indexOrder(),
+                permission: '',
+                icon: null,
+            },
+
+            {
+                title: 'Tukar Tambah',
+                href: indexTradeIn(),
                 permission: '',
                 icon: null,
             },

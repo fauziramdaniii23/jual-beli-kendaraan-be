@@ -99,7 +99,7 @@ export default function CustomerPage() {
             header: 'No Handphone',
             cell: ({row}) => {
                 const phone = row.getValue('phone')
-                
+
                 return `+${phone}`;
             }
         },

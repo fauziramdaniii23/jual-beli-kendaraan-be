@@ -26,5 +26,21 @@ class CustomerService
             }
         );
     }
-
+    public function updateOrCreate(array $data)
+    {
+        return DB::transaction(
+            function () use ($data) {
+                return Customer::updateOrCreate(
+                    [
+                        'phone' => $data['phone'],
+                    ],
+                    [
+                        'name' => $data['name'],
+                        'email' => $data['email'],
+                        'address' => $data['address'],
+                    ]
+                );
+            }
+        );
+    }
 }

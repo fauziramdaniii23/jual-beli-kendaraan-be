@@ -21,10 +21,10 @@ class OrderService
         );
     }
 
-    public function store(array $data)
+    public function storeOrder(array $data)
     {
         return DB::transaction(function () use ($data) {
-            Order::create($data);
+            return Order::create($data);
         });
     }
 }

@@ -63,39 +63,65 @@ export default function FormOrderPage() {
     return (
         <>
             <Head title={`${label} Order`} />
-            <Title title={`${label} Order`} description={`Form ${label} Order`} />
+            <Title
+                title={`${label} Order`}
+                description={`Form ${label} Order`}
+            />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
-                    <div className="flex gap-4 w-full mt-4">
+                    <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Nama<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Nama
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="name"
-                                            value={form.data.customer?.name || ''}
-                                            className="w-full input"
+                                            value={
+                                                form.data.customer?.name || ''
+                                            }
+                                            className="input w-full"
                                             disabled={true}
                                         />
                                     ) : (
                                         <Combobox
                                             items={customers}
-                                            itemToStringLabel={(item : TCustomer) => item.name}
-                                            onValueChange={(val : TCustomer | null) => form.setData('customer_id', Number(val?.customer_id))}
+                                            itemToStringLabel={(
+                                                item: TCustomer,
+                                            ) => `${item.name} - ${item.phone}`}
+                                            onValueChange={(
+                                                val: TCustomer | null,
+                                            ) =>
+                                                form.setData(
+                                                    'customer_id',
+                                                    Number(val?.customer_id),
+                                                )
+                                            }
                                         >
-                                            <ComboboxInput placeholder="Pilih Customer" showClear/>
+                                            <ComboboxInput
+                                                placeholder="Pilih Customer"
+                                                showClear
+                                            />
 
                                             <ComboboxContent>
-                                                <ComboboxEmpty>Customer tidak ditemukan.</ComboboxEmpty>
+                                                <ComboboxEmpty>
+                                                    Customer tidak ditemukan.
+                                                </ComboboxEmpty>
 
                                                 <ComboboxList>
                                                     {(customer) => (
                                                         <ComboboxItem
-                                                            key={customer.customer_id}
+                                                            key={
+                                                                customer.customer_id
+                                                            }
                                                             value={customer}
                                                         >
-                                                            {customer.name}
+                                                            {customer.name} -{' '}<span className="italic">(+{customer.phone})</span>
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>
@@ -107,7 +133,9 @@ export default function FormOrderPage() {
                                     <FieldLabel>Tipe Pembayaran</FieldLabel>
                                     <Select
                                         value={form.data.type_paid_code}
-                                        onValueChange={(val) => form.setData('type_paid_code', val)}
+                                        onValueChange={(val) =>
+                                            form.setData('type_paid_code', val)
+                                        }
                                         disabled={disable}
                                     >
                                         <SelectTrigger className="w-full">
@@ -115,38 +143,63 @@ export default function FormOrderPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>Tipe Pembayaran</SelectLabel>
-                                                {typePaid.map((item, index) =>
-                                                    <SelectItem key={index} value={item.ref_code}>{item.ref_value}</SelectItem>
-                                                )}
+                                                <SelectLabel>
+                                                    Tipe Pembayaran
+                                                </SelectLabel>
+                                                {typePaid.map((item, index) => (
+                                                    <SelectItem
+                                                        key={index}
+                                                        value={item.ref_code}
+                                                    >
+                                                        {item.ref_value}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
                                 </Field>
-
                             </FieldGroup>
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Unit<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Unit
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="unit"
                                             value={form.data.unit?.name || ''}
-                                            className="w-full input"
+                                            className="input w-full"
                                             disabled={true}
                                         />
                                     ) : (
                                         <Combobox
                                             items={units}
-                                            itemToStringLabel={(item : TUnit) => item.name}
-                                            onValueChange={(val : TUnit | null) => form.setData('car_id', Number(val?.car_id))}
+                                            itemToStringLabel={(item: TUnit) =>
+                                                item.name
+                                            }
+                                            onValueChange={(
+                                                val: TUnit | null,
+                                            ) =>
+                                                form.setData(
+                                                    'car_id',
+                                                    Number(val?.car_id),
+                                                )
+                                            }
                                         >
-                                            <ComboboxInput placeholder="Pilih Unit" showClear/>
+                                            <ComboboxInput
+                                                placeholder="Pilih Unit"
+                                                showClear
+                                            />
 
                                             <ComboboxContent>
-                                                <ComboboxEmpty>Unit tidak ditemukan.</ComboboxEmpty>
+                                                <ComboboxEmpty>
+                                                    Unit tidak ditemukan.
+                                                </ComboboxEmpty>
 
                                                 <ComboboxList>
                                                     {(unit) => (
@@ -155,8 +208,13 @@ export default function FormOrderPage() {
                                                             value={unit}
                                                         >
                                                             {unit.name}
-                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
-                                                                {unit.status.ref_value}
+                                                            <Badge
+                                                                variant={unit.status.ref_code.toLowerCase()}
+                                                            >
+                                                                {
+                                                                    unit.status
+                                                                        .ref_value
+                                                                }
                                                             </Badge>
                                                         </ComboboxItem>
                                                     )}
@@ -169,7 +227,9 @@ export default function FormOrderPage() {
                                     <FieldLabel>Status</FieldLabel>
                                     <Select
                                         value={form.data.status_code}
-                                        onValueChange={(val) => form.setData('status_code', val)}
+                                        onValueChange={(val) =>
+                                            form.setData('status_code', val)
+                                        }
                                         disabled={disable}
                                     >
                                         <SelectTrigger className="w-full">
@@ -177,10 +237,17 @@ export default function FormOrderPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>Status</SelectLabel>
-                                                {status.map((item, index) =>
-                                                    <SelectItem key={index} value={item.ref_code}>{item.ref_value}</SelectItem>
-                                                )}
+                                                <SelectLabel>
+                                                    Status
+                                                </SelectLabel>
+                                                {status.map((item, index) => (
+                                                    <SelectItem
+                                                        key={index}
+                                                        value={item.ref_code}
+                                                    >
+                                                        {item.ref_value}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -191,17 +258,24 @@ export default function FormOrderPage() {
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={() => router.get(indexOrder().url, {}, { preserveState: true, replace: true} )}
+                            onClick={() =>
+                                router.get(
+                                    indexOrder().url,
+                                    {},
+                                    { preserveState: true, replace: true },
+                                )
+                            }
                             type="button"
-                            variant="outline">
+                            variant="outline"
+                        >
                             {disable ? 'Kembali' : 'Batal'}
                         </Button>
-                        { !disable &&
+                        {!disable && (
                             <Button type="submit" disabled={form.processing}>
                                 {form.processing && <Spinner />}
                                 {form.processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
-                        }
+                        )}
                     </div>
                 </form>
             </div>

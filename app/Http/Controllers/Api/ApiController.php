@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\MasterReference;
 use App\services\BranchService;
+use App\services\CustomerService;
 use App\services\FAQService;
+use App\services\OrderService;
 use App\services\PromoService;
 use App\services\ReviewService;
 use App\services\StockUnitService;
+use App\services\TestDriveService;
+use App\services\TradeInService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,6 +26,10 @@ class ApiController extends Controller
     public function __construct(
         protected StockUnitService $stockUnitService,
         protected ReviewService $reviewService,
+        protected CustomerService $customerService,
+        protected OrderService $orderService,
+        protected TestDriveService $testDriveService,
+        protected TradeInService $tradeInService,
         protected BranchService $branchService,
         protected FAQService $faqService,
         protected PromoService $promoService,
@@ -72,8 +81,53 @@ class ApiController extends Controller
     public function orderUnit(Request $request, Car $car): JsonResponse
     {
         try {
-            $test = $request->all();
-            return $this->successResponse($car);
+            $rules = [
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'address' => 'required|string',
+                'isTestDrive' => 'required|boolean',
+                'date' => 'nullable|string',
+                'time' => 'nullable|string',
+            ];
+
+            if ($request->type === 'tradein') {
+                $rules = array_merge($rules, [
+                    'brand' => 'required|string',
+                    'model' => 'required|string',
+                    'variant' => 'required|string',
+                    'year' => 'required|integer',
+                    'km' => 'required|integer',
+                ]);
+            }
+            $validated = $request->validate($rules);
+            $customer = $this->customerService->updateOrCreate($validated);
+            $dataOrder = [
+                'customer_id' => $customer->customer_id,
+                'car_id' => $car->car_id,
+            ];
+            $order = $this->orderService->storeOrder($dataOrder);
+            if ($validated['isTestDrive']) {
+                $this->testDriveService->store([
+                    'customer_id' => $customer->customer_id,
+                    'car_id' => $car->car_id,
+                    'branch_id' => $car->branch_id,
+                    'test_drive_date' => DateHelper::combine($validated['date'], $validated['time']),
+                ]);
+            }
+            if ($request->type === 'tradein') {
+                $this->tradeInService->store([
+                    'car_id' => $car->car_id,
+                    'order_id' => $order->id,
+                    'brand_id' => $validated['brand'],
+                    'model_id' => $validated['model'],
+                    'variant' => $validated['variant'],
+                    'year' => $validated['year'],
+                    'kilometer' => $validated['kilometer'],
+                ]);
+            }
+
+            return $this->successResponse($validated);
 
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
