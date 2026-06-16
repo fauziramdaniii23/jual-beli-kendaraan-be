@@ -96,7 +96,12 @@ export default function CustomerPage() {
         },
         {
             accessorKey: 'phone',
-            header: 'No Handphone'
+            header: 'No Handphone',
+            cell: ({row}) => {
+                const phone = row.getValue('phone')
+                
+                return `+${phone}`;
+            }
         },
         {
             accessorKey: 'email',
