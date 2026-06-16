@@ -66,9 +66,9 @@ class TradeInController extends Controller
         try {
             $validated = $request->validate([
                 'car_id' => 'required|exists:cars,car_id',
+                'order_id' => 'required|exists:orders,order_id',
                 'brand_id' => 'required|exists:brand,brand_id',
                 'model_id' => 'required|exists:model,model_id',
-                'order_id' => 'required|exists:orders,order_id',
                 'variant' => 'required|string',
                 'status_code' => 'required|string',
                 'year' => 'required|integer',
