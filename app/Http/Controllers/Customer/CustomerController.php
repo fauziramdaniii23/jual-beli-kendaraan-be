@@ -29,6 +29,8 @@ class CustomerController extends Controller
                 'address' => ['required', 'string', 'max:255'],
             ]);
 
+            $validated['phone'] = Utils::normalizePhone($validated['phone']);
+
             $this->customerService->store($validated);
 
             Inertia::flash('toast', [
