@@ -89,7 +89,7 @@ export const menuItems: NavItem[] = [
         permission: PERMISSIONS.CUSTOMER_VIEW,
         items: [
             {
-                title: 'Customer',
+                title: 'Daftar Customer',
                 href: indexCustomer(),
                 permission: '',
                 icon: null,
@@ -108,14 +108,14 @@ export const menuItems: NavItem[] = [
                 icon: null,
             },
             {
-                title: 'Pre Order',
-                href: '/customers/preorder',
+                title: 'Test Drive',
+                href: indexTestDrive(),
                 permission: '',
                 icon: null,
             },
             {
-                title: 'Test Drive',
-                href: indexTestDrive(),
+                title: 'Pre Order',
+                href: '/customers/preorder',
                 permission: '',
                 icon: null,
             },

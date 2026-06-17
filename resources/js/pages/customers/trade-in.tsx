@@ -185,6 +185,10 @@ export default function TradeInPage() {
             },
         },
         {
+            accessorKey: 'order.order_uuid',
+            header: 'Order ID',
+        },
+        {
             accessorKey: 'status.ref_value',
             header: 'Status',
             cell: ({ row }) => {

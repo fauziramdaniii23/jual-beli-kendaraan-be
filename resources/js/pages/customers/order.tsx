@@ -127,7 +127,6 @@ export default function OrderPage() {
                 return formatDate(date)
             }
         },
-
         {
             accessorKey: 'status.ref_value',
             header: 'Status',
