@@ -3,21 +3,23 @@
 namespace App\services;
 
 use App\Models\TradeIn;
+use App\repositories\TradeInRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TradeInService
 {
+    public function __construct(protected TradeInRepository $repository) {}
     public function getTradeIn(Request $request)
     {
-        return TradeIn::with([
-            'unit',
-            'brand',
-            'model',
-            'customer',
-            'order',
-            'status',
-        ])->get();
+        return $this->repository->getTradeIn(
+            filters: [
+                'brand_id' => $request->brand_id,
+                'model_id' => $request->model_id,
+                'status_code' => $request->status_code,
+                'year' => $request->year,
+            ]
+        );
     }
 
     public function store(array $data)

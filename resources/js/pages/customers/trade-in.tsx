@@ -11,12 +11,13 @@ import {
     SquarePen,
     Trash
 } from 'lucide-react';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { index as indexTradeIn, form, destroy } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import type { TTradeIn } from '@/components/customers/orders/types';
+import type { TOptionItemModel } from '@/components/inventory/stock-unit/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -29,20 +30,37 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
-import { formatDate, formatRibuan, formatRupiah } from '@/lib/utils';
-import type { TMasterReference } from '@/types';
+import { formatDate, formatRibuan } from '@/lib/utils';
+import type { TMasterReference, TOptionItem } from '@/types';
+import { Input } from '@/components/ui/input';
 
 type PageProps = {
     tradeIns: TTradeIn[];
     status: TMasterReference[];
+    brands: TOptionItem[];
+    models: TOptionItemModel[];
 }
 
 export default function TradeInPage() {
-    const { tradeIns, status} = usePage<PageProps>().props;
+    const { tradeIns, status, brands, models} = usePage<PageProps>().props;
     const [tradeInId, setTradeInId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
+    const [selectBrand, setSelectBrand] = useState<string>('');
+    const [selectModel, setSelectModel] = useState<string>('');
+    const [year, setYear] = useState<string>('')
+
+    const filteredModels = useMemo(() => {
+        return models.filter(
+            (m) => !selectBrand || String(m.brand_id) === selectBrand,
+        );
+    }, [models, selectBrand]);
+
+    const handleBrandChange = (val: string) => {
+        setSelectBrand(val);
+        setSelectModel(''); // Reset model selection when brand changes
+    };
     const handleAction = (trade_in_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
             form().url,
@@ -61,7 +79,10 @@ export default function TradeInPage() {
         router.get(
             indexTradeIn().url,
             {
+                brand_id: selectBrand === '' ? undefined : selectBrand,
+                model_id: selectModel === '' ? undefined : selectModel,
                 status_code: statusCode === '' ? undefined : statusCode,
+                year: year === '' ? undefined : year
             },
             {
                 preserveState: true,
@@ -139,7 +160,30 @@ export default function TradeInPage() {
                 return formatRibuan(val);
             },
         },
+        {
+            accessorKey: 'inspection_date',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
 
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Tanggal Insppeksi
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+            cell: ({ row }) => {
+                const val = row.getValue('inspection_date');
+
+                return formatDate(val);
+            },
+        },
         {
             accessorKey: 'status.ref_value',
             header: 'Status',
@@ -208,8 +252,11 @@ export default function TradeInPage() {
     return (
         <>
             <Head title="Tukar Tambah" />
-            <Title title="Daftar Tukar Tambah" description="Daftar Semua Unit yang diajukan Tukar Tambah" />
-            <div className="m-4 border rounded-md">
+            <Title
+                title="Daftar Tukar Tambah"
+                description="Daftar Semua Unit yang diajukan Tukar Tambah"
+            />
+            <div className="m-4 rounded-md border">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="group w-full">
@@ -218,14 +265,28 @@ export default function TradeInPage() {
                         </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="flex flex-col items-start gap-2 p-2.5 pt-0 text-sm">
-                        <form className="w-full" onSubmit={(e) => {
-                            e.preventDefault();
-                            submitFilter();
-                        }}>
+                        <form
+                            className="w-full"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                submitFilter();
+                            }}
+                        >
                             <Separator />
-                            <div className="flex gap-4 w-full mt-4">
+                            <div className="mt-4 flex w-full gap-4">
                                 <div className="flex-1">
                                     <FieldGroup>
+                                        <Field>
+                                            <FieldLabel htmlFor="">
+                                                Merek
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Merek"
+                                                value={selectBrand}
+                                                onChange={handleBrandChange}
+                                                items={brands}
+                                            />
+                                        </Field>
                                         <Field>
                                             <FieldLabel htmlFor="">
                                                 Status
@@ -233,8 +294,13 @@ export default function TradeInPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Status"
                                                 value={statusCode}
-                                                onChange={(val) => setStatusCode(val)}
-                                                items={status.map((item) => ({label: item.ref_value, value: item.ref_code}))}
+                                                onChange={(val) =>
+                                                    setStatusCode(val)
+                                                }
+                                                items={status.map((item) => ({
+                                                    label: item.ref_value,
+                                                    value: item.ref_code,
+                                                }))}
                                             />
                                         </Field>
                                     </FieldGroup>
@@ -242,11 +308,45 @@ export default function TradeInPage() {
 
                                 <div className="flex-1">
                                     <FieldGroup>
-
+                                        <Field>
+                                            <FieldLabel htmlFor="">
+                                                Model
+                                            </FieldLabel>
+                                            <SelectWithClear
+                                                placeholder="Pilih Model"
+                                                value={selectModel}
+                                                onChange={(val) =>
+                                                    setSelectModel(val)
+                                                }
+                                                items={filteredModels.map(
+                                                    (m) => ({
+                                                        label: m.label,
+                                                        value: String(m.value),
+                                                    }),
+                                                )}
+                                            />
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>
+                                                Tahun
+                                            </FieldLabel>
+                                            <Input
+                                                value={year}
+                                                onChange={(e) => {
+                                                    const value = e.target.value
+                                                        .replace(/\D/g, '')
+                                                        .slice(0, 4);
+                                                    setYear(value)
+                                                }}
+                                                type="text"
+                                                inputMode="numeric"
+                                                maxLength={4}
+                                            />
+                                        </Field>
                                     </FieldGroup>
                                 </div>
                             </div>
-                            <div className="flex gap-2 mt-4">
+                            <div className="mt-4 flex gap-2">
                                 <CollapsibleTrigger asChild>
                                     <Button type="button" variant="outline">
                                         Tutup
@@ -276,7 +376,7 @@ export default function TradeInPage() {
                 onConfirm={handleDelete}
             />
         </>
-    )
+    );
 }
 
 TradeInPage.layout = {

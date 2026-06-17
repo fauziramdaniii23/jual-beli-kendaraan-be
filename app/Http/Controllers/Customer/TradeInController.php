@@ -22,8 +22,10 @@ class TradeInController extends Controller
     {
         $tradeIns = $this->tradeInService->getTradeIn($request);
         $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
+        $brands = $this->stockUnitService->getOptionFilter('BRAND');
+        $models = $this->stockUnitService->getOptionFilter('MODEL');
 
-        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status]);
+        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status, 'brands' => $brands, 'models' => $models]);
     }
 
     public function form(Request $request)
