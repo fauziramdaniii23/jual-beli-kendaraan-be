@@ -1,14 +1,12 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { index, store, update } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import DatePicker from '@/components/app/date-picker';
-import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import {
     defaultTradeIn
 } from '@/components/customers/orders/types';
 import type {TOrder, TTradeIn} from '@/components/customers/orders/types';
-import type { TOptionItemModel } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -35,20 +33,18 @@ import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import { formatRibuan } from '@/lib/utils';
-import type { TMasterReference, TOptionItem } from '@/types';
+import type { TMasterReference } from '@/types';
 
 type PageProps = {
     tradeIn: TTradeIn;
     orders: TOrder[];
-    brands: TOptionItem[];
-    models: TOptionItemModel[];
     status: TMasterReference[];
     order: TOrder;
     type: 'detail' | 'create' | 'update';
 };
 
 export default function FormTradeInPage() {
-    const { tradeIn, orders, brands, models, status, type, order } = usePage<PageProps>().props;
+    const { tradeIn, orders, status, type, order } = usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
     const form = useForm<TTradeIn>(tradeIn ?? defaultTradeIn);
     const disable = type === 'detail';
@@ -60,18 +56,6 @@ export default function FormTradeInPage() {
     const [unitName, setUnitName] = React.useState<string>(
         selectedOrder?.unit?.name ?? ''
     );
-
-    const handleBrandChange = (val: string) => {
-        form.setData(
-            'brand_id',
-            val === '' ? (undefined as any) : (val as any),
-        );
-        form.setData('model_id', undefined); // reset model when brand changes
-    };
-
-    const filteredModels = useMemo(() => {
-        return models.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
-    }, [models, form.data.brand_id]);
 
     const handleChangeOrderOptions = (order: TOrder) => {
         if(!order) {
@@ -163,17 +147,22 @@ export default function FormTradeInPage() {
                                             *
                                         </span>
                                     </FieldLabel>
-                                    <SelectWithClear
-                                        placeholder="Pilih Merek"
-                                        value={String(form.data.brand_id ?? '')}
-                                        onChange={handleBrandChange}
-                                        items={brands}
-                                        invalid={!!form.errors.brand_id}
+                                    <Input
+                                        name="name"
+                                        value={form.data.brand || ''}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'brand',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="input w-full"
+                                        aria-invalid={!!form.errors.brand}
                                         disabled={disable}
                                     />
-                                    {form.errors.brand_id && (
+                                    {form.errors.brand && (
                                         <div className="text-sm text-destructive">
-                                            {form.errors.brand_id}
+                                            {form.errors.brand}
                                         </div>
                                     )}
                                 </Field>
@@ -259,6 +248,32 @@ export default function FormTradeInPage() {
                                     </Field>
                                 )}
                                 <Field>
+                                    <FieldLabel>
+                                        Model
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
+                                    <Input
+                                        name="name"
+                                        value={form.data.model || ''}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'model',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="input w-full"
+                                        aria-invalid={!!form.errors.model}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.model && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.model}
+                                        </div>
+                                    )}
+                                </Field>
+                                <Field>
                                     <FieldLabel>Status</FieldLabel>
                                     <Select
                                         value={form.data.status_code}
@@ -286,39 +301,6 @@ export default function FormTradeInPage() {
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                </Field>
-
-                                <Field>
-                                    <FieldLabel>
-                                        Model
-                                        <span className="text-destructive">
-                                            *
-                                        </span>
-                                    </FieldLabel>
-                                    <SelectWithClear
-                                        name="model"
-                                        placeholder="Pilih Model"
-                                        value={String(form.data.model_id ?? '')}
-                                        onChange={(val) =>
-                                            form.setData(
-                                                'model_id',
-                                                val === ''
-                                                    ? (undefined as any)
-                                                    : (val as any),
-                                            )
-                                        }
-                                        items={filteredModels.map((m) => ({
-                                            label: m.label,
-                                            value: String(m.value),
-                                        }))}
-                                        invalid={!!form.errors.model_id}
-                                        disabled={disable}
-                                    />
-                                    {form.errors.model_id && (
-                                        <div className="text-sm text-destructive">
-                                            {form.errors.model_id}
-                                        </div>
-                                    )}
                                 </Field>
                                 <Field>
                                     <FieldLabel>

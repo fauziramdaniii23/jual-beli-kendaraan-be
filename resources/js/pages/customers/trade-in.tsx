@@ -11,13 +11,12 @@ import {
     SquarePen,
     Trash
 } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { index as indexTradeIn, form, destroy } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import type { TTradeIn } from '@/components/customers/orders/types';
-import type { TOptionItemModel } from '@/components/inventory/stock-unit/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -29,38 +28,24 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { formatDate, formatRibuan } from '@/lib/utils';
-import type { TMasterReference, TOptionItem } from '@/types';
-import { Input } from '@/components/ui/input';
+import type { TMasterReference} from '@/types';
 
 type PageProps = {
     tradeIns: TTradeIn[];
     status: TMasterReference[];
-    brands: TOptionItem[];
-    models: TOptionItemModel[];
 }
 
 export default function TradeInPage() {
-    const { tradeIns, status, brands, models} = usePage<PageProps>().props;
+    const { tradeIns, status} = usePage<PageProps>().props;
     const [tradeInId, setTradeInId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
-    const [selectBrand, setSelectBrand] = useState<string>('');
-    const [selectModel, setSelectModel] = useState<string>('');
     const [year, setYear] = useState<string>('')
 
-    const filteredModels = useMemo(() => {
-        return models.filter(
-            (m) => !selectBrand || String(m.brand_id) === selectBrand,
-        );
-    }, [models, selectBrand]);
-
-    const handleBrandChange = (val: string) => {
-        setSelectBrand(val);
-        setSelectModel(''); // Reset model selection when brand changes
-    };
     const handleAction = (trade_in_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
         router.get(
             form().url,
@@ -79,8 +64,6 @@ export default function TradeInPage() {
         router.get(
             indexTradeIn().url,
             {
-                brand_id: selectBrand === '' ? undefined : selectBrand,
-                model_id: selectModel === '' ? undefined : selectModel,
                 status_code: statusCode === '' ? undefined : statusCode,
                 year: year === '' ? undefined : year
             },
@@ -106,11 +89,11 @@ export default function TradeInPage() {
 
     const columns: ColumnDef<TTradeIn>[] = [
         {
-            accessorKey: 'brand.brand_name',
+            accessorKey: 'brand',
             header: 'Merek',
         },
         {
-            accessorKey: 'model.model_name',
+            accessorKey: 'model',
             header: 'Model',
         },
         {
@@ -282,17 +265,6 @@ export default function TradeInPage() {
                                     <FieldGroup>
                                         <Field>
                                             <FieldLabel htmlFor="">
-                                                Merek
-                                            </FieldLabel>
-                                            <SelectWithClear
-                                                placeholder="Pilih Merek"
-                                                value={selectBrand}
-                                                onChange={handleBrandChange}
-                                                items={brands}
-                                            />
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel htmlFor="">
                                                 Status
                                             </FieldLabel>
                                             <SelectWithClear
@@ -312,24 +284,6 @@ export default function TradeInPage() {
 
                                 <div className="flex-1">
                                     <FieldGroup>
-                                        <Field>
-                                            <FieldLabel htmlFor="">
-                                                Model
-                                            </FieldLabel>
-                                            <SelectWithClear
-                                                placeholder="Pilih Model"
-                                                value={selectModel}
-                                                onChange={(val) =>
-                                                    setSelectModel(val)
-                                                }
-                                                items={filteredModels.map(
-                                                    (m) => ({
-                                                        label: m.label,
-                                                        value: String(m.value),
-                                                    }),
-                                                )}
-                                            />
-                                        </Field>
                                         <Field>
                                             <FieldLabel>
                                                 Tahun

@@ -22,10 +22,8 @@ class TradeInController extends Controller
     {
         $tradeIns = $this->tradeInService->getTradeIn($request);
         $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
-        $brands = $this->stockUnitService->getOptionFilter('BRAND');
-        $models = $this->stockUnitService->getOptionFilter('MODEL');
 
-        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status, 'brands' => $brands, 'models' => $models]);
+        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status]);
     }
 
     public function form(Request $request)
@@ -41,8 +39,6 @@ class TradeInController extends Controller
 
             $orders = Order::query()->with(['unit', 'customer'])->where('type_paid_code', 'TRADE IN')->get();
             $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
-            $brands = $this->stockUnitService->getOptionFilter('BRAND');
-            $models = $this->stockUnitService->getOptionFilter('MODEL');
             $order = null;
             if ($type !== 'create') {
                 $order = Order::query()->with(['unit', 'customer'])->where('order_id', $tradeIn->order_id)->first();
@@ -52,8 +48,6 @@ class TradeInController extends Controller
                 'type' => $type,
                 'tradeIn' => $tradeIn,
                 'orders' => $orders,
-                'brands' => $brands,
-                'models' => $models,
                 'status' => $status,
                 'order' => $order,
             ]);
@@ -74,8 +68,8 @@ class TradeInController extends Controller
             $validated = $request->validate([
                 'car_id' => 'required|exists:cars,car_id',
                 'order_id' => 'required|exists:orders,order_id',
-                'brand_id' => 'required|exists:brand,brand_id',
-                'model_id' => 'required|exists:model,model_id',
+                'brand' => 'required|string',
+                'model' => 'required|string',
                 'variant' => 'required|string',
                 'status_code' => 'required|string',
                 'year' => 'required|integer',
@@ -105,8 +99,8 @@ class TradeInController extends Controller
         try {
             $validated = $request->validate([
                 'car_id' => 'required|exists:cars,car_id',
-                'order_id' => 'required|exists:orders,order_id',
-                'brand_id' => 'required|exists:brand,brand_id',
+                'brand' => 'required|string',
+                'model' => 'required|string',
                 'model_id' => 'required|exists:model,model_id',
                 'variant' => 'required|string',
                 'status_code' => 'required|string',

@@ -10,8 +10,6 @@ class TradeInRepository
     {
         return TradeIn::with([
             'unit',
-            'brand',
-            'model',
             'customer',
             'order',
             'status',

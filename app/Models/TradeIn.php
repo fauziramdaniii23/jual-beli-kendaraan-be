@@ -20,8 +20,8 @@ class TradeIn extends Model
 
     protected $fillable = [
         'car_id',
-        'brand_id',
-        'model_id',
+        'brand',
+        'model',
         'variant',
         'order_id',
         'status_code',
@@ -64,16 +64,6 @@ class TradeIn extends Model
     public function unit()
     {
         return $this->belongsTo(Car::class, 'car_id');
-    }
-
-    public function brand()
-    {
-        return $this->belongsTo(MasterBrand::class, 'brand_id');
-    }
-
-    public function model()
-    {
-        return $this->belongsTo(MasterModel::class, 'model_id');
     }
 
     public function customer()

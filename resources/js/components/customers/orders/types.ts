@@ -1,7 +1,5 @@
 import type { TCustomer } from '@/components/customers/customer/type';
 import type { TUnit } from '@/components/inventory/stock-unit/type';
-import type { TBrand } from '@/components/master/brand/type';
-import type { TModel } from '@/components/master/model/type';
 import type { TMasterReference } from '@/types';
 
 export type TOrder = {
@@ -20,8 +18,8 @@ export type TOrder = {
 export type TTradeIn = {
     trade_in_id?: number;
     car_id?: number;
-    brand_id?: number
-    model_id?: number
+    brand?: string;
+    model?: string;
     order_id?: number
     variant?: string;
     year?: number;
@@ -29,8 +27,6 @@ export type TTradeIn = {
     status_code: string;
     inspection_date: string
     unit?: TUnit;
-    brand?: TBrand;
-    model?: TModel;
     order?: TOrder;
     status?: TMasterReference;
 }
