@@ -219,7 +219,7 @@ export default function StockUnitPage() {
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable className="max-h-[600px]" columns={columns} data={stock_unit} />
+                <DataTable className="max-h-150" columns={columns} data={stock_unit} />
             </div>
             <ConfirmDialog
                 title="Hapus Stock Unit"

@@ -28,22 +28,7 @@ interface Props {
 export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): ColumnDef<TUnit>[] => [
     {
         accessorKey: "name",
-        header: ({ column }) => {
-            const sorted = column.getIsSorted();
-
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting()}
-                    className="flex w-full items-center justify-between"
-                >
-                    Nama Unit
-                    {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
-                </Button>
-            );
-        },
+        header: "Nama Unit"
     },
     {
         accessorKey: "branch.name",
@@ -166,22 +151,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
     },
     {
         accessorKey: "status.ref_value",
-        header: ({ column }) => {
-            const sorted = column.getIsSorted();
-
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting()}
-                    className="flex w-full items-center justify-between"
-                >
-                    Status
-                    {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
-                </Button>
-            );
-        },
+        header: "Status",
         cell: ({ row }) => {
             const status = row.original.status;
 
