@@ -32,6 +32,10 @@ export  function formatRupiah(value: number | string): string {
     }).format(Number(value));
 }
 
+export function formatRibuan(val: number | string): string {
+    return new Intl.NumberFormat('id-ID').format(Number(val));
+}
+
 export const normalizeUrl = (url: string) => {
     if (!url) {
         return ''

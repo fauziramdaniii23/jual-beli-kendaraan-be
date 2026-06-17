@@ -37,7 +37,7 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                     onClick={() => column.toggleSorting()}
                     className="flex w-full items-center justify-between"
                 >
-                    Judul
+                    Nama Unit
                     {!sorted && <ArrowUpDown />}
                     {sorted === "asc" && <ArrowDownNarrowWide />}
                     {sorted === "desc" && <ArrowUpWideNarrow />}

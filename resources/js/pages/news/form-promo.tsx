@@ -11,6 +11,7 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { InputGroupNumberFormat } from '@/components/ui/number-format-inputgroup';
 import {
     Select,
     SelectContent,
@@ -96,68 +97,118 @@ export default function FormPromoPage() {
     return (
         <>
             <Head title={`${TYPE_LABEL[type]} Promo`} />
-            <Title title={`${TYPE_LABEL[type]} Promo`} description={`Form ${TYPE_LABEL[type]} Promo`} />
+            <Title
+                title={`${TYPE_LABEL[type]} Promo`}
+                description={`Form ${TYPE_LABEL[type]} Promo`}
+            />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage
                         type={type}
-                        data={{image_id: promo?.promo_id, image_name: promo?.image_name, image_src: promo?.image_src}}
+                        data={{
+                            image_id: promo?.promo_id,
+                            image_name: promo?.image_name,
+                            image_src: promo?.image_src,
+                        }}
                         uploadImage={(file) => handleUploadImage(file)}
-                        removedImage={() => {} }
+                        removedImage={() => {}}
                     />
-                    <div className="flex gap-4 w-full mt-4">
+                    <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Nama Promo<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Nama Promo
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     <Input
                                         name="name"
                                         value={form.data.name || ''}
-                                        onChange={(e) => form.setData('name', e.target.value)}
-                                        className="w-full input"
+                                        onChange={(e) =>
+                                            form.setData('name', e.target.value)
+                                        }
+                                        className="input w-full"
                                         aria-invalid={!!form.errors.name}
                                         disabled={disable}
                                     />
-                                    {form.errors.name && <div className="text-sm text-destructive">{form.errors.name}</div>}
+                                    {form.errors.name && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.name}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Tipe Diskon<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Tipe Diskon
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     <Select
                                         name="type"
                                         value={form.data.type || ''}
                                         onValueChange={(val) => {
                                             setSelectType(val);
-                                            form.setData('type', val)
+                                            form.setData('type', val);
                                         }}
                                     >
-                                        <SelectTrigger className="w-full input" aria-invalid={!!form.errors.type} disabled={disable}>
+                                        <SelectTrigger
+                                            className="input w-full"
+                                            aria-invalid={!!form.errors.type}
+                                            disabled={disable}
+                                        >
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>Tipe Diskon</SelectLabel>
-                                                <SelectItem value="percentage">Persentase</SelectItem>
-                                                <SelectItem value="fixed">Fix</SelectItem>
+                                                <SelectLabel>
+                                                    Tipe Diskon
+                                                </SelectLabel>
+                                                <SelectItem value="percentage">
+                                                    Persentase
+                                                </SelectItem>
+                                                <SelectItem value="fixed">
+                                                    Fix
+                                                </SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                    {form.errors.type && <div className="text-sm text-destructive">{form.errors.type}</div>}
+                                    {form.errors.type && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.type}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Tanggal Mulai<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Tanggal Mulai
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     <DatePicker
                                         value={form.data.start_date || ''}
-                                        onChange={(val) => form.setData('start_date', val)}
+                                        onChange={(val) =>
+                                            form.setData('start_date', val)
+                                        }
                                         invalid={!!form.errors.start_date}
                                         disabled={disable}
                                     />
-                                    {form.errors.start_date && <div className="text-sm text-destructive">{form.errors.start_date}</div>}
+                                    {form.errors.start_date && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.start_date}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Deskripsi</FieldLabel>
                                     <TextEditor
                                         value={form.data.description || ''}
-                                        onChange={(val) => form.setData('description', val)}
+                                        onChange={(val) =>
+                                            form.setData('description', val)
+                                        }
                                         disabled={disable}
                                     />
                                 </Field>
@@ -166,54 +217,97 @@ export default function FormPromoPage() {
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Kode Promo<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Kode Promo
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     <ButtonGroup>
                                         <Input
                                             name="code"
                                             value={form.data.code || ''}
-                                            onChange={(e) => form.setData('code', e.target.value)}
-                                            className="w-full input"
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'code',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="input w-full"
                                             aria-invalid={!!form.errors.code}
                                             disabled={disable}
                                         />
-                                        <Button type="button" onClick={handleGenerateCode}>Generate</Button>
+                                        <Button
+                                            type="button"
+                                            onClick={handleGenerateCode}
+                                        >
+                                            Generate
+                                        </Button>
                                     </ButtonGroup>
-                                    {form.errors.code && <div className="text-sm text-destructive">{form.errors.code}</div>}
+                                    {form.errors.code && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.code}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Nilai Diskon<span className="text-destructive">*</span></FieldLabel>
-                                    <InputGroup className="w-full input">
-                                        <InputGroupInput
-                                            name="discount_value"
-                                            type="number"
-                                            value={form.data.discount_value}
-                                            onChange={(e) => form.setData('discount_value', e.target.value === '' ? undefined as any : Number(e.target.value) as any)}
-                                        />
-                                        { selectType === 'fixed' ? (
-                                            <InputGroupAddon>
-                                                Rp.
-                                            </InputGroupAddon>
-                                        ) : (
-                                            <InputGroupAddon align="inline-end"><Percent /></InputGroupAddon>
-                                        )}
-                                    </InputGroup>
+                                    <FieldLabel>
+                                        Nilai Diskon
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
+                                    <InputGroupNumberFormat
+                                        value={form.data.discount_value}
+                                        onChange={(value) =>
+                                            form.setData(
+                                                'discount_value',
+                                                value!,
+                                            )
+                                        }
+                                        disable={disable}
+                                        className="input w-full"
+                                        invalid={!!form.errors.discount_value}
+                                        prefix={
+                                            selectType === 'fixed' ? 'Rp.' : '%'
+                                        }
+                                        alignPrefix={
+                                            selectType === 'fixed'
+                                                ? undefined
+                                                : 'inline-end'
+                                        }
+                                    />
+                                    {form.errors.discount_value && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.discount_value}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Tanggal Berakhir</FieldLabel>
                                     <DatePicker
                                         value={form.data.end_date || ''}
-                                        onChange={(val) => form.setData('end_date', val)}
+                                        onChange={(val) =>
+                                            form.setData('end_date', val)
+                                        }
                                         invalid={!!form.errors.end_date}
                                         disabled={disable}
                                     />
-                                    {form.errors.end_date && <div className="text-sm text-destructive">{form.errors.end_date}</div>}
+                                    {form.errors.end_date && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.end_date}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
                                     <Label>Status</Label>
                                     <Select
                                         value={form.data.is_active.toString()}
                                         onValueChange={(val) =>
-                                            form.setData('is_active', val === 'true')
+                                            form.setData(
+                                                'is_active',
+                                                val === 'true',
+                                            )
                                         }
                                     >
                                         <SelectTrigger className="w-full">
@@ -221,8 +315,12 @@ export default function FormPromoPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectItem value="true">Aktif</SelectItem>
-                                                <SelectItem value="false">Tidak Aktif</SelectItem>
+                                                <SelectItem value="true">
+                                                    Aktif
+                                                </SelectItem>
+                                                <SelectItem value="false">
+                                                    Tidak Aktif
+                                                </SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -233,17 +331,24 @@ export default function FormPromoPage() {
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={() => router.get(indexPromo().url, {}, { preserveState: true, replace: true} )}
+                            onClick={() =>
+                                router.get(
+                                    indexPromo().url,
+                                    {},
+                                    { preserveState: true, replace: true },
+                                )
+                            }
                             type="button"
-                            variant="outline">
+                            variant="outline"
+                        >
                             {disable ? 'Kembali' : 'Batal'}
                         </Button>
-                        { !disable &&
+                        {!disable && (
                             <Button type="submit" disabled={form.processing}>
                                 {form.processing && <Spinner />}
                                 {form.processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
-                        }
+                        )}
                     </div>
                 </form>
             </div>

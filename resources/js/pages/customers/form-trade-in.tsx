@@ -33,6 +33,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TMasterReference, TOptionItem } from '@/types';
+import { NumberFormatInput } from '@/components/ui/number-format-input';
 
 type PageProps = {
     tradeIn?: TTradeIn;
@@ -318,18 +319,12 @@ export default function FormTradeInPage() {
                                 </Field>
                                 <Field>
                                     <FieldLabel>
-                                        Kilometer
+                                        Kilometer(KM)
                                         <span className="text-red-600">*</span>
                                     </FieldLabel>
-                                    <Input
+                                    <NumberFormatInput
                                         value={form.data.kilometer}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                'kilometer',
-                                                Number(e.target.value),
-                                            )
-                                        }
-                                        type="number"
+                                        onChange={(e) => form.setData('kilometer', e)}
                                         required
                                     />
                                 </Field>

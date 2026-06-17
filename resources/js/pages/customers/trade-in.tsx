@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatRibuan, formatRupiah } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
 
 type PageProps = {
@@ -79,17 +79,25 @@ export default function TradeInPage() {
     };
 
     const handleConfirmDelete = (tradeIn: TTradeIn) => {
-        setTradeInId(tradeIn.trade_in_id)
+        setTradeInId(tradeIn.trade_in_id!)
         setDeleteConfirmOpen(true);
     }
 
     const columns: ColumnDef<TTradeIn>[] = [
         {
-            accessorKey: 'year',
-            header: 'Tahun',
+            accessorKey: 'brand.brand_name',
+            header: 'Merek',
         },
         {
-            accessorKey: 'updated_at',
+            accessorKey: 'model.model_name',
+            header: 'Model',
+        },
+        {
+            accessorKey: 'variant',
+            header: 'Varian',
+        },
+        {
+            accessorKey: 'year',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
 
@@ -99,18 +107,37 @@ export default function TradeInPage() {
                         onClick={() => column.toggleSorting()}
                         className="flex w-full items-center justify-between"
                     >
-                        Update Terbaru
+                        Tahun
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
-            cell: ({row}) => {
-                const date = row.getValue('updated_at');
+        },
+        {
+            accessorKey: 'kilometer',
+            header: ({ column }) => {
+                const sorted = column.getIsSorted();
 
-                return formatDate(date)
-            }
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                        className="flex w-full items-center justify-between"
+                    >
+                        Kilometer
+                        {!sorted && <ArrowUpDown />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
+                    </Button>
+                );
+            },
+            cell: ({ row }) => {
+                const val: string = row.getValue('kilometer');
+
+                return formatRibuan(val);
+            },
         },
 
         {
@@ -121,20 +148,14 @@ export default function TradeInPage() {
 
                 return (
                     <div className="text-center">
-                        <Badge variant="outline">
-                            {status?.ref_value}
-                        </Badge>
+                        <Badge variant="outline">{status?.ref_value}</Badge>
                     </div>
                 );
             },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const tradeIn = row.original;
@@ -149,14 +170,23 @@ export default function TradeInPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(tradeIn.trade_in_id, 'detail')}
+                                    onClick={() =>
+                                        handleAction(
+                                            tradeIn.trade_in_id,
+                                            'detail',
+                                        )
+                                    }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(tradeIn.trade_in_id, 'update')}
+                                    onClick={() =>
+                                        handleAction(
+                                            tradeIn.trade_in_id,
+                                            'update',
+                                        )
+                                    }
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
@@ -165,7 +195,7 @@ export default function TradeInPage() {
                                     onClick={() => handleConfirmDelete(tradeIn)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
