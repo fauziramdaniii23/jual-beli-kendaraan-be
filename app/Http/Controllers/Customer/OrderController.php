@@ -8,12 +8,16 @@ use App\Models\Customer;
 use App\Models\MasterReference;
 use App\Models\Order;
 use App\services\OrderService;
+use App\services\StockUnitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    public function __construct(protected OrderService $orderService) {}
+    public function __construct(
+        protected OrderService $orderService,
+        protected StockUnitService $stockUnitService
+    ) {}
 
     public function index(Request $request)
     {
@@ -42,6 +46,11 @@ class OrderController extends Controller
             $typePaid = MasterReference::byType(MasterReference::TYPE_PAID_ORDER)->get();
             $status = MasterReference::byType(MasterReference::STATUS_ORDER)->get();
 
+            $orderUnit = null;
+            if ($type !== 'create') {
+                $orderUnit = $this->stockUnitService->getUnitById($order->car_id);
+            }
+
             return Inertia::render('customers/form-order', [
                 'type' => $type,
                 'order' => $order,
@@ -49,6 +58,7 @@ class OrderController extends Controller
                 'units' => $units,
                 'typePaid' => $typePaid,
                 'status' => $status,
+                'orderUnit' => $orderUnit,
             ]);
         } catch (\Exception $e) {
             Inertia::flash('toast', [
@@ -121,6 +131,7 @@ class OrderController extends Controller
                 'type' => 'success',
                 'message' => 'Order berhasil dihapus.',
             ]);
+
             return redirect()->route('customer.orders');
         } catch (\Exception $e) {
             Inertia::flash('toast', [

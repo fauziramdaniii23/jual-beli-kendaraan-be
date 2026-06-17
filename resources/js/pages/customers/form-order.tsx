@@ -8,6 +8,7 @@ import type {TOrder} from '@/components/customers/orders/types';
 import type { TUnit } from '@/components/inventory/stock-unit/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
     Combobox,
     ComboboxContent,
@@ -17,7 +18,6 @@ import {
     ComboboxList
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -30,6 +30,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
+import { formatRibuan, formatRupiah } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
 
 type PageProps = {
@@ -38,11 +39,12 @@ type PageProps = {
     units: TUnit[];
     status: TMasterReference[];
     typePaid: TMasterReference[];
+    orderUnit: TUnit;
     type: 'detail' | 'create' | 'update';
 };
 
 export default function FormOrderPage() {
-    const { order, customers, units, status, typePaid, type, } = usePage<PageProps>().props;
+    const { order, customers, units, status, typePaid, type, orderUnit } = usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
     const form = useForm<TOrder>(order ?? defaultOrder);
     const disable = type === 'detail';
@@ -68,27 +70,18 @@ export default function FormOrderPage() {
                 description={`Form ${label} Order`}
             />
             <div className="m-4">
-                <form onSubmit={submit} className="space-y-4">
+                <form onSubmit={submit} className="mb-4 space-y-4">
                     <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
-                                <Field>
-                                    <FieldLabel>
-                                        Nama
-                                        <span className="text-destructive">
-                                            *
-                                        </span>
-                                    </FieldLabel>
-                                    {type === 'detail' || type === 'update' ? (
-                                        <Input
-                                            name="name"
-                                            value={
-                                                form.data.customer?.name || ''
-                                            }
-                                            className="input w-full"
-                                            disabled={true}
-                                        />
-                                    ) : (
+                                {type === 'create' && (
+                                    <Field>
+                                        <FieldLabel>
+                                            Nama Customer
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </FieldLabel>
                                         <Combobox
                                             items={customers}
                                             itemToStringLabel={(
@@ -121,14 +114,19 @@ export default function FormOrderPage() {
                                                             }
                                                             value={customer}
                                                         >
-                                                            {customer.name} <span className="italic">(+{customer.phone})</span>
+                                                            {customer.name}{' '}
+                                                            <span className="italic">
+                                                                (+
+                                                                {customer.phone}
+                                                                )
+                                                            </span>
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>
                                             </ComboboxContent>
                                         </Combobox>
-                                    )}
-                                </Field>
+                                    </Field>
+                                )}
                                 <Field>
                                     <FieldLabel>Tipe Pembayaran</FieldLabel>
                                     <Select
@@ -162,29 +160,39 @@ export default function FormOrderPage() {
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
-                                <Field>
-                                    <FieldLabel>
-                                        Unit
-                                        <span className="text-destructive">
-                                            *
-                                        </span>
-                                    </FieldLabel>
-                                    {type === 'detail' || type === 'update' ? (
-                                        <Input
-                                            name="unit"
-                                            value={form.data.unit?.name || ''}
-                                            className="input w-full"
-                                            disabled={true}
-                                        />
-                                    ) : (
+                                {type === 'create' && (
+                                    <Field>
+                                        <FieldLabel>
+                                            Unit
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </FieldLabel>
                                         <Combobox
                                             defaultValue={null}
                                             items={units}
-                                            itemToStringLabel={(item: {car_id: string, name:string}) => item?.name}
-                                            onValueChange={(val: {car_id: string, name:string} | null) => form.setData('car_id', Number(val?.car_id),)}
+                                            itemToStringLabel={(item: {
+                                                car_id: string;
+                                                name: string;
+                                            }) => item?.name}
+                                            onValueChange={(
+                                                val: {
+                                                    car_id: string;
+                                                    name: string;
+                                                } | null,
+                                            ) =>
+                                                form.setData(
+                                                    'car_id',
+                                                    Number(val?.car_id),
+                                                )
+                                            }
                                             disabled={disable}
                                         >
-                                            <ComboboxInput disabled={disable} placeholder="Pilih Unit" showClear />
+                                            <ComboboxInput
+                                                disabled={disable}
+                                                placeholder="Pilih Unit"
+                                                showClear
+                                            />
                                             <ComboboxContent>
                                                 <ComboboxEmpty>
                                                     Unit tidak ditemukan.
@@ -196,13 +204,16 @@ export default function FormOrderPage() {
                                                             key={unit.car_id}
                                                             value={{
                                                                 car_id: unit.car_id,
-                                                                name: unit.name
+                                                                name: unit.name,
                                                             }}
                                                         >
                                                             {unit.name}
-                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
+                                                            <Badge
+                                                                variant={unit.status.ref_code.toLowerCase()}
+                                                            >
                                                                 {
-                                                                    unit.status.ref_value
+                                                                    unit.status
+                                                                        .ref_value
                                                                 }
                                                             </Badge>
                                                         </ComboboxItem>
@@ -210,8 +221,8 @@ export default function FormOrderPage() {
                                                 </ComboboxList>
                                             </ComboboxContent>
                                         </Combobox>
-                                    )}
-                                </Field>
+                                    </Field>
+                                )}
                                 <Field>
                                     <FieldLabel>Status</FieldLabel>
                                     <Select
@@ -267,6 +278,139 @@ export default function FormOrderPage() {
                         )}
                     </div>
                 </form>
+                {(type === 'detail' || type === 'update') && (
+                    <div>
+                        <Card>
+                            <CardHeader className="text-lg font-semibold text-gray-800">
+                                Detail Customer
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex w-full gap-4">
+                                    <div className="flex-1">
+                                        <FieldGroup>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Nama Customer
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {form.data.customer?.name ??
+                                                        '-'}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Nama Customer
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {form.data.customer
+                                                        ?.email ?? '-'}
+                                                </div>
+                                            </Field>
+                                        </FieldGroup>
+                                    </div>
+                                    <div className="flex-1">
+                                        <FieldGroup>
+                                            <Field>
+                                                <FieldLabel>
+                                                    No Handphone
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    +
+                                                    {form.data.customer
+                                                        ?.phone ?? '-'}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>
+                                                    No Handphone
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {form.data.customer
+                                                        ?.address ?? '-'}
+                                                </div>
+                                            </Field>
+                                        </FieldGroup>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="my-4">
+                            <CardHeader className="text-lg font-semibold text-gray-800">
+                                Detail Unit
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex w-full gap-4">
+                                    <div className="flex-1">
+                                        <FieldGroup>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Nama Unit
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {orderUnit.name}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>Tahun</FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {orderUnit.year}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Total Diskon
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {formatRupiah(
+                                                        orderUnit?.total_discount ??
+                                                            0,
+                                                    )}
+                                                </div>
+                                            </Field>
+                                        </FieldGroup>
+                                    </div>
+                                    <div className="flex-1">
+                                        <FieldGroup>
+                                            <Field>
+                                                <FieldLabel>Harga</FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {formatRupiah(
+                                                        orderUnit?.price ?? 0,
+                                                    )}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Kilometer(KM)
+                                                </FieldLabel>
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {formatRibuan(
+                                                        orderUnit?.kilometer ??
+                                                            0,
+                                                    )}
+                                                </div>
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel>
+                                                    Harga Akhir
+                                                    <span className="text-destructive">
+                                                        *
+                                                    </span>
+                                                </FieldLabel>
+                                                <div className="flex font-semibold h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                    {formatRupiah(
+                                                        orderUnit?.final_price ??
+                                                            0,
+                                                    )}
+                                                </div>
+                                            </Field>
+                                        </FieldGroup>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
             </div>
         </>
     );
