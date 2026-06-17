@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { NumberFormatInput } from '@/components/ui/number-format-input';
 import {
     Select,
     SelectContent,
@@ -33,10 +34,9 @@ import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TMasterReference, TOptionItem } from '@/types';
-import { NumberFormatInput } from '@/components/ui/number-format-input';
 
 type PageProps = {
-    tradeIn?: TTradeIn;
+    tradeIn: TTradeIn;
     orders: TOrder[];
     brands: TOptionItem[];
     models: TOptionItemModel[];
@@ -50,8 +50,17 @@ export default function FormTradeInPage() {
     const form = useForm<TTradeIn>(tradeIn ?? defaultTradeIn);
     const disable = type === 'detail';
 
-    const [unitName, setUnitName] = React.useState<string>("")
-    const [customerName, setCustomerName] = React.useState<string>("")
+    const selectedOrder = orders.find(
+        (o) => o.order_id === tradeIn?.order_id
+    );
+
+    const [unitName, setUnitName] = React.useState<string>(
+        selectedOrder?.unit?.name ?? ''
+    );
+
+    const [customerName, setCustomerName] = React.useState<string>(
+        selectedOrder?.customer?.name ?? ''
+    );
 
     const handleBrandChange = (val: string) => {
         form.setData(
@@ -106,7 +115,7 @@ export default function FormTradeInPage() {
                             <FieldGroup>
                                 <Field>
                                     <FieldLabel>
-                                        Order
+                                        Order ID
                                         <span className="text-destructive">
                                             *
                                         </span>
@@ -114,10 +123,7 @@ export default function FormTradeInPage() {
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="Order ID"
-                                            value={
-                                                form.data.order?.order_uuid ||
-                                                ''
-                                            }
+                                            value={selectedOrder?.order_uuid}
                                             className="input w-full"
                                             disabled={true}
                                         />
@@ -235,6 +241,7 @@ export default function FormTradeInPage() {
                                         type="text"
                                         inputMode="numeric"
                                         maxLength={4}
+                                        disabled={disable}
                                         required
                                     />
                                 </Field>
@@ -325,6 +332,7 @@ export default function FormTradeInPage() {
                                     <NumberFormatInput
                                         value={form.data.kilometer}
                                         onChange={(e) => form.setData('kilometer', e)}
+                                        disable={disable}
                                         required
                                     />
                                 </Field>

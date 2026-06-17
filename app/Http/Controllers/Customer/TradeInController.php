@@ -37,9 +37,10 @@ class TradeInController extends Controller
             $tradeIn = $tradeInId ? TradeIn::with([
                 'customer',
                 'unit',
+                'order',
             ])->findOrFail($tradeInId) : null;
 
-            $orders = $type !== 'detail' ? Order::query()->with(['unit', 'customer'])->get() : null;
+            $orders = Order::query()->with(['unit', 'customer'])->get();
             $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
             $brands = $this->stockUnitService->getOptionFilter('BRAND');
             $models = $this->stockUnitService->getOptionFilter('MODEL');
@@ -74,7 +75,7 @@ class TradeInController extends Controller
                 'variant' => 'required|string',
                 'status_code' => 'required|string',
                 'year' => 'required|integer',
-                'kilometer' => 'required|integer',
+                'kilometer' => 'required|numeric',
                 'inspection_date' => 'required|string',
             ]);
             $this->tradeInService->store($validated);
@@ -95,18 +96,25 @@ class TradeInController extends Controller
         }
     }
 
-    public function update(Request $request, Order $order)
+    public function update(Request $request, TradeIn $tradeIn)
     {
         try {
             $validated = $request->validate([
-                'type_paid_code' => 'required|string',
+                'car_id' => 'required|exists:cars,car_id',
+                'order_id' => 'required|exists:orders,order_id',
+                'brand_id' => 'required|exists:brand,brand_id',
+                'model_id' => 'required|exists:model,model_id',
+                'variant' => 'required|string',
                 'status_code' => 'required|string',
+                'year' => 'required|integer',
+                'kilometer' => 'required|numeric',
+                'inspection_date' => 'required|string',
             ]);
-            $order->update($validated);
+            $tradeIn->update($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Order berhasil disimpan.',
+                'message' => 'Data Tukar Tambah berhasil disimpan.',
             ]);
 
             return redirect()->route('customer.trade-in');
@@ -120,13 +128,13 @@ class TradeInController extends Controller
         }
     }
 
-    public function destroy(Order $order)
+    public function destroy(TradeIn $tradeIn)
     {
         try {
-            $order->delete();
+            $tradeIn->delete();
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Order berhasil dihapus.',
+                'message' => 'Data Tukar Tambah berhasil dihapus.',
             ]);
 
             return redirect()->route('customer.orders');

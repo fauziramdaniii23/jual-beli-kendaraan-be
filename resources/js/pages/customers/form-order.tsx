@@ -178,24 +178,13 @@ export default function FormOrderPage() {
                                         />
                                     ) : (
                                         <Combobox
+                                            defaultValue={null}
                                             items={units}
-                                            itemToStringLabel={(item: TUnit) =>
-                                                item.name
-                                            }
-                                            onValueChange={(
-                                                val: TUnit | null,
-                                            ) =>
-                                                form.setData(
-                                                    'car_id',
-                                                    Number(val?.car_id),
-                                                )
-                                            }
+                                            itemToStringLabel={(item: {car_id: string, name:string}) => item?.name}
+                                            onValueChange={(val: {car_id: string, name:string} | null) => form.setData('car_id', Number(val?.car_id),)}
+                                            disabled={disable}
                                         >
-                                            <ComboboxInput
-                                                placeholder="Pilih Unit"
-                                                showClear
-                                            />
-
+                                            <ComboboxInput disabled={disable} placeholder="Pilih Unit" showClear />
                                             <ComboboxContent>
                                                 <ComboboxEmpty>
                                                     Unit tidak ditemukan.
@@ -205,15 +194,15 @@ export default function FormOrderPage() {
                                                     {(unit) => (
                                                         <ComboboxItem
                                                             key={unit.car_id}
-                                                            value={unit}
+                                                            value={{
+                                                                car_id: unit.car_id,
+                                                                name: unit.name
+                                                            }}
                                                         >
                                                             {unit.name}
-                                                            <Badge
-                                                                variant={unit.status.ref_code.toLowerCase()}
-                                                            >
+                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
                                                                 {
-                                                                    unit.status
-                                                                        .ref_value
+                                                                    unit.status.ref_value
                                                                 }
                                                             </Badge>
                                                         </ComboboxItem>
