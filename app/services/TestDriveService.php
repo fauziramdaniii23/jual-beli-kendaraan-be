@@ -24,7 +24,6 @@ class TestDriveService
             TestDrive::create([
                 'customer_id' => $data['customer_id'],
                 'car_id' => $data['car_id'],
-                'status_code' => $data['status_code'],
                 'branch_id' => $data['branch_id'],
                 'test_drive_date' => $data['test_drive_date'],
             ]);

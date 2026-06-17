@@ -18,6 +18,7 @@ use App\services\TradeInService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -85,7 +86,7 @@ class ApiController extends Controller
                 'name' => 'required|string',
                 'email' => 'required|email',
                 'phone' => 'required|string',
-                'address' => 'required|string',
+                'address' => 'nullable|string',
                 'isTestDrive' => 'required|boolean',
                 'date' => 'nullable|string',
                 'time' => 'nullable|string',
@@ -97,35 +98,43 @@ class ApiController extends Controller
                     'model' => 'required|string',
                     'variant' => 'required|string',
                     'year' => 'required|integer',
-                    'km' => 'required|integer',
+                    'kilometer' => 'required|numeric',
                 ]);
             }
             $validated = $request->validate($rules);
-            $customer = $this->customerService->updateOrCreate($validated);
-            $dataOrder = [
-                'customer_id' => $customer->customer_id,
-                'car_id' => $car->car_id,
-            ];
-            $order = $this->orderService->storeOrder($dataOrder);
-            if ($validated['isTestDrive']) {
-                $this->testDriveService->store([
+            DB::transaction(function () use ($validated, $request, $car) {
+
+                $customer = $this->customerService->updateOrCreate($validated);
+
+                $order = $this->orderService->storeOrder([
                     'customer_id' => $customer->customer_id,
                     'car_id' => $car->car_id,
-                    'branch_id' => $car->branch_id,
-                    'test_drive_date' => DateHelper::combine($validated['date'], $validated['time']),
                 ]);
-            }
-            if ($request->type === 'tradein') {
-                $this->tradeInService->store([
-                    'car_id' => $car->car_id,
-                    'order_id' => $order->id,
-                    'brand_id' => $validated['brand'],
-                    'model_id' => $validated['model'],
-                    'variant' => $validated['variant'],
-                    'year' => $validated['year'],
-                    'kilometer' => $validated['kilometer'],
-                ]);
-            }
+
+                if ($request->type === 'tradein') {
+                    $this->tradeInService->store([
+                        'car_id' => $car->car_id,
+                        'order_id' => $order->id,
+                        'brand_id' => $validated['brand'],
+                        'model_id' => $validated['model'],
+                        'variant' => $validated['variant'],
+                        'year' => $validated['year'],
+                        'kilometer' => $validated['kilometer'],
+                    ]);
+                }
+
+                if ($validated['isTestDrive']) {
+                    $this->testDriveService->store([
+                        'customer_id' => $customer->customer_id,
+                        'car_id' => $car->car_id,
+                        'branch_id' => $car->branch_id,
+                        'test_drive_date' => DateHelper::combine(
+                            $validated['date'],
+                            $validated['time']
+                        ),
+                    ]);
+                }
+            });
 
             return $this->successResponse($validated);
 
