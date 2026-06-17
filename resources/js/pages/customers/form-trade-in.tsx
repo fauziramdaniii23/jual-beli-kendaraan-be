@@ -10,6 +10,7 @@ import {
 import type {TOrder, TTradeIn} from '@/components/customers/orders/types';
 import type { TOptionItemModel } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
     Combobox,
     ComboboxContent,
@@ -33,6 +34,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
+import { formatRibuan } from '@/lib/utils';
 import type { TMasterReference, TOptionItem } from '@/types';
 
 type PageProps = {
@@ -41,11 +43,12 @@ type PageProps = {
     brands: TOptionItem[];
     models: TOptionItemModel[];
     status: TMasterReference[];
+    order: TOrder;
     type: 'detail' | 'create' | 'update';
 };
 
 export default function FormTradeInPage() {
-    const { tradeIn, orders, brands, models, status, type, } = usePage<PageProps>().props;
+    const { tradeIn, orders, brands, models, status, type, order } = usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
     const form = useForm<TTradeIn>(tradeIn ?? defaultTradeIn);
     const disable = type === 'detail';
@@ -56,10 +59,6 @@ export default function FormTradeInPage() {
 
     const [unitName, setUnitName] = React.useState<string>(
         selectedOrder?.unit?.name ?? ''
-    );
-
-    const [customerName, setCustomerName] = React.useState<string>(
-        selectedOrder?.customer?.name ?? ''
     );
 
     const handleBrandChange = (val: string) => {
@@ -77,14 +76,12 @@ export default function FormTradeInPage() {
     const handleChangeOrderOptions = (order: TOrder) => {
         if(!order) {
             setUnitName("")
-            setCustomerName("")
             form.setData('order_id', undefined);
 
             return;
         }
 
         setUnitName(order.unit!.name)
-        setCustomerName(order.customer!.name)
         form.setData('order_id', order.order_id)
         form.setData('car_id', order.unit!.car_id)
     }
@@ -113,21 +110,15 @@ export default function FormTradeInPage() {
                     <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
-                                <Field>
-                                    <FieldLabel>
-                                        Order ID
-                                        <span className="text-destructive">
-                                            *
-                                        </span>
-                                    </FieldLabel>
-                                    {type === 'detail' || type === 'update' ? (
-                                        <Input
-                                            name="Order ID"
-                                            value={selectedOrder?.order_uuid}
-                                            className="input w-full"
-                                            disabled={true}
-                                        />
-                                    ) : (
+                                {type === 'create' && (
+                                    <Field>
+                                        <FieldLabel>
+                                            Order ID
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </FieldLabel>
+
                                         <Combobox
                                             items={orders}
                                             itemToStringLabel={(item: TOrder) =>
@@ -163,21 +154,8 @@ export default function FormTradeInPage() {
                                                 </ComboboxList>
                                             </ComboboxContent>
                                         </Combobox>
-                                    )}
-                                </Field>
-                                <Field>
-                                    <FieldLabel>
-                                        Nama Unit
-                                        <span className="text-xs text-slate-600 italic">
-                                            (Pilih Order)
-                                        </span>
-                                    </FieldLabel>
-                                    <Input
-                                        value={unitName}
-                                        className="input w-full"
-                                        disabled={true}
-                                    />
-                                </Field>
+                                    </Field>
+                                )}
                                 <Field>
                                     <FieldLabel>
                                         Merek
@@ -245,23 +223,41 @@ export default function FormTradeInPage() {
                                         required
                                     />
                                 </Field>
+                                <Field>
+                                    <FieldLabel>Tanggal Inspeksi</FieldLabel>
+                                    <DatePicker
+                                        value={form.data.inspection_date || ''}
+                                        onChange={(val) =>
+                                            form.setData('inspection_date', val)
+                                        }
+                                        invalid={!!form.errors.inspection_date}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.inspection_date && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.inspection_date}
+                                        </div>
+                                    )}
+                                </Field>
                             </FieldGroup>
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
-                                <Field>
-                                    <FieldLabel>
-                                        Nama Customer
-                                        <span className="text-xs text-slate-600 italic">
-                                            (Pilih Order)
-                                        </span>
-                                    </FieldLabel>
-                                    <Input
-                                        value={customerName}
-                                        className="input w-full"
-                                        disabled={true}
-                                    />
-                                </Field>
+                                {type === 'create' && (
+                                    <Field>
+                                        <FieldLabel>
+                                            Nama Unit
+                                            <span className="text-xs text-slate-600 italic">
+                                                (Pilih Order)
+                                            </span>
+                                        </FieldLabel>
+                                        <Input
+                                            value={unitName}
+                                            className="input w-full"
+                                            disabled={true}
+                                        />
+                                    </Field>
+                                )}
                                 <Field>
                                     <FieldLabel>Status</FieldLabel>
                                     <Select
@@ -331,26 +327,12 @@ export default function FormTradeInPage() {
                                     </FieldLabel>
                                     <NumberFormatInput
                                         value={form.data.kilometer}
-                                        onChange={(e) => form.setData('kilometer', e)}
+                                        onChange={(e) =>
+                                            form.setData('kilometer', e)
+                                        }
                                         disable={disable}
                                         required
                                     />
-                                </Field>
-                                <Field>
-                                    <FieldLabel>Tanggal Inspeksi</FieldLabel>
-                                    <DatePicker
-                                        value={form.data.inspection_date || ''}
-                                        onChange={(val) =>
-                                            form.setData('inspection_date', val)
-                                        }
-                                        invalid={!!form.errors.inspection_date}
-                                        disabled={disable}
-                                    />
-                                    {form.errors.inspection_date && (
-                                        <div className="text-sm text-destructive">
-                                            {form.errors.inspection_date}
-                                        </div>
-                                    )}
                                 </Field>
                             </FieldGroup>
                         </div>
@@ -378,6 +360,69 @@ export default function FormTradeInPage() {
                         )}
                     </div>
                 </form>
+                {(type === 'detail' || type === 'update') && (
+                    <Card className="my-4">
+                        <CardHeader className="text-lg font-semibold text-gray-800">
+                            Detail Order
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex w-full gap-4">
+                                <div className="flex-1">
+                                    <FieldGroup>
+                                        <Field>
+                                            <FieldLabel>Order ID</FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {order.order_uuid}
+                                            </div>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>Tahun</FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {order.unit?.year}
+                                            </div>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>
+                                                Nama Customer
+                                            </FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {order.customer?.name}
+                                            </div>
+                                        </Field>
+                                    </FieldGroup>
+                                </div>
+                                <div className="flex-1">
+                                    <FieldGroup>
+                                        <Field>
+                                            <FieldLabel>Unit</FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {order.unit?.name}
+                                            </div>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>
+                                                Kilometer(KM)
+                                            </FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {formatRibuan(
+                                                    order.unit?.kilometer ?? 0,
+                                                )}
+                                            </div>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>
+                                                No Handphone
+                                            </FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                +{order.customer?.phone}
+                                            </div>
+                                        </Field>
+                                    </FieldGroup>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </>
     );

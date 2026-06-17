@@ -35,15 +35,18 @@ class TradeInController extends Controller
             $tradeInId = $request->input('trade_in_id');
 
             $tradeIn = $tradeInId ? TradeIn::with([
-                'customer',
                 'unit',
                 'order',
             ])->findOrFail($tradeInId) : null;
 
-            $orders = Order::query()->with(['unit', 'customer'])->get();
+            $orders = Order::query()->with(['unit', 'customer'])->where('type_paid_code', 'TRADE IN')->get();
             $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
             $brands = $this->stockUnitService->getOptionFilter('BRAND');
             $models = $this->stockUnitService->getOptionFilter('MODEL');
+            $order = null;
+            if ($type !== 'create') {
+                $order = Order::query()->with(['unit', 'customer'])->where('order_id', $tradeIn->order_id)->first();
+            }
 
             return Inertia::render('customers/form-trade-in', [
                 'type' => $type,
@@ -52,6 +55,7 @@ class TradeInController extends Controller
                 'brands' => $brands,
                 'models' => $models,
                 'status' => $status,
+                'order' => $order,
             ]);
         } catch (\Exception $e) {
             Inertia::flash('toast', [
