@@ -114,12 +114,15 @@ class ApiController extends Controller
                 if ($request->type === 'tradein') {
                     $this->tradeInService->store([
                         'car_id' => $car->car_id,
-                        'order_id' => $order->id,
-                        'brand_id' => $validated['brand'],
-                        'model_id' => $validated['model'],
+                        'order_id' => $order->order_id,
+                        'brand' => $validated['brand'],
+                        'model' => $validated['model'],
                         'variant' => $validated['variant'],
                         'year' => $validated['year'],
                         'kilometer' => $validated['kilometer'],
+                    ]);
+                    $order->update([
+                        'type_paid_code' => 'TRADE IN',
                     ]);
                 }
 
