@@ -21,17 +21,12 @@ import { defaultUnit } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupInput,
-} from '@/components/ui/input-group';
+import { NumberFormatInput } from '@/components/ui/number-format-input';
+import { InputGroupNumberFormat } from '@/components/ui/number-format-inputgroup';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TImageProps } from '@/types';
-import { NumberFormatInput } from '@/components/ui/number-format-input';
-import { InputGroupNumberFormat } from '@/components/ui/number-format-inputgroup';
 
 type PageProps = {
     options: TStockUnitOptions;
