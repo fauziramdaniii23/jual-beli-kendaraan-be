@@ -31,7 +31,12 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 
-export default function UpdateReferenceDialog({ label, reference, isOpen, setIsOpen }: Props) {
+export default function UpdateReferenceDialog({
+    label,
+    reference,
+    isOpen,
+    setIsOpen,
+}: Props) {
     const { data, setData, put, processing, errors, reset } = useForm({
         ref_value: '',
         is_active: 'false',
@@ -98,8 +103,12 @@ export default function UpdateReferenceDialog({ label, reference, isOpen, setIsO
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="true">Aktif</SelectItem>
-                                        <SelectItem value="false">Tidak Aktif</SelectItem>
+                                        <SelectItem value="true">
+                                            Aktif
+                                        </SelectItem>
+                                        <SelectItem value="false">
+                                            Tidak Aktif
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

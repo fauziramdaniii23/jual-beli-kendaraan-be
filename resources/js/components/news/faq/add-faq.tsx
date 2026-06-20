@@ -12,7 +12,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -20,12 +20,19 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import type { TMasterReference, TOptionItem } from '@/types';
 import { SelectWithClear } from '@/components/app/select-with-clear';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 type Props = {
-    categories: TMasterReference[]
-}
-export default function CreateFaqDialog({categories}: Props) {
+    categories: TMasterReference[];
+};
+export default function CreateFaqDialog({ categories }: Props) {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm<TFaq>({
@@ -47,11 +54,10 @@ export default function CreateFaqDialog({categories}: Props) {
         });
     };
 
-    const OptionCategories: TOptionItem[] = categories.map(category => ({
-        label : category.ref_value,
-        value : category.ref_code
-
-    }))
+    const OptionCategories: TOptionItem[] = categories.map((category) => ({
+        label: category.ref_value,
+        value: category.ref_code,
+    }));
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -70,7 +76,10 @@ export default function CreateFaqDialog({categories}: Props) {
 
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="question">Pertanyaan ?<span className="text-destructive">*</span></Label>
+                            <Label htmlFor="question">
+                                Pertanyaan ?
+                                <span className="text-destructive">*</span>
+                            </Label>
 
                             <Input
                                 id="question"
@@ -88,7 +97,10 @@ export default function CreateFaqDialog({categories}: Props) {
                             )}
                         </Field>
                         <Field>
-                            <FieldLabel>Jawaban<span className="text-destructive">*</span></FieldLabel>
+                            <FieldLabel>
+                                Jawaban
+                                <span className="text-destructive">*</span>
+                            </FieldLabel>
                             <TextEditor
                                 value={data.answer || ''}
                                 onChange={(val) => setData('answer', val)}
@@ -100,18 +112,31 @@ export default function CreateFaqDialog({categories}: Props) {
                             )}
                         </Field>
                     </FieldGroup>
-                    <div className="w-full flex gap-4">
+                    <div className="flex w-full gap-4">
                         <Field className="flex-1">
-                            <FieldLabel>Kategori<span className="text-destructive">*</span></FieldLabel>
+                            <FieldLabel>
+                                Kategori
+                                <span className="text-destructive">*</span>
+                            </FieldLabel>
                             <SelectWithClear
                                 placeholder="Pilih Kategori"
                                 value={data.category_code ?? ''}
-                                onChange={(val) => setData('category_code', val === '' ? undefined as any : val as any)}
+                                onChange={(val) =>
+                                    setData(
+                                        'category_code',
+                                        val === ''
+                                            ? (undefined as any)
+                                            : (val as any),
+                                    )
+                                }
                                 items={OptionCategories}
                                 invalid={!!errors.category_code}
                             />
-                            {errors.category_code &&
-                                <div className="text-sm text-destructive">{errors.category_code}</div>}
+                            {errors.category_code && (
+                                <div className="text-sm text-destructive">
+                                    {errors.category_code}
+                                </div>
+                            )}
                         </Field>
                         <Field className="flex-1">
                             <Label>Urutan FAQ</Label>
@@ -121,7 +146,10 @@ export default function CreateFaqDialog({categories}: Props) {
                                 value={data.sort_order}
                                 type="number"
                                 onChange={(e) =>
-                                    setData('sort_order', Number(e.target.value))
+                                    setData(
+                                        'sort_order',
+                                        Number(e.target.value),
+                                    )
                                 }
                             />
                         </Field>

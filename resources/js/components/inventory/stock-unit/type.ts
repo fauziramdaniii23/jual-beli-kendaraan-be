@@ -21,7 +21,7 @@ export type TUnit = {
     price?: number | null;
     stnk_validity_period?: string | null;
     is_active: boolean;
-    images?: TImagesFile[]
+    images?: TImagesFile[];
     primary_image?: TImagesFile | null;
     upload_images?: File[] | null;
     deleted_image_ids?: number[] | null;
@@ -32,12 +32,12 @@ export type TUnit = {
     final_price?: number;
     promos?: TPromo[];
     promo_ids?: string[] | null;
-}
+};
 export type TOptionItemModel = {
     value: string | number;
     label: string;
     brand_id?: number; // Optional, only for model options
-}
+};
 export type TStockUnitOptions = {
     brand: TOptionItem[];
     branch: TOptionItem[];
@@ -56,13 +56,13 @@ export type TPromo = {
     code: string;
     discount_value: number;
     final_price: number;
-}
+};
 
 export type TPromoOption = {
-    promo_id: number,
-    name: string,
-    code: string,
-}
+    promo_id: number;
+    name: string;
+    code: string;
+};
 
 export const defaultUnit: TUnit = {
     name: '',

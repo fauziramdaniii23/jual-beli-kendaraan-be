@@ -1,6 +1,10 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React, { useMemo } from 'react';
-import { index as indexStockUnit, store as storeUnit, update as updateUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
+import {
+    index as indexStockUnit,
+    store as storeUnit,
+    update as updateUnit,
+} from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import DatePicker from '@/components/app/date-picker';
 import { ImageUpload } from '@/components/app/image-upload';
 import { MultiSelect } from '@/components/app/multiple-select';
@@ -8,12 +12,20 @@ import { SelectWithClear } from '@/components/app/select-with-clear';
 import TextEditor from '@/components/app/text-editor';
 import Title from '@/components/app/title';
 import { ExistingImage } from '@/components/inventory/stock-unit/existing-image';
-import type { TUnit, TStockUnitOptions, TPromoOption } from '@/components/inventory/stock-unit/type';
+import type {
+    TUnit,
+    TStockUnitOptions,
+    TPromoOption,
+} from '@/components/inventory/stock-unit/type';
 import { defaultUnit } from '@/components/inventory/stock-unit/type';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
@@ -35,40 +47,54 @@ export default function FormStockUnitPage() {
     const disable = type === 'detail';
 
     const filteredModels = useMemo(() => {
-        return options.model.filter((m) => !form.data.brand_id || String(m.brand_id) === String(form.data.brand_id));
+        return options.model.filter(
+            (m) =>
+                !form.data.brand_id ||
+                String(m.brand_id) === String(form.data.brand_id),
+        );
     }, [options.model, form.data.brand_id]);
 
     const handleBrandChange = (val: string) => {
-        form.setData('brand_id', val === '' ? undefined as any : val as any);
+        form.setData(
+            'brand_id',
+            val === '' ? (undefined as any) : (val as any),
+        );
         form.setData('model_id', ''); // reset model when brand changes
     };
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' && stock_unit ? updateUnit(stock_unit.car_id!).url : storeUnit.url();
+        const url =
+            type === 'update' && stock_unit
+                ? updateUnit(stock_unit.car_id!).url
+                : storeUnit.url();
 
         form.post(url, {
             forceFormData: true,
             preserveScroll: true,
-             onSuccess: () => {
-                 form.reset();
-             }
-        })
+            onSuccess: () => {
+                form.reset();
+            },
+        });
     };
     const handleImageChange = (files: File[]) => {
         form.setData('upload_images', files);
     };
     const handleRemoveExistingImage = (id: number) => {
-        form.setData('deleted_image_ids', [...form.data.deleted_image_ids || [], id]);
-    }
+        form.setData('deleted_image_ids', [
+            ...(form.data.deleted_image_ids || []),
+            id,
+        ]);
+    };
 
-    const existingImage: TImageProps[] = stock_unit?.images?.map((image) => {
-        return {
-            image_id: image.image_id,
-            image_name: image.file_name,
-            image_src: image.file_src
-        };
-    }) ?? [];
+    const existingImage: TImageProps[] =
+        stock_unit?.images?.map((image) => {
+            return {
+                image_id: image.image_id,
+                image_name: image.file_name,
+                image_src: image.file_src,
+            };
+        }) ?? [];
     const promoOptions = promos.map((promo) => ({
         value: promo.promo_id.toString(),
         label: `${promo.name} (${promo.code})`,
@@ -276,12 +302,18 @@ export default function FormStockUnitPage() {
                                     <FieldLabel>Harga</FieldLabel>
                                     <InputGroupNumberFormat
                                         value={form.data.price}
-                                        onChange={(value) => form.setData('price', value)}
+                                        onChange={(value) =>
+                                            form.setData('price', value)
+                                        }
                                         disable={disable}
                                         className="input w-full"
                                         invalid={!!form.errors.price}
                                     />
-                                    {form.errors.price && (<div className="text-sm text-destructive">{form.errors.price}</div>)}
+                                    {form.errors.price && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.price}
+                                        </div>
+                                    )}
                                 </Field>
                                 <Field>
                                     <FieldLabel>Kilometer(KM)</FieldLabel>

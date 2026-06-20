@@ -2,75 +2,87 @@ import { Head, router, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
-    ArrowUpDown, ArrowUpWideNarrow,
+    ArrowUpDown,
+    ArrowUpWideNarrow,
     ChevronDownIcon,
     Eye,
     Filter,
     MoreHorizontal,
     Plus,
     SquarePen,
-    Trash
+    Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { index as indexTradeIn, form, destroy } from '@/actions/App/Http/Controllers/Customer/TradeInController';
+import {
+    index as indexTradeIn,
+    form,
+    destroy,
+} from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import type { TTradeIn } from '@/components/customers/orders/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { formatDate, formatRibuan } from '@/lib/utils';
-import type { TMasterReference} from '@/types';
+import type { TMasterReference } from '@/types';
 
 type PageProps = {
     tradeIns: TTradeIn[];
     status: TMasterReference[];
-}
+};
 
 export default function TradeInPage() {
-    const { tradeIns, status} = usePage<PageProps>().props;
+    const { tradeIns, status } = usePage<PageProps>().props;
     const [tradeInId, setTradeInId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
-    const [year, setYear] = useState<string>('')
+    const [year, setYear] = useState<string>('');
 
-    const handleAction = (trade_in_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const handleAction = (
+        trade_in_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             form().url,
             {
                 trade_in_id: trade_in_id,
-                type: type
+                type: type,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
 
     const submitFilter = () => {
         router.get(
             indexTradeIn().url,
             {
                 status_code: statusCode === '' ? undefined : statusCode,
-                year: year === '' ? undefined : year
+                year: year === '' ? undefined : year,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
     const handleDelete = () => {
@@ -83,9 +95,9 @@ export default function TradeInPage() {
     };
 
     const handleConfirmDelete = (tradeIn: TTradeIn) => {
-        setTradeInId(tradeIn.trade_in_id!)
+        setTradeInId(tradeIn.trade_in_id!);
         setDeleteConfirmOpen(true);
-    }
+    };
 
     const columns: ColumnDef<TTradeIn>[] = [
         {
@@ -285,16 +297,14 @@ export default function TradeInPage() {
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
-                                            <FieldLabel>
-                                                Tahun
-                                            </FieldLabel>
+                                            <FieldLabel>Tahun</FieldLabel>
                                             <Input
                                                 value={year}
                                                 onChange={(e) => {
                                                     const value = e.target.value
                                                         .replace(/\D/g, '')
                                                         .slice(0, 4);
-                                                    setYear(value)
+                                                    setYear(value);
                                                 }}
                                                 type="text"
                                                 inputMode="numeric"

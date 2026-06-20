@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog';
 import type { TImageProps } from '@/types';
 
-
 interface ImagePreviewProps {
     images: TImageProps[];
     currentIndex: number;
@@ -17,8 +16,12 @@ interface ImagePreviewProps {
     onClose: () => void;
 }
 
-export default function ImagePreview({ images, currentIndex, isOpen, onClose, }: ImagePreviewProps) {
-
+export default function ImagePreview({
+    images,
+    currentIndex,
+    isOpen,
+    onClose,
+}: ImagePreviewProps) {
     const [activeIndex, setActiveIndex] = useState(currentIndex);
 
     const nextImage = useCallback(() => {
@@ -72,17 +75,15 @@ export default function ImagePreview({ images, currentIndex, isOpen, onClose, }:
     const currentImage = images[activeIndex];
 
     if (!currentImage) {
-        return null
+        return null;
     }
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-5xl border-0 bg-transparent p-4 shadow-none">
-                <DialogTitle className="sr-only">
-                    Preview Image
-                </DialogTitle>
+                <DialogTitle className="sr-only">Preview Image</DialogTitle>
 
-                <DialogClose className="absolute -right-2 -top-2 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70">
+                <DialogClose className="absolute -top-2 -right-2 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70">
                     <X className="h-5 w-5" />
                 </DialogClose>
 

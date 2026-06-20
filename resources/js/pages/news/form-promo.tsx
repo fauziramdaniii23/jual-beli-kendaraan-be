@@ -1,7 +1,11 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Percent } from 'lucide-react';
 import React from 'react';
-import { index as indexPromo, store as storePromo, update as updatePromo } from '@/actions/App/Http/Controllers/News/PromoController';
+import {
+    index as indexPromo,
+    store as storePromo,
+    update as updatePromo,
+} from '@/actions/App/Http/Controllers/News/PromoController';
 import DatePicker from '@/components/app/date-picker';
 import TextEditor from '@/components/app/text-editor';
 import Title from '@/components/app/title';
@@ -10,7 +14,11 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 import { InputGroupNumberFormat } from '@/components/ui/number-format-inputgroup';
 import {
     Select,
@@ -20,7 +28,7 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
@@ -39,7 +47,7 @@ type TPromo = {
     image_name: string;
     image_src: string;
     image_file: File | null;
-}
+};
 
 type PageProps = {
     promo: TPromo;
@@ -57,7 +65,7 @@ const defaultPromo = {
     end_date: '',
     is_active: false,
     image_file: null,
-}
+};
 
 export default function FormPromoPage() {
     const { promo, type } = usePage<PageProps>().props;
@@ -68,27 +76,30 @@ export default function FormPromoPage() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' ? updatePromo(promo.promo_id!).url : storePromo().url;
+        const url =
+            type === 'update'
+                ? updatePromo(promo.promo_id!).url
+                : storePromo().url;
 
         form.post(url, {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
-            }
-        })
+            },
+        });
     };
 
     const handleUploadImage = (file: File | null) => {
-        form.setData('image_file', file)
-    }
+        form.setData('image_file', file);
+    };
     const handleGenerateCode = () => {
         const promoName = form.data.name || '';
 
         const code = promoName
             .toUpperCase()
             .trim()
-            .replace(/\s+/g, '_')      // spasi -> _
+            .replace(/\s+/g, '_') // spasi -> _
             .replace(/[^A-Z0-9_]/g, ''); // hapus karakter khusus
 
         form.setData('code', code);

@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { destroy as deleteReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
 import {
@@ -10,7 +10,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
@@ -19,7 +19,12 @@ interface Props {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
-export function ConfirmDeleteReference({ label, ref_id, isOpen, setIsOpen }: Props) {
+export function ConfirmDeleteReference({
+    label,
+    ref_id,
+    isOpen,
+    setIsOpen,
+}: Props) {
     const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteReference({ id: ref_id }).url, {
@@ -32,35 +37,33 @@ export function ConfirmDeleteReference({ label, ref_id, isOpen, setIsOpen }: Pro
                 setIsOpen(false);
             },
         });
-    }
+    };
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Hapus {label}
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>Hapus {label}</AlertDialogTitle>
 
                     <AlertDialogDescription>
-                        Apakah Anda yakin ingin menghapus {label} ini?
-                        Tindakan ini tidak dapat dibatalkan dan dapat
-                        memengaruhi data mobil yang terkait dengan {label}.
+                        Apakah Anda yakin ingin menghapus {label} ini? Tindakan
+                        ini tidak dapat dibatalkan dan dapat memengaruhi data
+                        mobil yang terkait dengan {label}.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel>
-                        Batal
-                    </AlertDialogCancel>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete} disabled={loading}>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={loading}
+                    >
                         {loading && <Spinner />}
                         Hapus
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
-

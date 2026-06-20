@@ -7,7 +7,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
@@ -25,10 +25,10 @@ interface Props {
 export function ConfirmDialog({
     open,
     onOpenChange,
-    title = "?",
-    description = "Apakah Anda yakin?",
-    confirmText = "Lanjutkan",
-    cancelText = "Batal",
+    title = '?',
+    description = 'Apakah Anda yakin?',
+    confirmText = 'Lanjutkan',
+    cancelText = 'Batal',
     onConfirm,
     loading = false,
     disable = false,
@@ -37,9 +37,7 @@ export function ConfirmDialog({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        {title}
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>{title}</AlertDialogTitle>
 
                     <AlertDialogDescription>
                         {description}

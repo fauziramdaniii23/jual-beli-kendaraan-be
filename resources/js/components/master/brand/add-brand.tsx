@@ -11,7 +11,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldDescription, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,7 @@ export default function CreateBrandDialog() {
 
     const { data, setData, post, processing, errors, reset } = useForm<TBrand>({
         brand_name: '',
-        logo: null
+        logo: null,
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,7 +82,7 @@ export default function CreateBrandDialog() {
                                 onChange={(e) => {
                                     const file = e.target.files?.[0] || null;
 
-                                    setData("logo", file);
+                                    setData('logo', file);
                                 }}
                             />
 
@@ -92,7 +92,9 @@ export default function CreateBrandDialog() {
                                 </p>
                             )}
                             <FieldDescription>
-                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB. Gunakan gambar dengan rasio 1:1 untuk hasil tampilan terbaik.
+                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB.
+                                Gunakan gambar dengan rasio 1:1 untuk hasil
+                                tampilan terbaik.
                             </FieldDescription>
                         </Field>
                     </FieldGroup>

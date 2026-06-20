@@ -23,7 +23,7 @@ export function formatDate(dateString: any): string {
 
     return `${day}-${month}-${year}`;
 }
-export  function formatRupiah(value: number | string): string {
+export function formatRupiah(value: number | string): string {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -38,10 +38,8 @@ export function formatRibuan(val: number | string): string {
 
 export const normalizeUrl = (url: string) => {
     if (!url) {
-        return ''
+        return '';
     }
 
-    return /^https?:\/\//i.test(url)
-        ? url
-        : `https://${url}`;
+    return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 };

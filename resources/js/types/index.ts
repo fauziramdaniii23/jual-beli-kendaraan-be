@@ -8,7 +8,7 @@ export type TMasterReference = {
     ref_code: string;
     ref_value: string;
     is_active: boolean;
-}
+};
 export type TOptionItem = {
     value: string;
     label: string;
@@ -26,9 +26,9 @@ export type TImageProps = {
     image_id?: number;
     image_name?: string;
     image_src?: string;
-}
+};
 
 export type TDateRange = {
     from?: string;
     to?: string;
-}
+};

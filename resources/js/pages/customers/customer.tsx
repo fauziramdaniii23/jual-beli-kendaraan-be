@@ -1,11 +1,13 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
     ArrowUpWideNarrow,
-    MoreHorizontal, SquarePen, Trash,
+    MoreHorizontal,
+    SquarePen,
+    Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
@@ -27,9 +29,10 @@ import {
     Select,
     SelectContent,
     SelectGroup,
-    SelectItem, SelectSeparator,
+    SelectItem,
+    SelectSeparator,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 
 type PageProps = {
@@ -62,12 +65,12 @@ export default function CustomerPage() {
         router.get(
             indexCustomer().url,
             {
-                is_active: selectStatus === "all" ? undefined : selectStatus,
+                is_active: selectStatus === 'all' ? undefined : selectStatus,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
 
@@ -97,31 +100,25 @@ export default function CustomerPage() {
         {
             accessorKey: 'phone',
             header: 'No Handphone',
-            cell: ({row}) => {
-                const phone = row.getValue('phone')
+            cell: ({ row }) => {
+                const phone = row.getValue('phone');
 
                 return `+${phone}`;
-            }
+            },
         },
         {
             accessorKey: 'email',
-            header: 'Email'
+            header: 'Email',
         },
         {
             accessorKey: 'is_active',
-            header: () => (
-                <div className="text-center">
-                    Status
-                </div>
-            ),
+            header: () => <div className="text-center">Status</div>,
             cell: ({ row }) => {
                 const isActive = row.getValue('is_active') as boolean;
 
                 return (
                     <div className="text-center">
-                        <Badge
-                            variant={isActive ? "success" : "destructive"}
-                        >
+                        <Badge variant={isActive ? 'success' : 'destructive'}>
                             {isActive ? 'Aktif' : 'Tidak Aktif'}
                         </Badge>
                     </div>
@@ -130,14 +127,10 @@ export default function CustomerPage() {
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
-                const model : TCustomer = row.original;
+                const model: TCustomer = row.original;
 
                 return (
                     <div className="text-center">
@@ -149,18 +142,21 @@ export default function CustomerPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(model, 'update')}
+                                    onClick={() =>
+                                        handleAction(model, 'update')
+                                    }
                                 >
                                     <SquarePen /> Edit
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(model, 'delete')}
+                                    onClick={() =>
+                                        handleAction(model, 'delete')
+                                    }
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -173,9 +169,12 @@ export default function CustomerPage() {
     return (
         <>
             <Head title="Customer" />
-            <Title title="Daftar Customer" description="Daftar Semua Customer" />
+            <Title
+                title="Daftar Customer"
+                description="Daftar Semua Customer"
+            />
             <div className="mx-4 mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex w-full items-center gap-2">
                     <span className="text-sm text-muted-foreground">
                         Status
                     </span>
@@ -183,7 +182,7 @@ export default function CustomerPage() {
                         onValueChange={(val) => setSelectStatus(val as string)}
                     >
                         <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Semua"/>
+                            <SelectValue placeholder="Semua" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -192,21 +191,29 @@ export default function CustomerPage() {
                             <SelectSeparator />
                             <SelectGroup>
                                 <SelectItem value="true">Aktif</SelectItem>
-                                <SelectItem value="false">Tidak Aktif</SelectItem>
+                                <SelectItem value="false">
+                                    Tidak Aktif
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button onClick={submitFilter}>
-                        Filter
-                    </Button>
+                    <Button onClick={submitFilter}>Filter</Button>
                 </div>
                 <CreateCstomerDialog />
             </div>
             <div className="m-4">
                 <DataTable columns={columns} data={customers} />
             </div>
-            <UpdateCustomerDialog customer={customer} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteCustomer customer_id={customer.customer_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <UpdateCustomerDialog
+                customer={customer}
+                isOpen={isUpdateDialogOpen}
+                setIsOpen={(val) => setIsUpdateDialogOpen(val)}
+            />
+            <ConfirmDeleteCustomer
+                customer_id={customer.customer_id}
+                isOpen={isDeleteConfirmOpen}
+                setIsOpen={setIsDeleteConfirmOpen}
+            />
         </>
     );
 }

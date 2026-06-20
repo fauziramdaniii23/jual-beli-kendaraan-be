@@ -2,20 +2,36 @@ import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
-    ChevronDownIcon, Plus, Filter, ArrowUpDown, ArrowDownNarrowWide, ArrowUpWideNarrow
+    ChevronDownIcon,
+    Plus,
+    Filter,
+    ArrowUpDown,
+    ArrowDownNarrowWide,
+    ArrowUpWideNarrow,
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { addPromoToUnit, index as indexPromo, storePromoToUnit } from '@/actions/App/Http/Controllers/News/PromoController';
+import {
+    addPromoToUnit,
+    index as indexPromo,
+    storePromoToUnit,
+} from '@/actions/App/Http/Controllers/News/PromoController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import QuillContent from '@/components/app/quill-content';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
-import type { TStockUnitOptions, TUnit } from '@/components/inventory/stock-unit/type';
+import type {
+    TStockUnitOptions,
+    TUnit,
+} from '@/components/inventory/stock-unit/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
@@ -32,7 +48,7 @@ type TPromo = {
     end_date?: string;
     image?: string;
     is_active?: boolean;
-}
+};
 
 type TPromoUnit = {
     car_id: number;
@@ -46,7 +62,7 @@ type TPromoUnit = {
     promo_ids?: string[] | null;
     status_label?: string;
     status_code?: string;
-}
+};
 
 type PageProps = {
     promo: TPromo;
@@ -78,15 +94,19 @@ export default function AddPromoToUnitPage() {
             promo_ids: unit.promo_ids!,
             status_label: unit.status?.ref_value,
             status_code: unit.status?.ref_code,
-        }))
+        })),
     );
 
     const [selectBrand, setSelectBrand] = useState<string>(brandId ?? '');
     const [selectBranch, setSelectBranch] = useState<string>(branchId ?? '');
     const [selectModel, setSelectModel] = useState<string>(modelId ?? '');
     const [selectCarType, setSelectCarType] = useState<string>(carType ?? '');
-    const [selectTransmission, setSelectTransmission] = useState<string>(transmissionId ?? '');
-    const [selectFuelType, setSelectFuelType] = useState<string>(fuelType ?? '');
+    const [selectTransmission, setSelectTransmission] = useState<string>(
+        transmissionId ?? '',
+    );
+    const [selectFuelType, setSelectFuelType] = useState<string>(
+        fuelType ?? '',
+    );
     const [selectStatus, setSelectStatus] = useState<string>(status ?? '');
     const [deleteDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
     const [availableChange, setAvailableChange] = useState<boolean>(false);
@@ -94,7 +114,7 @@ export default function AddPromoToUnitPage() {
 
     const filteredModels = useMemo(() => {
         return options.model.filter(
-            (m) => !selectBrand || String(m.brand_id) === selectBrand
+            (m) => !selectBrand || String(m.brand_id) === selectBrand,
         );
     }, [options.model, selectBrand]);
 
@@ -106,61 +126,59 @@ export default function AddPromoToUnitPage() {
                 branch_id: selectBranch === '' ? undefined : selectBranch,
                 model_id: selectModel === '' ? undefined : selectModel,
                 car_type: selectCarType === '' ? undefined : selectCarType,
-                transmission: selectTransmission === '' ? undefined : selectTransmission,
+                transmission:
+                    selectTransmission === '' ? undefined : selectTransmission,
                 fuel_type: selectFuelType === '' ? undefined : selectFuelType,
                 status: selectStatus === '' ? undefined : selectStatus,
             },
             {
                 replace: true,
-            }
+            },
         );
     };
     const handleBrandChange = (val: string) => {
         setSelectBrand(val);
         setSelectModel('');
-    }
-    const handleToggleActive =  (id: number, isActive: boolean) => {
+    };
+    const handleToggleActive = (id: number, isActive: boolean) => {
         setAvailableChange(true);
         setPromoUnit((prev) =>
             prev.map((item) =>
                 item.car_id === id
                     ? {
-                        ...item,
-                        has_promo: isActive,
-                    }
-                    : item
-            )
+                          ...item,
+                          has_promo: isActive,
+                      }
+                    : item,
+            ),
         );
     };
-    const handleToggleAll = async ( isActive: boolean) => {
+    const handleToggleAll = async (isActive: boolean) => {
         setAvailableChange(true);
         setPromoUnit((prev) =>
             prev.map((item) => ({
                 ...item,
                 has_promo: isActive,
-            }))
+            })),
         );
     };
 
     const selectAll = useMemo(
-        () =>
-            promoUnit.length > 0 &&
-            promoUnit.every((item) => item.has_promo),
-        [promoUnit]
+        () => promoUnit.length > 0 && promoUnit.every((item) => item.has_promo),
+        [promoUnit],
     );
 
     const unSelectAll = useMemo(
         () =>
-            promoUnit.length > 0 &&
-            promoUnit.every((item) => !item.has_promo),
-        [promoUnit]
+            promoUnit.length > 0 && promoUnit.every((item) => !item.has_promo),
+        [promoUnit],
     );
 
     const columns: ColumnDef<TPromoUnit>[] = [
         {
             id: 'has_promo',
             header: () => (
-                <div className="items-center text-center min-w-10">
+                <div className="min-w-10 items-center text-center">
                     <Checkbox
                         checked={selectAll}
                         onCheckedChange={(checked) =>
@@ -176,7 +194,7 @@ export default function AddPromoToUnitPage() {
                         onCheckedChange={(checked) =>
                             handleToggleActive(
                                 row.original.car_id,
-                                Boolean(checked)
+                                Boolean(checked),
                             )
                         }
                     />
@@ -185,11 +203,11 @@ export default function AddPromoToUnitPage() {
         },
         {
             accessorKey: 'name',
-            header: 'Nama Unit'
+            header: 'Nama Unit',
         },
         {
             accessorKey: 'promo_names',
-            header: 'Nama Promo'
+            header: 'Nama Promo',
         },
         {
             accessorKey: 'price',
@@ -204,8 +222,8 @@ export default function AddPromoToUnitPage() {
                     >
                         Harga
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
@@ -213,7 +231,7 @@ export default function AddPromoToUnitPage() {
                 <div className="items-center text-end">
                     {formatRupiah(row.getValue('price'))}
                 </div>
-            )
+            ),
         },
         {
             accessorKey: 'total_discount',
@@ -228,8 +246,8 @@ export default function AddPromoToUnitPage() {
                     >
                         Total Diskon
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
@@ -237,7 +255,7 @@ export default function AddPromoToUnitPage() {
                 <div className="items-center text-end">
                     {formatRupiah(row.getValue('total_discount'))}
                 </div>
-            )
+            ),
         },
         {
             accessorKey: 'final_price',
@@ -252,8 +270,8 @@ export default function AddPromoToUnitPage() {
                     >
                         Harga Akhir
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
@@ -261,7 +279,7 @@ export default function AddPromoToUnitPage() {
                 <div className="items-center text-end">
                     {formatRupiah(row.getValue('final_price'))}
                 </div>
-            )
+            ),
         },
         {
             id: 'status',
@@ -276,50 +294,51 @@ export default function AddPromoToUnitPage() {
                     >
                         Status
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
             cell: ({ row }) => {
                 const { status_label, status_code } = row.original;
 
-                const variant = (status_code?.toLowerCase() ?? "default") as
-                    | "available"
-                    | "sold"
-                    | "reserved"
-                    | "repair";
+                const variant = (status_code?.toLowerCase() ?? 'default') as
+                    | 'available'
+                    | 'sold'
+                    | 'reserved'
+                    | 'repair';
 
                 return (
                     <div className="text-center">
-                        <Badge variant={variant}>
-                            {status_label}
-                        </Badge>
+                        <Badge variant={variant}>{status_label}</Badge>
                     </div>
                 );
             },
-        }
+        },
     ];
 
     const handleSavePromoAction = () => {
-        setLoad(true)
-        router.post(storePromoToUnit(promo.promo_id!).url, {
-            select_all: selectAll,
-            un_select_all: unSelectAll,
-            list_unit: promoUnit,
-            brand_id: brandId,
-            branch_id: branchId,
-            model_id: modelId,
-            car_type: carType,
-            transmission: transmissionId,
-            fuel_type: fuelType,
-            status: status,
-        },
-        {
-            preserveState: true,
-            replace: true,
-        })
-    }
+        setLoad(true);
+        router.post(
+            storePromoToUnit(promo.promo_id!).url,
+            {
+                select_all: selectAll,
+                un_select_all: unSelectAll,
+                list_unit: promoUnit,
+                brand_id: brandId,
+                branch_id: branchId,
+                model_id: modelId,
+                car_type: carType,
+                transmission: transmissionId,
+                fuel_type: fuelType,
+                status: status,
+            },
+            {
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
 
     return (
         <>
@@ -329,25 +348,32 @@ export default function AddPromoToUnitPage() {
                     Detail Promo
                 </CardHeader>
                 <CardContent>
-                    <div className="flex gap-4 w-full">
+                    <div className="flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel className="ml-2">Nama Promo</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
+                                    <FieldLabel className="ml-2">
+                                        Nama Promo
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
                                         {promo.name}
                                     </div>
-
                                 </Field>
                                 <Field>
-                                    <FieldLabel className="ml-2">Tipe Diskon</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
-                                        {promo.type === 'fixed' ? 'Fixed' : 'Persen'}
+                                    <FieldLabel className="ml-2">
+                                        Tipe Diskon
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
+                                        {promo.type === 'fixed'
+                                            ? 'Fixed'
+                                            : 'Persen'}
                                     </div>
                                 </Field>
                                 <Field>
-                                    <FieldLabel className="ml-2">Tanggal Mulai</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
+                                    <FieldLabel className="ml-2">
+                                        Tanggal Mulai
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
                                         {formatDate(promo.start_date)}
                                     </div>
                                 </Field>
@@ -356,31 +382,35 @@ export default function AddPromoToUnitPage() {
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel className="ml-2">Kode Promo</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
+                                    <FieldLabel className="ml-2">
+                                        Kode Promo
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
                                         {promo.code}
                                     </div>
                                 </Field>
                                 <Field>
-                                    <FieldLabel className="ml-2">Nilai Diskon</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
-                                        {promo.type === 'fixed' ? (
-                                            formatRupiah(promo.discount_value)
-                                        ) : (
-                                            `${promo.discount_value} %`
-                                        )}
+                                    <FieldLabel className="ml-2">
+                                        Nilai Diskon
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
+                                        {promo.type === 'fixed'
+                                            ? formatRupiah(promo.discount_value)
+                                            : `${promo.discount_value} %`}
                                     </div>
                                 </Field>
                                 <Field>
-                                    <FieldLabel className="ml-2">Tanggal Berakhir</FieldLabel>
-                                    <div className="w-full border border-gray-200 rounded-lg py-2 px-4">
+                                    <FieldLabel className="ml-2">
+                                        Tanggal Berakhir
+                                    </FieldLabel>
+                                    <div className="w-full rounded-lg border border-gray-200 px-4 py-2">
                                         {formatDate(promo.end_date)}
                                     </div>
                                 </Field>
                             </FieldGroup>
                         </div>
                     </div>
-                    <div className="mt-4 w-full border border-gray-200 rounded-lg py-2 px-4">
+                    <div className="mt-4 w-full rounded-lg border border-gray-200 px-4 py-2">
                         <Field>
                             <FieldLabel className="ml-2">Deskripsi</FieldLabel>
                             <QuillContent content={promo.description} />
@@ -392,21 +422,24 @@ export default function AddPromoToUnitPage() {
                 title={`Terapkan Promo ${promo.name}`}
                 description="Pilih unit kendaraan yang akan mendapatkan promo ini. Unit yang dipilih akan terhubung dengan promo dan digunakan dalam perhitungan harga serta penawaran."
             />
-            <div className="m-4 border rounded-md">
+            <div className="m-4 rounded-md border">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
-                        <Button variant="ghost" className="group w-full h-12">
+                        <Button variant="ghost" className="group h-12 w-full">
                             <Filter /> Filter
                             <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                         </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="flex flex-col items-start gap-2 p-2.5 pt-0 text-sm">
-                        <form className="w-full" onSubmit={(e) => {
-                            e.preventDefault();
-                            submitFilter();
-                        }}>
+                        <form
+                            className="w-full"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                submitFilter();
+                            }}
+                        >
                             <Separator />
-                            <div className="flex gap-4 w-full mt-4">
+                            <div className="mt-4 flex w-full gap-4">
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
@@ -427,7 +460,9 @@ export default function AddPromoToUnitPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Cabang"
                                                 value={selectBranch}
-                                                onChange={(val) => setSelectBranch(val)}
+                                                onChange={(val) =>
+                                                    setSelectBranch(val)
+                                                }
                                                 items={options.branch}
                                             />
                                         </Field>
@@ -438,8 +473,11 @@ export default function AddPromoToUnitPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Type"
                                                 value={selectCarType}
-                                                onChange={(val) => setSelectCarType(val)}
-                                                items={options.car_type} />
+                                                onChange={(val) =>
+                                                    setSelectCarType(val)
+                                                }
+                                                items={options.car_type}
+                                            />
                                         </Field>
 
                                         <Field>
@@ -449,8 +487,11 @@ export default function AddPromoToUnitPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Transmisi"
                                                 value={selectTransmission}
-                                                onChange={(val) => setSelectTransmission(val)}
-                                                items={options.transmission} />
+                                                onChange={(val) =>
+                                                    setSelectTransmission(val)
+                                                }
+                                                items={options.transmission}
+                                            />
                                         </Field>
                                     </FieldGroup>
                                 </div>
@@ -462,27 +503,50 @@ export default function AddPromoToUnitPage() {
                                                 Model
                                             </FieldLabel>
                                             <SelectWithClear
-                                                placeholder="Pilih Model" value={selectModel}
-                                                onChange={(val) => setSelectModel(val)}
-                                                items={filteredModels.map(m => ({ label: m.label, value: String(m.value) }))} />
+                                                placeholder="Pilih Model"
+                                                value={selectModel}
+                                                onChange={(val) =>
+                                                    setSelectModel(val)
+                                                }
+                                                items={filteredModels.map(
+                                                    (m) => ({
+                                                        label: m.label,
+                                                        value: String(m.value),
+                                                    }),
+                                                )}
+                                            />
                                         </Field>
                                         <Field>
                                             <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
                                                 Bahan Bakar
                                             </FieldLabel>
-                                            <SelectWithClear placeholder="Pilih Bahan Bakar" value={selectFuelType} onChange={(val) => setSelectFuelType(val)} items={options.fuel_type} />
+                                            <SelectWithClear
+                                                placeholder="Pilih Bahan Bakar"
+                                                value={selectFuelType}
+                                                onChange={(val) =>
+                                                    setSelectFuelType(val)
+                                                }
+                                                items={options.fuel_type}
+                                            />
                                         </Field>
 
                                         <Field>
                                             <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
                                                 Status
                                             </FieldLabel>
-                                            <SelectWithClear placeholder="Pilih Status" value={selectStatus} onChange={(val) => setSelectStatus(val)} items={options.status} />
+                                            <SelectWithClear
+                                                placeholder="Pilih Status"
+                                                value={selectStatus}
+                                                onChange={(val) =>
+                                                    setSelectStatus(val)
+                                                }
+                                                items={options.status}
+                                            />
                                         </Field>
                                     </FieldGroup>
                                 </div>
                             </div>
-                            <div className="flex gap-2 mt-4">
+                            <div className="mt-4 flex gap-2">
                                 <CollapsibleTrigger asChild>
                                     <Button type="button" variant="outline">
                                         Tutup
@@ -495,18 +559,30 @@ export default function AddPromoToUnitPage() {
                 </Collapsible>
             </div>
             <div className="mx-4">
-                <DataTable className="max-h-150" showRowNumber={false} columns={columns} data={promoUnit} />
+                <DataTable
+                    className="max-h-150"
+                    showRowNumber={false}
+                    columns={columns}
+                    data={promoUnit}
+                />
             </div>
 
             <div className="m-4">
-                <Button disabled={promoUnit.length <= 0} onClick={() => setConfirmDialogOpen(true)}>
+                <Button
+                    disabled={promoUnit.length <= 0}
+                    onClick={() => setConfirmDialogOpen(true)}
+                >
                     <Plus />
                     Terapkan Promo ke Unit Terpilih
                 </Button>
             </div>
             <ConfirmDialog
                 title="Terapkan Promo"
-                description={availableChange ? "Apakah Anda yakin ingin menerapkan Promo ini ke Unit terpilih?." : "Anda belum melakukan perubahan" }
+                description={
+                    availableChange
+                        ? 'Apakah Anda yakin ingin menerapkan Promo ini ke Unit terpilih?.'
+                        : 'Anda belum melakukan perubahan'
+                }
                 confirmText="Terapkan"
                 open={deleteDialogOpen}
                 onOpenChange={(val) => setConfirmDialogOpen(val)}
@@ -525,10 +601,10 @@ AddPromoToUnitPage.layout = {
         },
         {
             title: 'Promo',
-            href: indexPromo()
+            href: indexPromo(),
         },
         {
             title: 'Terapkan Promo',
-        }
+        },
     ],
 };

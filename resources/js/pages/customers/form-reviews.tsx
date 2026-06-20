@@ -1,7 +1,11 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Star } from 'lucide-react';
 import React from 'react';
-import { index as indexReviews, store as storeReviews, update as updateReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
+import {
+    index as indexReviews,
+    store as storeReviews,
+    update as updateReviews,
+} from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import TextEditor from '@/components/app/text-editor';
 import Title from '@/components/app/title';
 import type { TCustomer } from '@/components/customers/customer/type';
@@ -14,7 +18,7 @@ import {
     ComboboxEmpty,
     ComboboxInput,
     ComboboxItem,
-    ComboboxList
+    ComboboxList,
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -25,7 +29,7 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
@@ -37,8 +41,8 @@ type TUnit = {
     status: {
         ref_code: string;
         ref_value: string;
-    }
-}
+    };
+};
 
 export type TFormReviews = {
     review_id?: number;
@@ -52,7 +56,7 @@ export type TFormReviews = {
     image_file?: File | null | string;
     image_src?: string;
     image_name?: string;
-}
+};
 
 type PageProps = {
     units: TUnit[];
@@ -68,7 +72,7 @@ const defaultReviews = {
     rating: '',
     review_text: '',
     image_file: null,
-}
+};
 
 export default function FormReviewPage() {
     const { units, customers, reviews, type } = usePage<PageProps>().props;
@@ -77,55 +81,86 @@ export default function FormReviewPage() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' ? updateReviews(reviews.review_id!).url : storeReviews().url;
+        const url =
+            type === 'update'
+                ? updateReviews(reviews.review_id!).url
+                : storeReviews().url;
 
         form.post(url, {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
-            }
-        })
+            },
+        });
     };
 
     const handleUploadImage = (file: File | null) => {
-        form.setData('image_file', file)
-    }
+        form.setData('image_file', file);
+    };
 
     return (
         <>
             <Head title={`${TYPE_LABEL[type]} Rating & Ulasan`} />
-            <Title title={`${TYPE_LABEL[type]} Rating & Ulasan`} description={`Form ${TYPE_LABEL[type]} Rating & Ulasan`} />
+            <Title
+                title={`${TYPE_LABEL[type]} Rating & Ulasan`}
+                description={`Form ${TYPE_LABEL[type]} Rating & Ulasan`}
+            />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
                     <FormImage
                         type={type}
-                        data={{image_id: reviews?.review_id, image_name: reviews?.image_name, image_src: reviews?.image_src}}
+                        data={{
+                            image_id: reviews?.review_id,
+                            image_name: reviews?.image_name,
+                            image_src: reviews?.image_src,
+                        }}
                         uploadImage={(file) => handleUploadImage(file)}
-                        removedImage={(id) => console.log('removedImage', id) }
+                        removedImage={(id) => console.log('removedImage', id)}
                     />
-                    <div className="flex gap-4 w-full mt-4">
+                    <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Nama<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Nama
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="name"
-                                            value={form.data.customer.name || ''}
-                                            className="w-full input"
+                                            value={
+                                                form.data.customer.name || ''
+                                            }
+                                            className="input w-full"
                                             disabled={true}
                                         />
                                     ) : (
                                         <Combobox
                                             items={customers}
-                                            itemToStringLabel={(item : TCustomer) => item.name}
-                                            onValueChange={(val : TCustomer | null) => form.setData('customer_id', Number(val?.customer_id))}
+                                            itemToStringLabel={(
+                                                item: TCustomer,
+                                            ) => item.name}
+                                            onValueChange={(
+                                                val: TCustomer | null,
+                                            ) =>
+                                                form.setData(
+                                                    'customer_id',
+                                                    Number(val?.customer_id),
+                                                )
+                                            }
                                         >
-                                            <ComboboxInput placeholder="Pilih Customer" showClear/>
+                                            <ComboboxInput
+                                                placeholder="Pilih Customer"
+                                                showClear
+                                            />
 
                                             <ComboboxContent>
-                                                <ComboboxEmpty>Customer tidak ditemukan.</ComboboxEmpty>
+                                                <ComboboxEmpty>
+                                                    Customer tidak ditemukan.
+                                                </ComboboxEmpty>
 
                                                 <ComboboxList>
                                                     {(customer) => (
@@ -145,26 +180,44 @@ export default function FormReviewPage() {
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
-
                                 <Field>
-                                    <FieldLabel>Unit<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Unit
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     {type === 'detail' || type === 'update' ? (
                                         <Input
                                             name="unit"
                                             value={form.data.unit.name || ''}
-                                            className="w-full input"
+                                            className="input w-full"
                                             disabled={true}
                                         />
                                     ) : (
                                         <Combobox
                                             items={units}
-                                            itemToStringLabel={(item : TUnit) => item.name}
-                                            onValueChange={(val : TUnit | null) => form.setData('car_id', Number(val?.car_id))}
+                                            itemToStringLabel={(item: TUnit) =>
+                                                item.name
+                                            }
+                                            onValueChange={(
+                                                val: TUnit | null,
+                                            ) =>
+                                                form.setData(
+                                                    'car_id',
+                                                    Number(val?.car_id),
+                                                )
+                                            }
                                         >
-                                            <ComboboxInput placeholder="Pilih Unit" showClear/>
+                                            <ComboboxInput
+                                                placeholder="Pilih Unit"
+                                                showClear
+                                            />
 
                                             <ComboboxContent>
-                                                <ComboboxEmpty>Unit tidak ditemukan.</ComboboxEmpty>
+                                                <ComboboxEmpty>
+                                                    Unit tidak ditemukan.
+                                                </ComboboxEmpty>
 
                                                 <ComboboxList>
                                                     {(unit) => (
@@ -173,8 +226,13 @@ export default function FormReviewPage() {
                                                             value={unit}
                                                         >
                                                             {unit.name}
-                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
-                                                                {unit.status.ref_value}
+                                                            <Badge
+                                                                variant={unit.status.ref_code.toLowerCase()}
+                                                            >
+                                                                {
+                                                                    unit.status
+                                                                        .ref_value
+                                                                }
                                                             </Badge>
                                                         </ComboboxItem>
                                                     )}
@@ -183,7 +241,6 @@ export default function FormReviewPage() {
                                         </Combobox>
                                     )}
                                 </Field>
-
                             </FieldGroup>
                         </div>
                         <div className="flex-1">
@@ -212,21 +269,28 @@ export default function FormReviewPage() {
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <div className="flex">
-                                                            {Array.from({ length: 5 }).map((_, index) => (
-                                                                <Star
-                                                                    key={index}
-                                                                    className={`h-4 w-4 ${
-                                                                        index < rating
-                                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                                            : 'text-gray-300'
-                                                                    }`}
-                                                                />
-                                                            ))}
+                                                            {Array.from({
+                                                                length: 5,
+                                                            }).map(
+                                                                (_, index) => (
+                                                                    <Star
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className={`h-4 w-4 ${
+                                                                            index <
+                                                                            rating
+                                                                                ? 'fill-yellow-400 text-yellow-400'
+                                                                                : 'text-gray-300'
+                                                                        }`}
+                                                                    />
+                                                                ),
+                                                            )}
                                                         </div>
 
                                                         <span className="text-sm">
-                                                                ({rating})
-                                                            </span>
+                                                            ({rating})
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             ))}
@@ -235,33 +299,42 @@ export default function FormReviewPage() {
                                 </Select>
                             </Field>
                         </div>
-                        {
-                            type !== 'create' && (
-                                <div className="flex-1">
-                                    <Field>
-                                        <FieldLabel>Status Publish</FieldLabel>
+                        {type !== 'create' && (
+                            <div className="flex-1">
+                                <Field>
+                                    <FieldLabel>Status Publish</FieldLabel>
 
-                                        <Select
-                                            name="status"
-                                            value={form.data.is_published.toString()}
-                                            onValueChange={(val) => form.setData('is_published', val === 'true')}
-                                            disabled={disable}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Status</SelectLabel>
-                                                    <SelectItem value="true">Published</SelectItem>
-                                                    <SelectItem value="false">Not Publish</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </Field>
-                                </div>
-                            )
-                        }
+                                    <Select
+                                        name="status"
+                                        value={form.data.is_published.toString()}
+                                        onValueChange={(val) =>
+                                            form.setData(
+                                                'is_published',
+                                                val === 'true',
+                                            )
+                                        }
+                                        disabled={disable}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select Status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>
+                                                    Status
+                                                </SelectLabel>
+                                                <SelectItem value="true">
+                                                    Published
+                                                </SelectItem>
+                                                <SelectItem value="false">
+                                                    Not Publish
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </Field>
+                            </div>
+                        )}
                     </div>
                     <Field>
                         <FieldLabel>Ulasan</FieldLabel>
@@ -274,17 +347,24 @@ export default function FormReviewPage() {
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={() => router.get(indexReviews().url, {}, { preserveState: true, replace: true} )}
+                            onClick={() =>
+                                router.get(
+                                    indexReviews().url,
+                                    {},
+                                    { preserveState: true, replace: true },
+                                )
+                            }
                             type="button"
-                            variant="outline">
+                            variant="outline"
+                        >
                             {disable ? 'Kembali' : 'Batal'}
                         </Button>
-                        { !disable &&
+                        {!disable && (
                             <Button type="submit" disabled={form.processing}>
                                 {form.processing && <Spinner />}
                                 {form.processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
-                        }
+                        )}
                     </div>
                 </form>
             </div>

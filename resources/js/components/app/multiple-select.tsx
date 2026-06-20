@@ -57,7 +57,7 @@ export function MultiSelect({
     };
 
     const selectedOptions = options.filter((option) =>
-        value.includes(option.value)
+        value.includes(option.value),
     );
 
     return (
@@ -69,8 +69,8 @@ export function MultiSelect({
                     role="combobox"
                     disabled={disabled}
                     className={cn(
-                        'min-h-10 h-auto w-full justify-between',
-                        className
+                        'h-auto min-h-10 w-full justify-between',
+                        className,
                     )}
                 >
                     <div className="flex flex-wrap gap-1">
@@ -112,9 +112,7 @@ export function MultiSelect({
                 <Command>
                     <CommandInput placeholder="Cari..." />
 
-                    <CommandEmpty>
-                        {emptyText}
-                    </CommandEmpty>
+                    <CommandEmpty>{emptyText}</CommandEmpty>
 
                     <CommandGroup>
                         {options.map((option) => {
@@ -123,16 +121,14 @@ export function MultiSelect({
                             return (
                                 <CommandItem
                                     key={option.value}
-                                    onSelect={() =>
-                                        toggleOption(option.value)
-                                    }
+                                    onSelect={() => toggleOption(option.value)}
                                 >
                                     <Check
                                         className={cn(
                                             'mr-2 h-4 w-4',
                                             selected
                                                 ? 'opacity-100'
-                                                : 'opacity-0'
+                                                : 'opacity-0',
                                         )}
                                     />
 

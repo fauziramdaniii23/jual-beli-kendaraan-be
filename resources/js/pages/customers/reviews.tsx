@@ -1,7 +1,14 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Eye, MoreHorizontal, Plus, SquarePen, Star, Trash } from 'lucide-react';
+import {
+    Eye,
+    MoreHorizontal,
+    Plus,
+    SquarePen,
+    Star,
+    Trash,
+} from 'lucide-react';
 import React from 'react';
 import { form } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { destroy as deleteReview } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
@@ -15,7 +22,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 type TReviews = {
@@ -29,9 +36,9 @@ type TReviews = {
     unit: {
         car_id: number;
         name: string;
-    }
-    customer: TCustomer
-}
+    };
+    customer: TCustomer;
+};
 type PageProps = {
     reviews: TReviews[];
 };
@@ -40,19 +47,22 @@ export default function ReviewsPage() {
     const { reviews } = usePage<PageProps>().props;
     const [reviewId, setReviewId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
-    const handleAction = (review_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const handleAction = (
+        review_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             form().url,
             {
                 review_id: review_id,
-                type: type
+                type: type,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
     const handleDelete = () => {
         router.delete(deleteReview(reviewId!).url, {
             preserveScroll: true,
@@ -63,23 +73,25 @@ export default function ReviewsPage() {
     };
 
     const handleConfirmDelete = (review: TReviews) => {
-        setReviewId(review.review_id)
+        setReviewId(review.review_id);
         setDeleteConfirmOpen(true);
-    }
+    };
 
     const columns: ColumnDef<TReviews>[] = [
         {
             accessorKey: 'customer.name',
-            header: 'Nama Customer'
+            header: 'Nama Customer',
         },
         {
             accessorKey: 'unit.name',
-            header: 'Unit'
+            header: 'Unit',
         },
         {
             accessorKey: 'rating',
             header: () => (
-                <div className="flex items-center justify-center gap-1">Rating</div>
+                <div className="flex items-center justify-center gap-1">
+                    Rating
+                </div>
             ),
             cell: ({ row }) => {
                 const rating = row.original.rating;
@@ -103,26 +115,26 @@ export default function ReviewsPage() {
         {
             accessorKey: 'is_published',
             header: () => (
-                <div className="flex items-center justify-center gap-1">Status Published</div>
+                <div className="flex items-center justify-center gap-1">
+                    Status Published
+                </div>
             ),
-            cell:({row}) => {
+            cell: ({ row }) => {
                 const isActived = row.getValue('is_published') as boolean;
                 const label = isActived ? 'Publish' : 'Not Published';
 
                 return (
                     <div className="flex items-center justify-center gap-1">
-                        <Badge variant={isActived ? 'success' : 'destructive'}>{label}</Badge>
+                        <Badge variant={isActived ? 'success' : 'destructive'}>
+                            {label}
+                        </Badge>
                     </div>
-                )
-            }
+                );
+            },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const reviews = row.original;
@@ -137,14 +149,23 @@ export default function ReviewsPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(reviews.review_id, 'detail')}
+                                    onClick={() =>
+                                        handleAction(
+                                            reviews.review_id,
+                                            'detail',
+                                        )
+                                    }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(reviews.review_id, 'update')}
+                                    onClick={() =>
+                                        handleAction(
+                                            reviews.review_id,
+                                            'update',
+                                        )
+                                    }
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
@@ -153,7 +174,7 @@ export default function ReviewsPage() {
                                     onClick={() => handleConfirmDelete(reviews)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -166,7 +187,10 @@ export default function ReviewsPage() {
     return (
         <>
             <Head title="Rating & Ulasan" />
-            <Title title="Daftar Rating & Ulasan" description="Daftar Semua Rating & Ulasan" />
+            <Title
+                title="Daftar Rating & Ulasan"
+                description="Daftar Semua Rating & Ulasan"
+            />
             <div className="mx-4 mt-4">
                 <Button onClick={() => handleAction(undefined, 'create')}>
                     <Plus />

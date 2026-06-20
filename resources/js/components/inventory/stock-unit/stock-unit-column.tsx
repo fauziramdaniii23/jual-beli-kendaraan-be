@@ -1,22 +1,23 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
-    ArrowUpWideNarrow, Eye,
+    ArrowUpWideNarrow,
+    Eye,
     MoreHorizontal,
     SquarePen,
-    Trash
+    Trash,
 } from 'lucide-react';
-import React from "react";
-import type { TUnit } from "@/components/inventory/stock-unit/type";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import type { TUnit } from '@/components/inventory/stock-unit/type';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import { formatRupiah } from '@/lib/utils';
 
 interface Props {
@@ -25,17 +26,21 @@ interface Props {
     onDelete: (id: number | undefined) => void;
 }
 
-export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): ColumnDef<TUnit>[] => [
+export const getStockUnitColumns = ({
+    onDelete,
+    onDetail,
+    onEdit,
+}: Props): ColumnDef<TUnit>[] => [
     {
-        accessorKey: "name",
-        header: "Nama Unit"
+        accessorKey: 'name',
+        header: 'Nama Unit',
     },
     {
-        accessorKey: "branch.name",
-        header: "Cabang"
+        accessorKey: 'branch.name',
+        header: 'Cabang',
     },
     {
-        accessorKey: "year",
+        accessorKey: 'year',
         header: ({ column }) => {
             const sorted = column.getIsSorted();
 
@@ -47,19 +52,17 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                 >
                     Tahun
                     {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                    {sorted === 'asc' && <ArrowDownNarrowWide />}
+                    {sorted === 'desc' && <ArrowUpWideNarrow />}
                 </Button>
             );
         },
         cell: ({ row }) => (
-            <div className="text-right w-full">
-                {row.getValue("year")}
-            </div>
+            <div className="w-full text-right">{row.getValue('year')}</div>
         ),
     },
     {
-        accessorKey: "stnk_validity_period",
+        accessorKey: 'stnk_validity_period',
         header: ({ column }) => {
             const sorted = column.getIsSorted();
 
@@ -71,14 +74,14 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                 >
                     Periode STNK
                     {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                    {sorted === 'asc' && <ArrowDownNarrowWide />}
+                    {sorted === 'desc' && <ArrowUpWideNarrow />}
                 </Button>
             );
-        }
+        },
     },
     {
-        accessorKey: "formatted_price",
+        accessorKey: 'formatted_price',
         header: ({ column }) => {
             const sorted = column.getIsSorted();
 
@@ -90,14 +93,14 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                 >
                     Harga
                     {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                    {sorted === 'asc' && <ArrowDownNarrowWide />}
+                    {sorted === 'desc' && <ArrowUpWideNarrow />}
                 </Button>
             );
         },
         cell: ({ row }) => (
-            <div className="text-right w-full">
-                {row.getValue("formatted_price")}
+            <div className="w-full text-right">
+                {row.getValue('formatted_price')}
             </div>
         ),
     },
@@ -114,8 +117,8 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                 >
                     Total Diskon
                     {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                    {sorted === 'asc' && <ArrowDownNarrowWide />}
+                    {sorted === 'desc' && <ArrowUpWideNarrow />}
                 </Button>
             );
         },
@@ -123,10 +126,10 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
             <div className="items-center text-end">
                 {formatRupiah(row.getValue('total_discount'))}
             </div>
-        )
+        ),
     },
     {
-        accessorKey: "final_price",
+        accessorKey: 'final_price',
         header: ({ column }) => {
             const sorted = column.getIsSorted();
 
@@ -138,43 +141,41 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                 >
                     Harga Akhir
                     {!sorted && <ArrowUpDown />}
-                    {sorted === "asc" && <ArrowDownNarrowWide />}
-                    {sorted === "desc" && <ArrowUpWideNarrow />}
+                    {sorted === 'asc' && <ArrowDownNarrowWide />}
+                    {sorted === 'desc' && <ArrowUpWideNarrow />}
                 </Button>
             );
         },
         cell: ({ row }) => (
-            <div className="text-right w-full">
-                {formatRupiah(row.getValue("final_price"))}
+            <div className="w-full text-right">
+                {formatRupiah(row.getValue('final_price'))}
             </div>
         ),
     },
     {
-        accessorKey: "status.ref_value",
-        header: "Status",
+        accessorKey: 'status.ref_value',
+        header: 'Status',
         cell: ({ row }) => {
             const status = row.original.status;
 
-            const variant = (status?.ref_code?.toLowerCase() ?? "default") as
-                | "available"
-                | "sold"
-                | "reserved"
-                | "repair";
+            const variant = (status?.ref_code?.toLowerCase() ?? 'default') as
+                | 'available'
+                | 'sold'
+                | 'reserved'
+                | 'repair';
 
             return (
                 <div className="text-center">
-                    <Badge variant={variant}>
-                        {status?.ref_value}
-                    </Badge>
+                    <Badge variant={variant}>{status?.ref_value}</Badge>
                 </div>
             );
         },
     },
     {
-        id: "actions",
+        id: 'actions',
         header: () => <div className="text-center">Aksi</div>,
         enableHiding: false,
-        cell: ({row}) => {
+        cell: ({ row }) => {
             const id = row.original.car_id;
 
             return (
@@ -187,18 +188,17 @@ export const getStockUnitColumns = ({ onDelete, onDetail, onEdit}: Props): Colum
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={() => onDetail(id) }
-                            >
+                            <DropdownMenuItem onClick={() => onDetail(id)}>
                                 <Eye /> Detail
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => onEdit(id) }
-                            >
+                            <DropdownMenuItem onClick={() => onEdit(id)}>
                                 <SquarePen /> Edit
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem onClick={() => onDelete(id)} className="text-red-500">
+                            <DropdownMenuItem
+                                onClick={() => onDelete(id)}
+                                className="text-red-500"
+                            >
                                 <Trash className="text-red-500" /> Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>

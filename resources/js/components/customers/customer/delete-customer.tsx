@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { destroy as deleteCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
 import {
@@ -10,7 +10,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
@@ -18,7 +18,11 @@ interface Props {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
-export function ConfirmDeleteCustomer({ customer_id, isOpen, setIsOpen }: Props) {
+export function ConfirmDeleteCustomer({
+    customer_id,
+    isOpen,
+    setIsOpen,
+}: Props) {
     const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteCustomer(customer_id).url, {
@@ -31,15 +35,13 @@ export function ConfirmDeleteCustomer({ customer_id, isOpen, setIsOpen }: Props)
                 setIsOpen(false);
             },
         });
-    }
+    };
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Hapus Customer
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>Hapus Customer</AlertDialogTitle>
 
                     <AlertDialogDescription>
                         Apakah Anda yakin ingin menghapus Customer ini?
@@ -47,9 +49,7 @@ export function ConfirmDeleteCustomer({ customer_id, isOpen, setIsOpen }: Props)
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel>
-                        Batal
-                    </AlertDialogCancel>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
 
                     <AlertDialogAction
                         onClick={handleDelete}
@@ -61,6 +61,5 @@ export function ConfirmDeleteCustomer({ customer_id, isOpen, setIsOpen }: Props)
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
-

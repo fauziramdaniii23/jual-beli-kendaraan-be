@@ -14,7 +14,14 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { TOptionItem } from '@/types';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import React from 'react';
 
 interface Props {
@@ -24,45 +31,53 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 
-export default function DetailFaqDialog({ faq, optionCategories, isOpen, setIsOpen }: Props){
-
+export default function DetailFaqDialog({
+    faq,
+    optionCategories,
+    isOpen,
+    setIsOpen,
+}: Props) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="sm:max-w-[80vw]">
-                    <DialogHeader>
-                        <DialogTitle>Detail FAQ</DialogTitle>
-                    </DialogHeader>
+                <DialogHeader>
+                    <DialogTitle>Detail FAQ</DialogTitle>
+                </DialogHeader>
 
-                    <FieldGroup>
-                        <Field>
-                            <Label htmlFor="question">Pertanyaan ?<span className="text-destructive">*</span></Label>
+                <FieldGroup>
+                    <Field>
+                        <Label htmlFor="question">
+                            Pertanyaan ?
+                            <span className="text-destructive">*</span>
+                        </Label>
 
-                            <Input
-                                id="question"
-                                name="question"
-                                value={faq.question}
-                                disabled={true}
-                            />
-                        </Field>
-                        <Field>
-                            <FieldLabel>Jawaban<span className="text-destructive">*</span></FieldLabel>
-                            <TextEditor
-                                disabled={true}
-                                value={faq.answer || ''}
-                            />
-                        </Field>
-                        <Field>
-                            <FieldLabel>Kategori<span className="text-destructive">*</span></FieldLabel>
-                            <SelectWithClear
-                                placeholder="Pilih Kategori"
-                                value={faq.category_code ?? ''}
-                                items={optionCategories}
-                                onChange={() => {}}
-                                disabled={true}
-                            />
-                        </Field>
-                    </FieldGroup>
-                <div className="w-full flex gap-4">
+                        <Input
+                            id="question"
+                            name="question"
+                            value={faq.question}
+                            disabled={true}
+                        />
+                    </Field>
+                    <Field>
+                        <FieldLabel>
+                            Jawaban<span className="text-destructive">*</span>
+                        </FieldLabel>
+                        <TextEditor disabled={true} value={faq.answer || ''} />
+                    </Field>
+                    <Field>
+                        <FieldLabel>
+                            Kategori<span className="text-destructive">*</span>
+                        </FieldLabel>
+                        <SelectWithClear
+                            placeholder="Pilih Kategori"
+                            value={faq.category_code ?? ''}
+                            items={optionCategories}
+                            onChange={() => {}}
+                            disabled={true}
+                        />
+                    </Field>
+                </FieldGroup>
+                <div className="flex w-full gap-4">
                     <Field className="flex-1">
                         <Label>Status Published</Label>
                         <Select
@@ -75,7 +90,9 @@ export default function DetailFaqDialog({ faq, optionCategories, isOpen, setIsOp
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectItem value="true">Aktif</SelectItem>
-                                    <SelectItem value="false">Tidak Aktif</SelectItem>
+                                    <SelectItem value="false">
+                                        Tidak Aktif
+                                    </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -92,13 +109,13 @@ export default function DetailFaqDialog({ faq, optionCategories, isOpen, setIsOp
                     </Field>
                 </div>
 
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button type="button" variant="outline">
-                                Kembali
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button type="button" variant="outline">
+                            Kembali
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );

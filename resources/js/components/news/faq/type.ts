@@ -8,5 +8,4 @@ export type TFaq = {
     category?: TMasterReference;
     is_published?: boolean;
     sort_order?: number;
-
-}
+};

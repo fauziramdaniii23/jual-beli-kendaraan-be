@@ -5,4 +5,4 @@ export type TCustomer = {
     phone: string;
     address?: string;
     is_active?: boolean;
-}
+};

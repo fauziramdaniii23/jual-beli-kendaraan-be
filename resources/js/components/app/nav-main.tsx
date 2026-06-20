@@ -1,13 +1,20 @@
 import { Link } from '@inertiajs/react';
 import { ChevronDown, Dot } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
     SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { usePermission } from '@/hooks/use-permission';
@@ -18,12 +25,13 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { can } = usePermission();
 
     return (
-        <SidebarContent className="overflow-y-auto scrollbar-hide">
+        <SidebarContent className="scrollbar-hide overflow-y-auto">
             <SidebarGroup>
                 <SidebarGroupContent>
                     <SidebarMenu>
                         {items.map((item) => {
-                            const hasChildren = item.items && item.items.length > 0;
+                            const hasChildren =
+                                item.items && item.items.length > 0;
 
                             if (!can(item.permission)) {
                                 return null;
@@ -34,17 +42,26 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                     {hasChildren ? (
                                         <Collapsible
                                             asChild
-                                            defaultOpen={item.title !== 'Master' && item.title !== 'Otentikasi'}
+                                            defaultOpen={
+                                                item.title !== 'Master' &&
+                                                item.title !== 'Otentikasi'
+                                            }
                                             className="group/collapsible"
                                         >
                                             <div>
                                                 <CollapsibleTrigger asChild>
                                                     <SidebarMenuButton
-                                                        isActive={isCurrentUrl(item.href)}
+                                                        isActive={isCurrentUrl(
+                                                            item.href,
+                                                        )}
                                                         tooltip={item.title}
                                                     >
-                                                        {item.icon && <item.icon />}
-                                                        <span>{item.title}</span>
+                                                        {item.icon && (
+                                                            <item.icon />
+                                                        )}
+                                                        <span>
+                                                            {item.title}
+                                                        </span>
 
                                                         <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                                     </SidebarMenuButton>
@@ -52,19 +69,35 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
 
                                                 <CollapsibleContent>
                                                     <SidebarMenuSub>
-                                                        {item.items?.map((subItem) => (
-                                                            <SidebarMenuSubItem key={subItem.title}>
-                                                                <SidebarMenuSubButton
-                                                                    asChild
-                                                                    isActive={isCurrentUrl(subItem.href)}
+                                                        {item.items?.map(
+                                                            (subItem) => (
+                                                                <SidebarMenuSubItem
+                                                                    key={
+                                                                        subItem.title
+                                                                    }
                                                                 >
-                                                                    <Link href={subItem.href}>
-                                                                        <Dot/>
-                                                                        <span>{subItem.title}</span>
-                                                                    </Link>
-                                                                </SidebarMenuSubButton>
-                                                            </SidebarMenuSubItem>
-                                                        ))}
+                                                                    <SidebarMenuSubButton
+                                                                        asChild
+                                                                        isActive={isCurrentUrl(
+                                                                            subItem.href,
+                                                                        )}
+                                                                    >
+                                                                        <Link
+                                                                            href={
+                                                                                subItem.href
+                                                                            }
+                                                                        >
+                                                                            <Dot />
+                                                                            <span>
+                                                                                {
+                                                                                    subItem.title
+                                                                                }
+                                                                            </span>
+                                                                        </Link>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            ),
+                                                        )}
                                                     </SidebarMenuSub>
                                                 </CollapsibleContent>
                                             </div>

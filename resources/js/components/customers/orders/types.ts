@@ -3,33 +3,33 @@ import type { TUnit } from '@/components/inventory/stock-unit/type';
 import type { TMasterReference } from '@/types';
 
 export type TOrder = {
-    order_id: number
-    order_uuid: string
-    car_id: number
-    customer_id: number
+    order_id: number;
+    order_uuid: string;
+    car_id: number;
+    customer_id: number;
     status_code: string;
     type_paid_code: string;
     unit?: TUnit;
     customer?: TCustomer;
     status?: TMasterReference;
     typePaid?: TMasterReference;
-}
+};
 
 export type TTradeIn = {
     trade_in_id?: number;
     car_id?: number;
     brand?: string;
     model?: string;
-    order_id?: number
+    order_id?: number;
     variant?: string;
     year?: number;
-    kilometer?: number
+    kilometer?: number;
     status_code: string;
-    inspection_date: string
+    inspection_date: string;
     unit?: TUnit;
     order?: TOrder;
     status?: TMasterReference;
-}
+};
 
 export const defaultOrder: TOrder = {
     order_id: 0,
@@ -38,10 +38,10 @@ export const defaultOrder: TOrder = {
     customer_id: 0,
     status_code: '',
     type_paid_code: '',
-}
+};
 
 export const defaultTradeIn: TTradeIn = {
     variant: '',
     status_code: 'NEW',
-    inspection_date: ''
-}
+    inspection_date: '',
+};

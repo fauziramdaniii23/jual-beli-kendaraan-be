@@ -32,7 +32,12 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 
-export default function UpdateModelDialog({ model, brands, isOpen, setIsOpen }: Props) {
+export default function UpdateModelDialog({
+    model,
+    brands,
+    isOpen,
+    setIsOpen,
+}: Props) {
     const { data, setData, put, processing, errors, reset } = useForm({
         model_name: '',
         brand_id: '',
@@ -125,13 +130,16 @@ export default function UpdateModelDialog({ model, brands, isOpen, setIsOpen }: 
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="true">Aktif</SelectItem>
-                                        <SelectItem value="false">Tidak Aktif</SelectItem>
+                                        <SelectItem value="true">
+                                            Aktif
+                                        </SelectItem>
+                                        <SelectItem value="false">
+                                            Tidak Aktif
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </Field>
-
                     </FieldGroup>
 
                     <DialogFooter>

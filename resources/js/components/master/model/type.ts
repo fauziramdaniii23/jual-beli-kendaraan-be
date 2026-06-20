@@ -6,4 +6,4 @@ export type TModel = {
     brand_id: number;
     brand: TBrand;
     is_active: boolean;
-}
+};

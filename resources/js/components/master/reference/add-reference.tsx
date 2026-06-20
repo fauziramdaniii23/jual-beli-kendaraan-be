@@ -10,7 +10,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -32,7 +32,7 @@ export default function CreateTransmissionDialog({ type, label }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(storeReference({type: type}).url, {
+        post(storeReference({ type: type }).url, {
             preserveScroll: true,
             onSuccess: () => {
                 reset();

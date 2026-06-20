@@ -10,11 +10,15 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -56,41 +60,72 @@ export default function CreateCstomerDialog() {
 
                     <FieldGroup>
                         <Field>
-                            <FieldLabel>Nama<span className="text-red-600">*</span></FieldLabel>
+                            <FieldLabel>
+                                Nama<span className="text-red-600">*</span>
+                            </FieldLabel>
                             <Input
                                 value={data.name}
-                                onChange={(e) => setData("name", e.target.value)}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 required
                             />
-                            {errors.name && (<p className="text-sm text-red-500">{errors.name}</p>)}
+                            {errors.name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
                         </Field>
                         <Field>
-                            <FieldLabel>No Handphone<span className="text-red-600">*</span></FieldLabel>
+                            <FieldLabel>
+                                No Handphone
+                                <span className="text-red-600">*</span>
+                            </FieldLabel>
                             <InputGroup>
                                 <InputGroupInput
                                     value={data.phone}
-                                    onChange={(e) => setData("phone", e.target.value)}
-                                    type="number" />
-                                <InputGroupAddon>
-                                    +62
-                                </InputGroupAddon>
+                                    onChange={(e) =>
+                                        setData('phone', e.target.value)
+                                    }
+                                    type="number"
+                                />
+                                <InputGroupAddon>+62</InputGroupAddon>
                             </InputGroup>
-                            {errors.phone && (<p className="text-sm text-red-500">{errors.phone}</p>)}
+                            {errors.phone && (
+                                <p className="text-sm text-red-500">
+                                    {errors.phone}
+                                </p>
+                            )}
                         </Field>
                         <Field>
-                            <FieldLabel>Email<span className="text-red-600">*</span></FieldLabel>
+                            <FieldLabel>
+                                Email<span className="text-red-600">*</span>
+                            </FieldLabel>
                             <Input
                                 value={data.email}
-                                onChange={(e) => setData("email", e.target.value)}
+                                onChange={(e) =>
+                                    setData('email', e.target.value)
+                                }
                                 required
                             />
-                            {errors.name && (<p className="text-sm text-red-500">{errors.name}</p>)}
+                            {errors.name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
                         </Field>
                         <Field>
-                            <FieldLabel>Alamat <span className="text-neutral-500">(opsional)</span></FieldLabel>
+                            <FieldLabel>
+                                Alamat{' '}
+                                <span className="text-neutral-500">
+                                    (opsional)
+                                </span>
+                            </FieldLabel>
                             <Textarea
                                 value={data.address}
-                                onChange={(e) => setData("address", e.target.value)}
+                                onChange={(e) =>
+                                    setData('address', e.target.value)
+                                }
                                 required
                             />
                         </Field>

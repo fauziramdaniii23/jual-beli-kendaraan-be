@@ -11,7 +11,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ export default function CreateUserDialog() {
         password: '',
         password_confirmation: '',
         phone_number: '',
-        roles_id: []
+        roles_id: [],
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,7 +68,11 @@ export default function CreateUserDialog() {
                                     setData('name', e.target.value)
                                 }
                             />
-                            {errors.name && (<p className="text-sm text-red-500">{errors.name}</p>)}
+                            {errors.name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
                         </Field>
                         <Field>
                             <Label htmlFor="email">Email</Label>
@@ -83,7 +87,11 @@ export default function CreateUserDialog() {
                                     setData('email', e.target.value)
                                 }
                             />
-                            {errors.email && (<p className="text-sm text-red-500">{errors.email}</p>)}
+                            {errors.email && (
+                                <p className="text-sm text-red-500">
+                                    {errors.email}
+                                </p>
+                            )}
                         </Field>
                         <div className="flex gap-4">
                             <Field>
@@ -98,10 +106,16 @@ export default function CreateUserDialog() {
                                         setData('password', e.target.value)
                                     }
                                 />
-                                {errors.password && (<p className="text-sm text-red-500">{errors.password}</p>)}
+                                {errors.password && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.password}
+                                    </p>
+                                )}
                             </Field>
                             <Field>
-                                <Label htmlFor="email">Password Confirmation</Label>
+                                <Label htmlFor="email">
+                                    Password Confirmation
+                                </Label>
 
                                 <Input
                                     id="password_confirmation"
@@ -109,10 +123,17 @@ export default function CreateUserDialog() {
                                     type="password"
                                     value={data.password_confirmation}
                                     onChange={(e) =>
-                                        setData('password_confirmation', e.target.value)
+                                        setData(
+                                            'password_confirmation',
+                                            e.target.value,
+                                        )
                                     }
                                 />
-                                {errors.password_confirmation && (<p className="text-sm text-red-500">{errors.password_confirmation}</p>)}
+                                {errors.password_confirmation && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.password_confirmation}
+                                    </p>
+                                )}
                             </Field>
                         </div>
                         <Field>
@@ -127,15 +148,15 @@ export default function CreateUserDialog() {
                                     setData('phone_number', e.target.value)
                                 }
                             />
-                            {errors.phone_number && (<p className="text-sm text-red-500">{errors.phone_number}</p>)}
+                            {errors.phone_number && (
+                                <p className="text-sm text-red-500">
+                                    {errors.phone_number}
+                                </p>
+                            )}
                         </Field>
                         <Field>
                             <Label htmlFor="picture">Photo Profile</Label>
-                            <Input
-                                id="picture"
-                                type="file"
-                                accept="image/*"
-                            />
+                            <Input id="picture" type="file" accept="image/*" />
                         </Field>
                     </FieldGroup>
 

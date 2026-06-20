@@ -1,12 +1,12 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import {
-    Eye,
-    MoreHorizontal, Plus, SquarePen, Trash
-} from 'lucide-react';
+import { Eye, MoreHorizontal, Plus, SquarePen, Trash } from 'lucide-react';
 import React, { useState } from 'react';
-import { destroy as deleteUser, formUser } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
+import {
+    destroy as deleteUser,
+    formUser,
+} from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import type { TUser } from '@/components/otentikasi/user/type';
 import { Button } from '@/components/ui/button';
@@ -32,19 +32,22 @@ export default function UsersPage() {
         seTUserId(user.id);
         setIsDeleteConfirmOpen(true);
     };
-    const handleAction = (user_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const handleAction = (
+        user_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             formUser().url,
             {
                 user_id: user_id,
-                type: type
+                type: type,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
     const handleDelete = () => {
         router.delete(deleteUser(userId!).url, {
             preserveScroll: true,
@@ -57,7 +60,7 @@ export default function UsersPage() {
     const columns: ColumnDef<TUser>[] = [
         {
             accessorKey: 'name',
-            header: 'Nama'
+            header: 'Nama',
         },
         {
             accessorKey: 'email',
@@ -73,19 +76,14 @@ export default function UsersPage() {
             header: 'Roles',
 
             cell: ({ row }) => {
+                const roles = row.original.roles;
 
-                const roles = row.original.roles
-
-                return roles?.join(', ')
-            }
+                return roles?.join(', ');
+            },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const user = row.original;
@@ -100,14 +98,17 @@ export default function UsersPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(user.id, 'detail')}
+                                    onClick={() =>
+                                        handleAction(user.id, 'detail')
+                                    }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(user.id, 'update')}
+                                    onClick={() =>
+                                        handleAction(user.id, 'update')
+                                    }
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
@@ -116,7 +117,7 @@ export default function UsersPage() {
                                     onClick={() => handleActionDelete(user)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

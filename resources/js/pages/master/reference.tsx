@@ -1,11 +1,13 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
     ArrowUpWideNarrow,
-    MoreHorizontal, SquarePen, Trash
+    MoreHorizontal,
+    SquarePen,
+    Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
@@ -26,9 +28,10 @@ import {
     Select,
     SelectContent,
     SelectGroup,
-    SelectItem, SelectSeparator,
+    SelectItem,
+    SelectSeparator,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 import { MASTER_REFERENCE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
@@ -52,7 +55,10 @@ export default function MasterReferencePage() {
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [selectStatus, setSelectStatus] = useState<string>('all');
-    const handleAction = (reference: TMasterReference, type: 'update' | 'delete') => {
+    const handleAction = (
+        reference: TMasterReference,
+        type: 'update' | 'delete',
+    ) => {
         setReference(reference);
 
         if (type === 'update') {
@@ -63,14 +69,14 @@ export default function MasterReferencePage() {
     };
     const submitFilter = () => {
         router.get(
-            indexReference({type: type}).url,
+            indexReference({ type: type }).url,
             {
                 status: selectStatus === 'all' ? undefined : selectStatus,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
     const columns: ColumnDef<TMasterReference>[] = [
@@ -120,19 +126,13 @@ export default function MasterReferencePage() {
         },
         {
             accessorKey: 'is_active',
-            header: () => (
-                <div className="text-center">
-                    Status
-                </div>
-            ),
+            header: () => <div className="text-center">Status</div>,
             cell: ({ row }) => {
                 const isActive = row.getValue('is_active') as boolean;
 
                 return (
                     <div className="text-center">
-                        <Badge
-                            variant={isActive ? "success" : "destructive"}
-                        >
+                        <Badge variant={isActive ? 'success' : 'destructive'}>
                             {isActive ? 'Aktif' : 'Tidak Aktif'}
                         </Badge>
                     </div>
@@ -141,11 +141,7 @@ export default function MasterReferencePage() {
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const reference = row.original;
@@ -160,18 +156,21 @@ export default function MasterReferencePage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(reference, 'update')}
+                                    onClick={() =>
+                                        handleAction(reference, 'update')
+                                    }
                                 >
                                     <SquarePen /> Edit
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(reference, 'delete')}
+                                    onClick={() =>
+                                        handleAction(reference, 'delete')
+                                    }
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -184,9 +183,12 @@ export default function MasterReferencePage() {
     return (
         <>
             <Head title={label} />
-            <Title title={`Daftar ${label}`} description={`Daftar Semua ${label}`} />
+            <Title
+                title={`Daftar ${label}`}
+                description={`Daftar Semua ${label}`}
+            />
             <div className="mx-4 mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex w-full items-center gap-2">
                     <span className="text-sm text-muted-foreground">
                         Status
                     </span>
@@ -195,7 +197,7 @@ export default function MasterReferencePage() {
                         onValueChange={(val) => setSelectStatus(val as string)}
                     >
                         <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Semua"/>
+                            <SelectValue placeholder="Semua" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -204,28 +206,40 @@ export default function MasterReferencePage() {
                             <SelectSeparator />
                             <SelectGroup>
                                 <SelectItem value="true">Aktif</SelectItem>
-                                <SelectItem value="false">Tidak Aktif</SelectItem>
+                                <SelectItem value="false">
+                                    Tidak Aktif
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button onClick={submitFilter}>
-                        Filter
-                    </Button>
+                    <Button onClick={submitFilter}>Filter</Button>
                 </div>
-                <CreatereferenceDialog type={type} label={label}/>
+                <CreatereferenceDialog type={type} label={label} />
             </div>
             <div className="m-4">
                 <DataTable columns={columns} data={data_reference} />
             </div>
-            <UpdateReferenceDialog label={label} reference={reference} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteReference label={label} ref_id={reference.ref_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <UpdateReferenceDialog
+                label={label}
+                reference={reference}
+                isOpen={isUpdateDialogOpen}
+                setIsOpen={(val) => setIsUpdateDialogOpen(val)}
+            />
+            <ConfirmDeleteReference
+                label={label}
+                ref_id={reference.ref_id}
+                isOpen={isDeleteConfirmOpen}
+                setIsOpen={setIsDeleteConfirmOpen}
+            />
         </>
     );
 }
 
 MasterReferencePage.layout = (page: React.ReactElement<PageProps>) => {
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
-    const breadcrumbTitle = pageProps?.type ? MASTER_REFERENCE_LABEL[pageProps.type] : '';
+    const breadcrumbTitle = pageProps?.type
+        ? MASTER_REFERENCE_LABEL[pageProps.type]
+        : '';
 
     return (
         <AppLayout

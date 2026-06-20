@@ -1,7 +1,7 @@
-import Quill from "quill";
-import { useEffect, useRef } from "react";
+import Quill from 'quill';
+import { useEffect, useRef } from 'react';
 
-import "quill/dist/quill.snow.css";
+import 'quill/dist/quill.snow.css';
 
 type Props = {
     value?: string;
@@ -9,11 +9,7 @@ type Props = {
     disabled?: boolean;
 };
 
-export default function TextEditor({
-   value = "",
-   onChange,
-    disabled,
-}: Props) {
+export default function TextEditor({ value = '', onChange, disabled }: Props) {
     const editorRef = useRef<HTMLDivElement | null>(null);
     const quillRef = useRef<Quill | null>(null);
 
@@ -23,22 +19,22 @@ export default function TextEditor({
         }
 
         const quill = new Quill(editorRef.current, {
-            theme: "snow",
+            theme: 'snow',
 
             modules: {
                 toolbar: [
                     [{ header: [1, 2, false] }],
-                    ["bold", "italic", "underline"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link"],
-                    ["clean"],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link'],
+                    ['clean'],
                 ],
             },
         });
 
         quill.root.innerHTML = value;
 
-        quill.on("text-change", () => {
+        quill.on('text-change', () => {
             onChange?.(quill.root.innerHTML);
         });
 
@@ -47,7 +43,7 @@ export default function TextEditor({
 
     useEffect(() => {
         if (!quillRef.current) {
-            return
+            return;
         }
 
         if (disabled) {
@@ -58,7 +54,7 @@ export default function TextEditor({
     }, [disabled]);
 
     return (
-        <div className="rounded-md overflow-hidden">
+        <div className="overflow-hidden rounded-md">
             <div ref={editorRef} />
         </div>
     );

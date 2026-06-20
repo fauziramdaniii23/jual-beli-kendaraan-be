@@ -2,30 +2,39 @@ import { Head, router, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
-    ArrowUpDown, ArrowUpWideNarrow,
+    ArrowUpDown,
+    ArrowUpWideNarrow,
     ChevronDownIcon,
     Eye,
     Filter,
     MoreHorizontal,
     Plus,
     SquarePen,
-    Trash
+    Trash,
 } from 'lucide-react';
 import React from 'react';
-import { index as indexOrder, form, destroy } from '@/actions/App/Http/Controllers/Customer/OrderController';
+import {
+    index as indexOrder,
+    form,
+    destroy,
+} from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
 import type { TOrder } from '@/components/customers/orders/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
@@ -36,28 +45,31 @@ type PageProps = {
     orders: TOrder[];
     status: TMasterReference[];
     typePaid: TMasterReference[];
-}
+};
 
 export default function OrderPage() {
-    const { orders, status, typePaid} = usePage<PageProps>().props;
+    const { orders, status, typePaid } = usePage<PageProps>().props;
     const [reviewId, setreviewId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
-    const [typePaidCode, setTypePaidCode] = React.useState<string>('')
-    const handleAction = (order_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const [typePaidCode, setTypePaidCode] = React.useState<string>('');
+    const handleAction = (
+        order_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             form().url,
             {
                 order_id: order_id,
-                type: type
+                type: type,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
 
     const submitFilter = () => {
         router.get(
@@ -69,7 +81,7 @@ export default function OrderPage() {
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
     const handleDelete = () => {
@@ -82,9 +94,9 @@ export default function OrderPage() {
     };
 
     const handleConfirmDelete = (review: TOrder) => {
-        setreviewId(review.order_id)
+        setreviewId(review.order_id);
         setDeleteConfirmOpen(true);
-    }
+    };
 
     const columns: ColumnDef<TOrder>[] = [
         {
@@ -100,8 +112,8 @@ export default function OrderPage() {
             header: 'Unit',
         },
         {
-          accessorKey: 'type_paid.ref_value',
-          header: 'Tipe Pembayaran',
+            accessorKey: 'type_paid.ref_value',
+            header: 'Tipe Pembayaran',
         },
         {
             accessorKey: 'updated_at',
@@ -116,16 +128,16 @@ export default function OrderPage() {
                     >
                         Update Terbaru
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
-            cell: ({row}) => {
+            cell: ({ row }) => {
                 const date = row.getValue('updated_at');
 
-                return formatDate(date)
-            }
+                return formatDate(date);
+            },
         },
         {
             accessorKey: 'status.ref_value',
@@ -135,20 +147,14 @@ export default function OrderPage() {
 
                 return (
                     <div className="text-center">
-                        <Badge variant="outline">
-                            {status?.ref_value}
-                        </Badge>
+                        <Badge variant="outline">{status?.ref_value}</Badge>
                     </div>
                 );
             },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const order = row.original;
@@ -163,14 +169,17 @@ export default function OrderPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(order.order_id, 'detail')}
+                                    onClick={() =>
+                                        handleAction(order.order_id, 'detail')
+                                    }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(order.order_id, 'update')}
+                                    onClick={() =>
+                                        handleAction(order.order_id, 'update')
+                                    }
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
@@ -179,7 +188,7 @@ export default function OrderPage() {
                                     onClick={() => handleConfirmDelete(order)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -193,7 +202,7 @@ export default function OrderPage() {
         <>
             <Head title="Orders" />
             <Title title="Daftar Orders" description="Daftar Semua Order" />
-            <div className="m-4 border rounded-md">
+            <div className="m-4 rounded-md border">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="group w-full">
@@ -202,12 +211,15 @@ export default function OrderPage() {
                         </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="flex flex-col items-start gap-2 p-2.5 pt-0 text-sm">
-                        <form className="w-full" onSubmit={(e) => {
-                            e.preventDefault();
-                            submitFilter();
-                        }}>
+                        <form
+                            className="w-full"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                submitFilter();
+                            }}
+                        >
                             <Separator />
-                            <div className="flex gap-4 w-full mt-4">
+                            <div className="mt-4 flex w-full gap-4">
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
@@ -217,8 +229,13 @@ export default function OrderPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Status"
                                                 value={statusCode}
-                                                onChange={(val) => setStatusCode(val)}
-                                                items={status.map((item) => ({label: item.ref_value, value: item.ref_code}))}
+                                                onChange={(val) =>
+                                                    setStatusCode(val)
+                                                }
+                                                items={status.map((item) => ({
+                                                    label: item.ref_value,
+                                                    value: item.ref_code,
+                                                }))}
                                             />
                                         </Field>
                                     </FieldGroup>
@@ -233,14 +250,19 @@ export default function OrderPage() {
                                             <SelectWithClear
                                                 placeholder="Pilih Tipe Pembayaran"
                                                 value={typePaidCode}
-                                                onChange={(val) => setTypePaidCode(val)}
-                                                items={typePaid.map((item) => ({label: item.ref_value, value: item.ref_code}))}
+                                                onChange={(val) =>
+                                                    setTypePaidCode(val)
+                                                }
+                                                items={typePaid.map((item) => ({
+                                                    label: item.ref_value,
+                                                    value: item.ref_code,
+                                                }))}
                                             />
                                         </Field>
                                     </FieldGroup>
                                 </div>
                             </div>
-                            <div className="flex gap-2 mt-4">
+                            <div className="mt-4 flex gap-2">
                                 <CollapsibleTrigger asChild>
                                     <Button type="button" variant="outline">
                                         Tutup
@@ -270,7 +292,7 @@ export default function OrderPage() {
                 onConfirm={handleDelete}
             />
         </>
-    )
+    );
 }
 
 OrderPage.layout = {

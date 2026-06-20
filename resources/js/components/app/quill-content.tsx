@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
-import { cn } from "@/lib/utils";
+import DOMPurify from 'isomorphic-dompurify';
+import { cn } from '@/lib/utils';
 
 interface QuillContentProps {
     content?: string | null;
@@ -7,8 +7,11 @@ interface QuillContentProps {
     clamp?: number;
 }
 
-export default function QuillContent({content, className,clamp}: QuillContentProps) {
-
+export default function QuillContent({
+    content,
+    className,
+    clamp,
+}: QuillContentProps) {
     if (!content) {
         return null;
     }
@@ -16,9 +19,9 @@ export default function QuillContent({content, className,clamp}: QuillContentPro
     return (
         <div
             className={cn(
-                "quill-content",
+                'quill-content',
                 clamp && `line-clamp-${clamp}`,
-                className
+                className,
             )}
             dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(content),

@@ -17,7 +17,11 @@ interface ImageUploadProps {
     maxFileSize?: number; // in MB
 }
 
-export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5, }: ImageUploadProps) {
+export function ImageUpload({
+    onImagesSelected,
+    maxImages = 10,
+    maxFileSize = 5,
+}: ImageUploadProps) {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [previewImages, setPreviewImages] = useState<TImageProps[]>([]);
     const [isDragActive, setIsDragActive] = useState(false);
@@ -74,8 +78,8 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                 newPreviewImages.push({
                     image_id: imageId,
                     image_name: file.name,
-                    image_src: preview
-                })
+                    image_src: preview,
+                });
             });
 
             // Check total limit
@@ -86,7 +90,10 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
             }
 
             const updatedImages = [...images, ...newImages];
-            const updatedPreviewImages = [...previewImages, ...newPreviewImages];
+            const updatedPreviewImages = [
+                ...previewImages,
+                ...newPreviewImages,
+            ];
             setImages(updatedImages);
             setPreviewImages(updatedPreviewImages);
 
@@ -95,7 +102,7 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                 onImagesSelected(updatedImages.map((img) => img.file));
             }
         },
-        [images, maxImages, onImagesSelected]
+        [images, maxImages, onImagesSelected],
     );
 
     const handleDrag = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -119,7 +126,7 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                 handleFiles(e.dataTransfer.files);
             }
         },
-        [handleFiles]
+        [handleFiles],
     );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +164,7 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-    const openPreview = (src: string, name: string, index:number) => {
+    const openPreview = (src: string, name: string, index: number) => {
         setSelectedIndex(index);
         setIsPreviewOpen(true);
     };
@@ -174,7 +181,7 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                     'relative rounded-lg border-2 border-dashed transition-colors',
                     isDragActive
                         ? 'border-primary bg-primary/5'
-                        : 'border-muted-foreground/25 bg-muted/50 hover:border-muted-foreground/50'
+                        : 'border-muted-foreground/25 bg-muted/50 hover:border-muted-foreground/50',
                 )}
             >
                 <input
@@ -187,14 +194,18 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                 />
 
                 <div className="flex flex-col items-center justify-center gap-3 px-6 py-12">
-                    <div className={cn(
-                        'rounded-full p-3 transition-colors',
-                        isDragActive ? 'bg-primary/20' : 'bg-muted'
-                    )}>
+                    <div
+                        className={cn(
+                            'rounded-full p-3 transition-colors',
+                            isDragActive ? 'bg-primary/20' : 'bg-muted',
+                        )}
+                    >
                         <Upload
                             className={cn(
                                 'h-6 w-6 transition-colors',
-                                isDragActive ? 'text-primary' : 'text-muted-foreground'
+                                isDragActive
+                                    ? 'text-primary'
+                                    : 'text-muted-foreground',
                             )}
                         />
                     </div>
@@ -215,14 +226,15 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
             </div>
 
             {/* Error Message */}
-            {error && ( <p className="mt-2 text-sm text-destructive">{error}</p> )}
+            {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
 
             {/* Image Preview Grid */}
             {images.length > 0 && (
                 <div className="mt-6">
                     <div className="mb-3 flex items-center justify-between">
                         <p className="font-medium text-foreground">
-                            {images.length} {images.length === 1 ? 'gambar' : 'gambar'}
+                            {images.length}{' '}
+                            {images.length === 1 ? 'gambar' : 'gambar'}
                         </p>
                         {images.length > 0 && (
                             <Button
@@ -240,7 +252,13 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                         {images.map((image, i) => (
                             <div
                                 key={image.id}
-                                onClick={() => openPreview(image.preview, image.file.name, i)}
+                                onClick={() =>
+                                    openPreview(
+                                        image.preview,
+                                        image.file.name,
+                                        i,
+                                    )
+                                }
                                 className="group relative overflow-hidden rounded-lg border border-muted-foreground/25"
                             >
                                 {/* Image */}
@@ -259,7 +277,7 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                                         e.stopPropagation();
                                         removeImage(image.id);
                                     }}
-                                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                    className="absolute top-1 right-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
                                     aria-label={`Hapus ${image.file.name}`}
                                     type="button"
                                 >
@@ -275,7 +293,12 @@ export function ImageUpload({ onImagesSelected, maxImages = 10, maxFileSize = 5,
                     </div>
                 </div>
             )}
-            <ImagePreview currentIndex={selectedIndex} images={previewImages} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+            <ImagePreview
+                currentIndex={selectedIndex}
+                images={previewImages}
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+            />
         </div>
     );
 }

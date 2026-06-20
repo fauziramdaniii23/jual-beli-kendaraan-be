@@ -37,4 +37,4 @@ export const PERMISSIONS = {
     OTENTIKASI_CREATE: 'otentikasi.create',
     OTENTIKASI_EDIT: 'otentikasi.edit',
     OTENTIKASI_DELETE: 'otentikasi.delete',
-} as const
+} as const;

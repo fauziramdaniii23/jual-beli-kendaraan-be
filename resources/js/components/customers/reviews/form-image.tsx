@@ -10,8 +10,12 @@ type Props = {
     removedImage: (id: number) => void;
 };
 
-export default function FormImage({ type, data, uploadImage, removedImage}: Props) {
-
+export default function FormImage({
+    type,
+    data,
+    uploadImage,
+    removedImage,
+}: Props) {
     const images: TImageProps[] = useMemo(() => {
         if (!data || !data.image_name) {
             return [];
@@ -35,7 +39,7 @@ export default function FormImage({ type, data, uploadImage, removedImage}: Prop
     const handleRemoveImage = (id: number) => {
         removedImage(id);
         setHasImage(false);
-    }
+    };
 
     return (
         <>
@@ -47,7 +51,7 @@ export default function FormImage({ type, data, uploadImage, removedImage}: Prop
                 />
             ) : (
                 <ImageUpload
-                    onImagesSelected={(files) => handleUploadImage(files[0]) }
+                    onImagesSelected={(files) => handleUploadImage(files[0])}
                     maxImages={1}
                     maxFileSize={5}
                 />

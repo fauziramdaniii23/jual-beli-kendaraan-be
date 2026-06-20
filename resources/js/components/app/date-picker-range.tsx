@@ -29,15 +29,14 @@ export default function DateRangePicker({
 }: Props) {
     const [open, setOpen] = React.useState(false);
 
-    const date: DateRange | undefined =
-        value?.from
-            ? {
-                from: parse(value.from, 'dd-MM-yyyy', new Date()),
-                to: value.to
-                    ? parse(value.to, 'dd-MM-yyyy', new Date())
-                    : undefined,
-            }
-            : undefined;
+    const date: DateRange | undefined = value?.from
+        ? {
+              from: parse(value.from, 'dd-MM-yyyy', new Date()),
+              to: value.to
+                  ? parse(value.to, 'dd-MM-yyyy', new Date())
+                  : undefined,
+          }
+        : undefined;
 
     const handleSelect = (range: DateRange | undefined) => {
         if (!range?.from) {
@@ -50,9 +49,7 @@ export default function DateRangePicker({
         }
 
         const from = format(range.from, 'dd-MM-yyyy');
-        const to = range.to
-            ? format(range.to, 'dd-MM-yyyy')
-            : '';
+        const to = range.to ? format(range.to, 'dd-MM-yyyy') : '';
 
         onChange?.({
             from,

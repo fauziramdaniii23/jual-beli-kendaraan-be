@@ -1,11 +1,13 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     ArrowDownNarrowWide,
     ArrowUpDown,
     ArrowUpWideNarrow,
-    MoreHorizontal, SquarePen, Trash,
+    MoreHorizontal,
+    SquarePen,
+    Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { index as indexModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
@@ -23,7 +25,7 @@ import {
     ComboboxEmpty,
     ComboboxInput,
     ComboboxItem,
-    ComboboxList
+    ComboboxList,
 } from '@/components/ui/combobox';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import {
@@ -36,9 +38,10 @@ import {
     Select,
     SelectContent,
     SelectGroup,
-    SelectItem, SelectSeparator,
+    SelectItem,
+    SelectSeparator,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 
 type PageProps = {
@@ -77,12 +80,12 @@ export default function MasterModelPage() {
             indexModel().url,
             {
                 brand_id: selectedBrand?.brand_id || undefined,
-                status: selectStatus === "all" ? undefined : selectStatus,
+                status: selectStatus === 'all' ? undefined : selectStatus,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
 
@@ -130,19 +133,13 @@ export default function MasterModelPage() {
         },
         {
             accessorKey: 'is_active',
-            header: () => (
-                <div className="text-center">
-                    Status
-                </div>
-            ),
+            header: () => <div className="text-center">Status</div>,
             cell: ({ row }) => {
                 const isActive = row.getValue('is_active') as boolean;
 
                 return (
                     <div className="text-center">
-                        <Badge
-                            variant={isActive ? "success" : "destructive"}
-                        >
+                        <Badge variant={isActive ? 'success' : 'destructive'}>
                             {isActive ? 'Aktif' : 'Tidak Aktif'}
                         </Badge>
                     </div>
@@ -151,14 +148,10 @@ export default function MasterModelPage() {
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
-                const model : TModel = row.original;
+                const model: TModel = row.original;
 
                 return (
                     <div className="text-center">
@@ -170,18 +163,21 @@ export default function MasterModelPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(model, 'update')}
+                                    onClick={() =>
+                                        handleAction(model, 'update')
+                                    }
                                 >
                                     <SquarePen /> Edit
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(model, 'delete')}
+                                    onClick={() =>
+                                        handleAction(model, 'delete')
+                                    }
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -196,7 +192,7 @@ export default function MasterModelPage() {
             <Head title="Model" />
             <Title title="Daftar Model" description="Daftar Semua Model" />
             <div className="mx-4 mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex w-full items-center gap-2">
                     <span className="text-sm text-muted-foreground">
                         Status
                     </span>
@@ -204,7 +200,7 @@ export default function MasterModelPage() {
                         onValueChange={(val) => setSelectStatus(val as string)}
                     >
                         <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Semua"/>
+                            <SelectValue placeholder="Semua" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -213,7 +209,9 @@ export default function MasterModelPage() {
                             <SelectSeparator />
                             <SelectGroup>
                                 <SelectItem value="true">Aktif</SelectItem>
-                                <SelectItem value="false">Tidak Aktif</SelectItem>
+                                <SelectItem value="false">
+                                    Tidak Aktif
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -223,13 +221,22 @@ export default function MasterModelPage() {
                     <div className="w-full max-w-56">
                         <Combobox
                             items={brands}
-                            itemToStringLabel={(item : TBrand) => item.brand_name}
-                            onValueChange={(val : TBrand | null) => setSelectedBrand(val)}
+                            itemToStringLabel={(item: TBrand) =>
+                                item.brand_name
+                            }
+                            onValueChange={(val: TBrand | null) =>
+                                setSelectedBrand(val)
+                            }
                         >
-                            <ComboboxInput placeholder="Pilih Merek Mobil" showClear/>
+                            <ComboboxInput
+                                placeholder="Pilih Merek Mobil"
+                                showClear
+                            />
 
                             <ComboboxContent>
-                                <ComboboxEmpty>Brand tidak ditemukan.</ComboboxEmpty>
+                                <ComboboxEmpty>
+                                    Brand tidak ditemukan.
+                                </ComboboxEmpty>
 
                                 <ComboboxList>
                                     {(brand) => (
@@ -244,17 +251,24 @@ export default function MasterModelPage() {
                             </ComboboxContent>
                         </Combobox>
                     </div>
-                    <Button onClick={submitFilter}>
-                        Filter
-                    </Button>
+                    <Button onClick={submitFilter}>Filter</Button>
                 </div>
-                <CreateModelDialog brands={brands}/>
+                <CreateModelDialog brands={brands} />
             </div>
             <div className="m-4">
                 <DataTable columns={columns} data={carModels} />
             </div>
-            <UpdateModelDialog model={model} brands={brands} isOpen={isUpdateDialogOpen} setIsOpen={(val) => setIsUpdateDialogOpen(val)} />
-            <ConfirmDeleteModel model_id={model.model_id} isOpen={isDeleteConfirmOpen} setIsOpen={setIsDeleteConfirmOpen}/>
+            <UpdateModelDialog
+                model={model}
+                brands={brands}
+                isOpen={isUpdateDialogOpen}
+                setIsOpen={(val) => setIsUpdateDialogOpen(val)}
+            />
+            <ConfirmDeleteModel
+                model_id={model.model_id}
+                isOpen={isDeleteConfirmOpen}
+                setIsOpen={setIsDeleteConfirmOpen}
+            />
         </>
     );
 }

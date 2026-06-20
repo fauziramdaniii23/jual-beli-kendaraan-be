@@ -1,10 +1,14 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React from 'react';
-import { index as indexOrder, store as storeOrder, update as updateOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
+import {
+    index as indexOrder,
+    store as storeOrder,
+    update as updateOrder,
+} from '@/actions/App/Http/Controllers/Customer/OrderController';
 import Title from '@/components/app/title';
 import type { TCustomer } from '@/components/customers/customer/type';
-import { defaultOrder  } from '@/components/customers/orders/types';
-import type {TOrder} from '@/components/customers/orders/types';
+import { defaultOrder } from '@/components/customers/orders/types';
+import type { TOrder } from '@/components/customers/orders/types';
 import type { TUnit } from '@/components/inventory/stock-unit/type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,7 +19,7 @@ import {
     ComboboxEmpty,
     ComboboxInput,
     ComboboxItem,
-    ComboboxList
+    ComboboxList,
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import {
@@ -25,7 +29,7 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
@@ -44,22 +48,26 @@ type PageProps = {
 };
 
 export default function FormOrderPage() {
-    const { order, customers, units, status, typePaid, type, orderUnit } = usePage<PageProps>().props;
+    const { order, customers, units, status, typePaid, type, orderUnit } =
+        usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
     const form = useForm<TOrder>(order ?? defaultOrder);
     const disable = type === 'detail';
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' && order ? updateOrder(order.order_id!).url : storeOrder.url();
+        const url =
+            type === 'update' && order
+                ? updateOrder(order.order_id!).url
+                : storeOrder.url();
 
         form.post(url, {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
-            }
-        })
+            },
+        });
     };
 
     return (
@@ -397,7 +405,7 @@ export default function FormOrderPage() {
                                                         *
                                                     </span>
                                                 </FieldLabel>
-                                                <div className="flex font-semibold h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-semibold">
                                                     {formatRupiah(
                                                         orderUnit?.final_price ??
                                                             0,

@@ -6,14 +6,14 @@ import {
     SelectGroup,
     SelectItem,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 
 type SelectWithClearProps = {
     value?: string;
     onChange: (val: string) => void;
     placeholder?: string;
-    name?: string
+    name?: string;
     items: { label: string; value: string }[];
     disabled?: boolean;
     loading?: boolean;
@@ -22,16 +22,16 @@ type SelectWithClearProps = {
 };
 
 export function SelectWithClear({
-        value,
-        onChange,
-        placeholder = 'Select option',
-        name,
-        items,
-        disabled = false,
-        loading = false,
-        required = false,
-        invalid = false,
-    }: SelectWithClearProps) {
+    value,
+    onChange,
+    placeholder = 'Select option',
+    name,
+    items,
+    disabled = false,
+    loading = false,
+    required = false,
+    invalid = false,
+}: SelectWithClearProps) {
     const isDisabled = disabled || loading;
 
     return (

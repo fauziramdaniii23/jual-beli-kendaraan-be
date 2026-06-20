@@ -96,7 +96,7 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                                 onChange={(e) => {
                                     const file = e.target.files?.[0] || null;
 
-                                    setData("logo", file);
+                                    setData('logo', file);
                                 }}
                             />
 
@@ -106,7 +106,9 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                                 </p>
                             )}
                             <FieldDescription>
-                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB. Gunakan gambar dengan rasio 1:1 untuk hasil tampilan terbaik.
+                                Format: JPG, JPEG, PNG, WEBP. Maksimal 2MB.
+                                Gunakan gambar dengan rasio 1:1 untuk hasil
+                                tampilan terbaik.
                             </FieldDescription>
                         </Field>
 
@@ -123,8 +125,12 @@ export default function UpdateBrandDialog({ brand, isOpen, setIsOpen }: Props) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="true">Aktif</SelectItem>
-                                        <SelectItem value="false">Tidak Aktif</SelectItem>
+                                        <SelectItem value="true">
+                                            Aktif
+                                        </SelectItem>
+                                        <SelectItem value="false">
+                                            Tidak Aktif
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

@@ -7,7 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import {
     Popover,
     PopoverContent,
-    PopoverTrigger
+    PopoverTrigger,
 } from '@/components/ui/popover';
 
 interface Props {
@@ -20,7 +20,15 @@ interface Props {
     invalid?: boolean;
 }
 
-export default function DatePicker({ value, onChange, placeholder = 'Pilih Tanggal', startMonth, endMonth, disabled, invalid, }: Props) {
+export default function DatePicker({
+    value,
+    onChange,
+    placeholder = 'Pilih Tanggal',
+    startMonth,
+    endMonth,
+    disabled,
+    invalid,
+}: Props) {
     const [open, setOpen] = React.useState(false);
 
     // value dari backend: yyyy-MM-dd

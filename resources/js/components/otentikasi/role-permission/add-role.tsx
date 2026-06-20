@@ -10,7 +10,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,9 @@ import { Spinner } from '@/components/ui/spinner';
 export default function CreateRoleDialog() {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm<{name: string}>({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        name: string;
+    }>({
         name: '',
     });
 
@@ -62,7 +64,11 @@ export default function CreateRoleDialog() {
                                     setData('name', e.target.value)
                                 }
                             />
-                            {errors.name && (<p className="text-sm text-red-500">{errors.name}</p>)}
+                            {errors.name && (
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
                         </Field>
                     </FieldGroup>
 

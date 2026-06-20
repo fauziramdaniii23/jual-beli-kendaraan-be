@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
@@ -8,7 +8,7 @@ import {
     Eye,
     MoreHorizontal,
     SquarePen,
-    Trash
+    Trash,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { destroy as deleteFaq } from '@/actions/App/Http/Controllers/News/FAQController';
@@ -24,7 +24,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
     Select,
@@ -33,7 +33,7 @@ import {
     SelectItem,
     SelectSeparator,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 import type { TMasterReference, TOptionItem } from '@/types';
 import DetailFaqDialog from '@/components/news/faq/detail-faq';
@@ -82,9 +82,9 @@ export default function ReviewsPage() {
     };
 
     const handleConfirmDelete = (faq: TFaq) => {
-        setFaqId(faq.faq_id!)
+        setFaqId(faq.faq_id!);
         setIsDeleteConfirmOpen(true);
-    }
+    };
     const submitFilter = () => {
         router.get(
             indexFAQ().url,
@@ -94,17 +94,17 @@ export default function ReviewsPage() {
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     };
     const columns: ColumnDef<TFaq>[] = [
         {
             accessorKey: 'question',
-            header: 'Pertanyaan'
+            header: 'Pertanyaan',
         },
         {
             accessorKey: 'category.ref_value',
-            header: 'Kategori'
+            header: 'Kategori',
         },
         {
             accessorKey: 'sort_order',
@@ -119,38 +119,42 @@ export default function ReviewsPage() {
                     >
                         Urutan FAQ
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
-            cell: ({row}) => {
-                return (<div className="text-center">{row.getValue('sort_order')}</div>)
-            }
+            cell: ({ row }) => {
+                return (
+                    <div className="text-center">
+                        {row.getValue('sort_order')}
+                    </div>
+                );
+            },
         },
         {
             accessorKey: 'is_published',
             header: () => (
-                <div className="flex items-center justify-center gap-1">Status Published</div>
+                <div className="flex items-center justify-center gap-1">
+                    Status Published
+                </div>
             ),
-            cell:({row}) => {
+            cell: ({ row }) => {
                 const isActived = row.getValue('is_published') as boolean;
                 const label = isActived ? 'Publish' : 'Not Published';
 
                 return (
                     <div className="flex items-center justify-center gap-1">
-                        <Badge variant={isActived ? 'success' : 'destructive'}>{label}</Badge>
+                        <Badge variant={isActived ? 'success' : 'destructive'}>
+                            {label}
+                        </Badge>
                     </div>
-                )
-            }
+                );
+            },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const faq = row.original;
@@ -165,7 +169,6 @@ export default function ReviewsPage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
                                     onClick={() => handleAction(faq, 'detail')}
                                 >
@@ -181,7 +184,7 @@ export default function ReviewsPage() {
                                     onClick={() => handleConfirmDelete(faq)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -195,24 +198,26 @@ export default function ReviewsPage() {
         return {
             label: c.ref_value,
             value: c.ref_code,
-        }
-    })
+        };
+    });
 
     return (
         <>
             <Head title="FAQ" />
             <Title title="Daftar FAQ" description="Daftar Semua FAQ" />
             <div className="mx-4 mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex w-full items-center gap-2">
                     <span className="text-sm text-muted-foreground">
                         Kategori
                     </span>
                     <Select
                         value={selectCategory}
-                        onValueChange={(val) => setSelectCategory(val as string)}
+                        onValueChange={(val) =>
+                            setSelectCategory(val as string)
+                        }
                     >
                         <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Semua"/>
+                            <SelectValue placeholder="Semua" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -220,33 +225,38 @@ export default function ReviewsPage() {
                             </SelectGroup>
                             <SelectSeparator />
                             <SelectGroup>
-                                {categories.map((category: TMasterReference) => {
-                                    return (
-                                        <SelectItem
-                                            key={category.ref_code}
-                                            value={category.ref_code}
-                                        >
-                                            {category.ref_value}
-                                        </SelectItem>
-                                    )
-                                })}
+                                {categories.map(
+                                    (category: TMasterReference) => {
+                                        return (
+                                            <SelectItem
+                                                key={category.ref_code}
+                                                value={category.ref_code}
+                                            >
+                                                {category.ref_value}
+                                            </SelectItem>
+                                        );
+                                    },
+                                )}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button onClick={submitFilter}>
-                        Filter
-                    </Button>
+                    <Button onClick={submitFilter}>Filter</Button>
                 </div>
-                <CreateFaqDialog categories={categories}/>
+                <CreateFaqDialog categories={categories} />
             </div>
             <div className="m-4">
                 <DataTable columns={columns} data={faqs} />
             </div>
-            <DetailFaqDialog faq={faq} optionCategories={optionsCategories} isOpen={isDetailOpen} setIsOpen={setIsDetailOpen}/>
+            <DetailFaqDialog
+                faq={faq}
+                optionCategories={optionsCategories}
+                isOpen={isDetailOpen}
+                setIsOpen={setIsDetailOpen}
+            />
             <UpdateFaqDialog
                 optionCategories={optionsCategories}
-
-                faq={faq} isOpen={isUpdateDialogOpen}
+                faq={faq}
+                isOpen={isUpdateDialogOpen}
                 setIsOpen={(val) => setIsUpdateDialogOpen(val)}
             />
             <ConfirmDialog

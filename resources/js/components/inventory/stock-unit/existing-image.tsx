@@ -10,7 +10,7 @@ interface Props {
     type?: 'update' | 'create' | 'detail';
 }
 
-export function ExistingImage({images, removeImage, type}: Props) {
+export function ExistingImage({ images, removeImage, type }: Props) {
     const [existingImages, setExistingImages] = useState<TImageProps[]>(images);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedImageId, setSelectedImageId] = useState<number | null>(null);
@@ -18,13 +18,15 @@ export function ExistingImage({images, removeImage, type}: Props) {
     const handleDeleteClick = (id: number) => {
         setSelectedImageId(id);
         setIsDialogOpen(true);
-    }
+    };
     const handleConfirmDelete = () => {
-        const updatedImages = existingImages.filter(image => image.image_id !== selectedImageId);
+        const updatedImages = existingImages.filter(
+            (image) => image.image_id !== selectedImageId,
+        );
         setExistingImages(updatedImages);
         removeImage(selectedImageId!);
         setIsDialogOpen(false);
-    }
+    };
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -39,7 +41,13 @@ export function ExistingImage({images, removeImage, type}: Props) {
                 {existingImages.map((image, index) => (
                     <div
                         key={image.image_id}
-                        onClick={() => openPreview(image.image_src!, image.image_name!, index)}
+                        onClick={() =>
+                            openPreview(
+                                image.image_src!,
+                                image.image_name!,
+                                index,
+                            )
+                        }
                         className="group relative overflow-hidden rounded-lg border border-muted-foreground/25"
                     >
                         {/* Image */}
@@ -53,21 +61,19 @@ export function ExistingImage({images, removeImage, type}: Props) {
                         <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/40" />
 
                         {/* Delete Button */}
-                        {
-                            type !== 'detail' && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteClick(image.image_id!)
-                                    }}
-                                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
-                                    aria-label={`Hapus ${image.image_name}`}
-                                    type="button"
-                                >
-                                    <X className="h-4 w-4 text-white" />
-                                </button>
-                            )
-                        }
+                        {type !== 'detail' && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteClick(image.image_id!);
+                                }}
+                                className="absolute top-1 right-1 rounded-full bg-destructive p-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                aria-label={`Hapus ${image.image_name}`}
+                                type="button"
+                            >
+                                <X className="h-4 w-4 text-white" />
+                            </button>
+                        )}
 
                         {/* File Name */}
                         <p className="absolute bottom-0 w-full truncate bg-black/50 px-2 py-1 text-xs text-white">
@@ -85,7 +91,12 @@ export function ExistingImage({images, removeImage, type}: Props) {
                 onConfirm={handleConfirmDelete}
             />
 
-            <ImagePreview images={existingImages} currentIndex={selectedIndex} isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+            <ImagePreview
+                images={existingImages}
+                currentIndex={selectedIndex}
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+            />
         </>
     );
 }

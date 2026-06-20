@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { destroy as deleteBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
 import {
@@ -10,7 +10,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
 
 interface Props {
@@ -18,7 +18,11 @@ interface Props {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
-export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Props>) {
+export function ConfirmDeleteBrand({
+    brand_id,
+    isOpen,
+    setIsOpen,
+}: Readonly<Props>) {
     const [loading, setLoading] = useState(false);
     const handleDelete = () => {
         router.delete(deleteBrand({ brand: brand_id }).url, {
@@ -49,7 +53,10 @@ export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Pro
                 <AlertDialogFooter>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete} disabled={loading}>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={loading}
+                    >
                         {loading && <Spinner />}
                         Hapus
                     </AlertDialogAction>
@@ -58,4 +65,3 @@ export function ConfirmDeleteBrand({ brand_id, isOpen, setIsOpen }: Readonly<Pro
         </AlertDialog>
     );
 }
-

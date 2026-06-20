@@ -5,4 +5,4 @@ export type TUser = {
     phone?: string;
     avatar?: string;
     roles?: string[];
-}
+};

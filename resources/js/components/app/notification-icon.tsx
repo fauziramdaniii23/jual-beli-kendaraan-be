@@ -4,7 +4,11 @@ import { Bell, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +16,8 @@ const MOCK_NOTIFICATIONS = [
     {
         id: '1',
         title: 'Komentar baru dari John',
-        description: 'John berkomentar pada postingan Anda: "Ini sangat menarik!"',
+        description:
+            'John berkomentar pada postingan Anda: "Ini sangat menarik!"',
         timestamp: '2 menit yang lalu',
         read: false,
         icon: <MessageSquare className="h-5 w-5 text-blue-500" />,
@@ -20,7 +25,8 @@ const MOCK_NOTIFICATIONS = [
     {
         id: '2',
         title: 'Anda mendapat 10 likes baru',
-        description: 'Postingan Anda telah menerima 10 likes dari pengguna lain.',
+        description:
+            'Postingan Anda telah menerima 10 likes dari pengguna lain.',
         timestamp: '15 menit yang lalu',
         read: false,
         icon: <Heart className="h-5 w-5 text-red-500" />,
@@ -57,8 +63,7 @@ const MOCK_NOTIFICATIONS = [
         read: true,
         icon: <Bell className="h-5 w-5 text-gray-500" />,
     },
-]
-
+];
 
 interface NotificationItem {
     id: string;
@@ -74,25 +79,23 @@ interface NotificationIconProps {
     className?: string;
 }
 
-export function NotificationIcon(
-    {
-        maxDisplay = 5,
-        className
-    }: NotificationIconProps) {
-
-    const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
+export function NotificationIcon({
+    maxDisplay = 5,
+    className,
+}: NotificationIconProps) {
+    const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
     const handleNotificationClick = (notification: NotificationItem) => {
-        console.log('Notifikasi diklik:', notification)
-    }
+        console.log('Notifikasi diklik:', notification);
+    };
 
     const handleMarkAsRead = (id: string) => {
         setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-        )
-    }
+            prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+        );
+    };
     const handleMarkAllAsRead = () => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
-    }
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    };
     const unreadCount = notifications.filter((n) => !n.read).length;
     const displayNotifications = notifications.slice(0, maxDisplay);
 
@@ -109,7 +112,7 @@ export function NotificationIcon(
                     {unreadCount > 0 && (
                         <Badge
                             variant="destructive"
-                            className="absolute -right-2 -top-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                            className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center p-0 text-xs"
                         >
                             {unreadCount > 99 ? '99+' : unreadCount}
                         </Badge>
@@ -120,12 +123,12 @@ export function NotificationIcon(
             <PopoverContent className="w-80 p-0" align="end">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b p-4">
-                    <h2 className="font-semibold text-base">Notifikasi</h2>
+                    <h2 className="text-base font-semibold">Notifikasi</h2>
                     {unreadCount > 0 && (
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-xs h-auto px-2 py-1"
+                            className="h-auto px-2 py-1 text-xs"
                             onClick={handleMarkAllAsRead}
                         >
                             Tandai semua sebagai dibaca
@@ -137,16 +140,18 @@ export function NotificationIcon(
                 <div className="max-h-96 overflow-y-auto">
                     {displayNotifications.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-8 text-center">
-                            <Bell className="h-8 w-8 text-muted-foreground mb-2 opacity-50" />
-                            <p className="text-sm text-muted-foreground">Tidak ada notifikasi</p>
+                            <Bell className="mb-2 h-8 w-8 text-muted-foreground opacity-50" />
+                            <p className="text-sm text-muted-foreground">
+                                Tidak ada notifikasi
+                            </p>
                         </div>
                     ) : (
                         displayNotifications.map((notification, index) => (
                             <div key={notification.id}>
                                 <div
                                     className={cn(
-                                        'p-4 cursor-pointer transition-colors hover:bg-accent',
-                                        !notification.read && 'bg-muted/50'
+                                        'cursor-pointer p-4 transition-colors hover:bg-accent',
+                                        !notification.read && 'bg-muted/50',
                                     )}
                                     onClick={() => {
                                         handleNotificationClick(notification);
@@ -158,24 +163,23 @@ export function NotificationIcon(
                                 >
                                     <div className="flex gap-3">
                                         {notification.icon && (
-                                            <div className="flex-shrink-0 mt-1">
+                                            <div className="mt-1 flex-shrink-0">
                                                 {notification.icon}
                                             </div>
                                         )}
-                                        <div className="flex-1 min-w-0">
+                                        <div className="min-w-0 flex-1">
                                             <div className="flex items-start justify-between gap-2">
-                                                <p className="font-medium text-sm leading-tight">
+                                                <p className="text-sm leading-tight font-medium">
                                                     {notification.title}
                                                 </p>
                                                 {!notification.read && (
-                                                    <div
-                                                        className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />
+                                                    <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
                                                 )}
                                             </div>
-                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                                                 {notification.description}
                                             </p>
-                                            <p className="text-xs text-muted-foreground mt-2">
+                                            <p className="mt-2 text-xs text-muted-foreground">
                                                 {notification.timestamp}
                                             </p>
                                         </div>
@@ -194,7 +198,11 @@ export function NotificationIcon(
                     <>
                         <Separator className="m-0" />
                         <div className="p-3 text-center">
-                            <Button variant="ghost" size="sm" className="text-xs">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-xs"
+                            >
                                 Lihat semua notifikasi ({notifications.length})
                             </Button>
                         </div>

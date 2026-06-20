@@ -1,88 +1,87 @@
-import { router, Head, usePage } from '@inertiajs/react'
-import type { ColumnDef } from '@tanstack/react-table'
+import { router, Head, usePage } from '@inertiajs/react';
+import type { ColumnDef } from '@tanstack/react-table';
 import React, { useEffect, useState } from 'react';
-import { indexRole, updatePermission } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
+import {
+    indexRole,
+    updatePermission,
+} from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import Title from '@/components/app/title';
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DataTable } from '@/components/ui/data-table/data-table'
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DataTable } from '@/components/ui/data-table/data-table';
 
 type TRole = {
-    id: number
-    name: string
-}
+    id: number;
+    name: string;
+};
 
 type TPermission = {
-    modul: string
-    nama_modul: string
-    view: boolean | null
-    create: boolean | null
-    edit: boolean | null
-    delete: boolean | null
-}
+    modul: string;
+    nama_modul: string;
+    view: boolean | null;
+    create: boolean | null;
+    edit: boolean | null;
+    delete: boolean | null;
+};
 
 type PageProps = {
-    role: TRole
-    permissions: TPermission[]
-}
+    role: TRole;
+    permissions: TPermission[];
+};
 
-type PermissionAction =
-    | 'view'
-    | 'create'
-    | 'edit'
-    | 'delete'
+type PermissionAction = 'view' | 'create' | 'edit' | 'delete';
 
-type PermissionState = Record<string, boolean>
+type PermissionState = Record<string, boolean>;
 export default function MasterPermissionPage() {
-    const { role, permissions } = usePage<PageProps>().props
+    const { role, permissions } = usePage<PageProps>().props;
 
-    const [payload, setPayload] = useState<PermissionState>({})
-    const [data, setData] = useState<TPermission[]>(permissions)
+    const [payload, setPayload] = useState<PermissionState>({});
+    const [data, setData] = useState<TPermission[]>(permissions);
     useEffect(() => {
-        console.log(payload)
-    }, [payload])
+        console.log(payload);
+    }, [payload]);
 
-    const initPayload = ( permission: string,  checked: boolean) => {
-
+    const initPayload = (permission: string, checked: boolean) => {
         setPayload((prev) => ({
             ...prev,
             [permission]: checked,
-        }))
-    }
+        }));
+    };
 
     const handleCheckboxChange = (
         modul: string,
         action: PermissionAction,
-        checked: boolean
+        checked: boolean,
     ) => {
-        const permission = `${modul}.${action}`
-        initPayload(permission, checked)
+        const permission = `${modul}.${action}`;
+        initPayload(permission, checked);
         setData((prev) =>
             prev.map((item) => {
                 if (item.modul !== modul) {
-                    return item
+                    return item;
                 }
 
                 return {
                     ...item,
                     [action]: checked,
-                }
-            })
-        )
-    }
+                };
+            }),
+        );
+    };
 
     const handleSubmit = () => {
-        router.put(
-            updatePermission(role.id),
-            {
-                permissions: payload,
-            }
-        )
-    }
+        router.put(updatePermission(role.id), {
+            permissions: payload,
+        });
+    };
 
-    const renderCheckbox = (value: boolean | null, modul: string, action: PermissionAction) => {
+    const renderCheckbox = (
+        value: boolean | null,
+        modul: string,
+        action: PermissionAction,
+    ) => {
         if (value === null) {
-            return null
+            return null;
         }
 
         return (
@@ -94,8 +93,8 @@ export default function MasterPermissionPage() {
                     }
                 />
             </div>
-        )
-    }
+        );
+    };
 
     const columns: ColumnDef<TPermission>[] = [
         {
@@ -105,81 +104,64 @@ export default function MasterPermissionPage() {
 
         {
             accessorKey: 'view',
-            header: () => (
-                <div className="items-center text-center">
-                    View
-                </div>
-            ),
+            header: () => <div className="items-center text-center">View</div>,
 
             cell: ({ row }) =>
-                renderCheckbox(
-                    row.original.view,
-                    row.original.modul,
-                    'view'
-                ),
+                renderCheckbox(row.original.view, row.original.modul, 'view'),
         },
 
         {
             accessorKey: 'create',
             header: () => (
-                <div className="items-center text-center">
-                    Create
-                </div>
+                <div className="items-center text-center">Create</div>
             ),
 
             cell: ({ row }) =>
                 renderCheckbox(
                     row.original.create,
                     row.original.modul,
-                    'create'
+                    'create',
                 ),
         },
 
         {
             accessorKey: 'edit',
             header: () => (
-                <div className="items-center text-center">
-                    Update
-                </div>
+                <div className="items-center text-center">Update</div>
             ),
 
             cell: ({ row }) =>
-                renderCheckbox(
-                    row.original.edit,
-                    row.original.modul,
-                    'edit'
-                ),
+                renderCheckbox(row.original.edit, row.original.modul, 'edit'),
         },
 
         {
             accessorKey: 'delete',
             header: () => (
-                <div className="items-center text-center">
-                    Delete
-                </div>
+                <div className="items-center text-center">Delete</div>
             ),
 
             cell: ({ row }) =>
                 renderCheckbox(
                     row.original.delete,
                     row.original.modul,
-                    'delete'
+                    'delete',
                 ),
         },
-    ]
+    ];
 
     return (
         <>
             <Head title="Permission" />
-            <Title title={`Permission role ${role.name}`} description={`Permission akse menu untuk role ${role.name}`} />
+            <Title
+                title={`Permission role ${role.name}`}
+                description={`Permission akse menu untuk role ${role.name}`}
+            />
             <div className="mx-4 mt-4 flex items-center justify-between">
                 <h1 className="text-lg font-semibold">
                     Permission {role.name}
                 </h1>
 
-                <Button onClick={handleSubmit}>
-                    Simpan
-                </Button>
+                <Button onClick={handleSubmit}>Simpan</Button>
             </div>
 
             <div className="m-4">
@@ -192,7 +174,7 @@ export default function MasterPermissionPage() {
                 />
             </div>
         </>
-    )
+    );
 }
 
 MasterPermissionPage.layout = {
@@ -206,6 +188,6 @@ MasterPermissionPage.layout = {
         },
         {
             title: 'Permission',
-        }
+        },
     ],
-}
+};

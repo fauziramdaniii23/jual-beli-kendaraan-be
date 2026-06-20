@@ -18,7 +18,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import type { TOptionItem } from '@/types';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 interface Props {
     faq: TFaq;
@@ -27,7 +34,12 @@ interface Props {
     setIsOpen: (open: boolean) => void;
 }
 
-export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOpen }: Props) {
+export default function UpdateFaqDialog({
+    faq,
+    optionCategories,
+    isOpen,
+    setIsOpen,
+}: Props) {
     const { data, setData, post, processing, errors, reset } = useForm<TFaq>({
         question: '',
         answer: '',
@@ -71,7 +83,10 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
 
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="question">Pertanyaan ?<span className="text-destructive">*</span></Label>
+                            <Label htmlFor="question">
+                                Pertanyaan ?
+                                <span className="text-destructive">*</span>
+                            </Label>
 
                             <Input
                                 id="question"
@@ -89,7 +104,10 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
                             )}
                         </Field>
                         <Field>
-                            <FieldLabel>Jawaban<span className="text-destructive">*</span></FieldLabel>
+                            <FieldLabel>
+                                Jawaban
+                                <span className="text-destructive">*</span>
+                            </FieldLabel>
                             <TextEditor
                                 value={data.answer || ''}
                                 onChange={(val) => setData('answer', val)}
@@ -101,19 +119,32 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
                             )}
                         </Field>
                         <Field>
-                            <FieldLabel>Kategori<span className="text-destructive">*</span></FieldLabel>
+                            <FieldLabel>
+                                Kategori
+                                <span className="text-destructive">*</span>
+                            </FieldLabel>
                             <SelectWithClear
                                 placeholder="Pilih Kategori"
                                 value={data.category_code ?? ''}
-                                onChange={(val) => setData('category_code', val === '' ? undefined as any : val as any)}
+                                onChange={(val) =>
+                                    setData(
+                                        'category_code',
+                                        val === ''
+                                            ? (undefined as any)
+                                            : (val as any),
+                                    )
+                                }
                                 items={optionCategories}
                                 invalid={!!errors.category_code}
                             />
-                            {errors.category_code &&
-                                <div className="text-sm text-destructive">{errors.category_code}</div>}
+                            {errors.category_code && (
+                                <div className="text-sm text-destructive">
+                                    {errors.category_code}
+                                </div>
+                            )}
                         </Field>
                     </FieldGroup>
-                    <div className="w-full flex gap-4">
+                    <div className="flex w-full gap-4">
                         <Field className="flex-1">
                             <Label>Status Published</Label>
                             <Select
@@ -127,8 +158,12 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="true">Aktif</SelectItem>
-                                        <SelectItem value="false">Tidak Aktif</SelectItem>
+                                        <SelectItem value="true">
+                                            Aktif
+                                        </SelectItem>
+                                        <SelectItem value="false">
+                                            Tidak Aktif
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -141,7 +176,10 @@ export default function UpdateFaqDialog({ faq, optionCategories, isOpen, setIsOp
                                 value={data.sort_order}
                                 type="number"
                                 onChange={(e) =>
-                                    setData('sort_order', Number(e.target.value))
+                                    setData(
+                                        'sort_order',
+                                        Number(e.target.value),
+                                    )
                                 }
                             />
                         </Field>

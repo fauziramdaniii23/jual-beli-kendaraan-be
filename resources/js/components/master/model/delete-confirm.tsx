@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { destroy as deleteModel } from '@/actions/App/Http/Controllers/Master/MasterModelController';
 import {
     AlertDialog,
@@ -9,7 +9,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import React, { useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 
@@ -31,27 +31,23 @@ export function ConfirmDeleteModel({ model_id, isOpen, setIsOpen }: Props) {
                 setIsOpen(false);
             },
         });
-    }
+    };
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Hapus Model
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>Hapus Model</AlertDialogTitle>
 
                     <AlertDialogDescription>
-                        Apakah Anda yakin ingin menghapus Model ini?
-                        Tindakan ini tidak dapat dibatalkan dan dapat
-                        memengaruhi data mobil yang terkait dengan Model.
+                        Apakah Anda yakin ingin menghapus Model ini? Tindakan
+                        ini tidak dapat dibatalkan dan dapat memengaruhi data
+                        mobil yang terkait dengan Model.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel>
-                        Batal
-                    </AlertDialogCancel>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
 
                     <AlertDialogAction
                         onClick={handleDelete}
@@ -63,6 +59,5 @@ export function ConfirmDeleteModel({ model_id, isOpen, setIsOpen }: Props) {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
-

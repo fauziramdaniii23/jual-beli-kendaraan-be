@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
@@ -10,10 +10,14 @@ import {
     Plus,
     SquarePen,
     Trash,
-    ListPlus
+    ListPlus,
 } from 'lucide-react';
 import React from 'react';
-import { destroy as deletePromo, form, addPromoToUnit  } from '@/actions/App/Http/Controllers/News/PromoController';
+import {
+    destroy as deletePromo,
+    form,
+    addPromoToUnit,
+} from '@/actions/App/Http/Controllers/News/PromoController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +27,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 export type TPromo = {
@@ -37,7 +41,7 @@ export type TPromo = {
     end_date: string;
     is_active: boolean;
     image: string;
-}
+};
 type PageProps = {
     promos: TPromo[];
 };
@@ -49,24 +53,31 @@ export default function PromosPage() {
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const handleAddPromoToUnit = (id: number) => {
-        router.get(addPromoToUnit(id).url, {}, {
-            preserveState: true,
-            replace: true,
-        })
-    }
-    const handleAction = (promo_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+        router.get(
+            addPromoToUnit(id).url,
+            {},
+            {
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
+    const handleAction = (
+        promo_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             form().url,
             {
                 promo_id: promo_id,
-                type: type
+                type: type,
             },
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
     const handleDelete = () => {
         router.delete(deletePromo(promoId!).url, {
             preserveScroll: true,
@@ -77,18 +88,18 @@ export default function PromosPage() {
     };
 
     const handleConfirmDelete = (review: TPromo) => {
-        setPromoId(review.promo_id)
+        setPromoId(review.promo_id);
         setDeleteConfirmOpen(true);
-    }
+    };
 
     const columns: ColumnDef<TPromo>[] = [
         {
             accessorKey: 'name',
-            header: 'Nama Promo'
+            header: 'Nama Promo',
         },
         {
             accessorKey: 'type',
-            header: 'Tipe Promo'
+            header: 'Tipe Promo',
         },
         {
             accessorKey: 'discount_value',
@@ -103,8 +114,8 @@ export default function PromosPage() {
                     >
                         Nilai Diskon
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
             },
@@ -117,15 +128,11 @@ export default function PromosPage() {
                         ? `${value}%`
                         : `Rp. ${Number(value).toLocaleString('id-ID')}`;
 
-                return (
-                    <div className="text-right">
-                        {displayValue}
-                    </div>
-                );
+                return <div className="text-right">{displayValue}</div>;
             },
         },
         {
-            accessorKey: "start_date",
+            accessorKey: 'start_date',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
 
@@ -137,14 +144,14 @@ export default function PromosPage() {
                     >
                         Tanggal Mulai
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
-            }
+            },
         },
         {
-            accessorKey: "end_date",
+            accessorKey: 'end_date',
             header: ({ column }) => {
                 const sorted = column.getIsSorted();
 
@@ -156,35 +163,35 @@ export default function PromosPage() {
                     >
                         Tanggal Berakhir
                         {!sorted && <ArrowUpDown />}
-                        {sorted === "asc" && <ArrowDownNarrowWide />}
-                        {sorted === "desc" && <ArrowUpWideNarrow />}
+                        {sorted === 'asc' && <ArrowDownNarrowWide />}
+                        {sorted === 'desc' && <ArrowUpWideNarrow />}
                     </Button>
                 );
-            }
+            },
         },
         {
             accessorKey: 'is_active',
             header: () => (
-                <div className="flex items-center justify-center gap-1">Status Published</div>
+                <div className="flex items-center justify-center gap-1">
+                    Status Published
+                </div>
             ),
-            cell:({row}) => {
+            cell: ({ row }) => {
                 const isActived = row.getValue('is_active') as boolean;
                 const label = isActived ? 'Aktif' : 'Tidak Aktif';
 
                 return (
                     <div className="flex items-center justify-center gap-1">
-                        <Badge variant={isActived ? 'success' : 'destructive'}>{label}</Badge>
+                        <Badge variant={isActived ? 'success' : 'destructive'}>
+                            {label}
+                        </Badge>
                     </div>
-                )
-            }
+                );
+            },
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const promos = row.original;
@@ -200,17 +207,23 @@ export default function PromosPage() {
 
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                    onClick={() => handleAddPromoToUnit(promos.promo_id)}
+                                    onClick={() =>
+                                        handleAddPromoToUnit(promos.promo_id)
+                                    }
                                 >
                                     <ListPlus /> Terapkan ke Unit
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(promos.promo_id, 'detail')}
+                                    onClick={() =>
+                                        handleAction(promos.promo_id, 'detail')
+                                    }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() => handleAction(promos.promo_id, 'update')}
+                                    onClick={() =>
+                                        handleAction(promos.promo_id, 'update')
+                                    }
                                 >
                                     <SquarePen /> Update
                                 </DropdownMenuItem>
@@ -219,7 +232,7 @@ export default function PromosPage() {
                                     onClick={() => handleConfirmDelete(promos)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

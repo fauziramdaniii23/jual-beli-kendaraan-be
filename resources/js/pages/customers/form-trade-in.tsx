@@ -1,12 +1,14 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React from 'react';
-import { index, store, update } from '@/actions/App/Http/Controllers/Customer/TradeInController';
+import {
+    index,
+    store,
+    update,
+} from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import DatePicker from '@/components/app/date-picker';
 import Title from '@/components/app/title';
-import {
-    defaultTradeIn
-} from '@/components/customers/orders/types';
-import type {TOrder, TTradeIn} from '@/components/customers/orders/types';
+import { defaultTradeIn } from '@/components/customers/orders/types';
+import type { TOrder, TTradeIn } from '@/components/customers/orders/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -15,7 +17,7 @@ import {
     ComboboxEmpty,
     ComboboxInput,
     ComboboxItem,
-    ComboboxList
+    ComboboxList,
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -27,7 +29,7 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
@@ -49,37 +51,38 @@ export default function FormTradeInPage() {
     const form = useForm<TTradeIn>(tradeIn ?? defaultTradeIn);
     const disable = type === 'detail';
 
-    const selectedOrder = orders.find(
-        (o) => o.order_id === tradeIn?.order_id
-    );
+    const selectedOrder = orders.find((o) => o.order_id === tradeIn?.order_id);
 
     const [unitName, setUnitName] = React.useState<string>(
-        selectedOrder?.unit?.name ?? ''
+        selectedOrder?.unit?.name ?? '',
     );
 
     const handleChangeOrderOptions = (order: TOrder) => {
-        if(!order) {
-            setUnitName("")
+        if (!order) {
+            setUnitName('');
             form.setData('order_id', undefined);
 
             return;
         }
 
-        setUnitName(order.unit!.name)
-        form.setData('order_id', order.order_id)
-        form.setData('car_id', order.unit!.car_id)
-    }
+        setUnitName(order.unit!.name);
+        form.setData('order_id', order.order_id);
+        form.setData('car_id', order.unit!.car_id);
+    };
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        const url = type === 'update' && tradeIn ? update(tradeIn.trade_in_id!).url : store.url();
+        const url =
+            type === 'update' && tradeIn
+                ? update(tradeIn.trade_in_id!).url
+                : store.url();
 
         form.post(url, {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
-            }
-        })
+            },
+        });
     };
 
     return (

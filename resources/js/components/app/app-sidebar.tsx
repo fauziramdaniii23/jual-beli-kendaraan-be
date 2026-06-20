@@ -8,7 +8,7 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem
+    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { menuItems, secondaryItems } from '@/const/constant';
 import { dashboard } from '@/routes';

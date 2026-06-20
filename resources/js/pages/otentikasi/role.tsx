@@ -1,12 +1,12 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import {
-    Eye,
-    MoreHorizontal, Trash
-} from 'lucide-react';
+import { Eye, MoreHorizontal, Trash } from 'lucide-react';
 import React, { useState } from 'react';
-import { indexPermission, destroyRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
+import {
+    indexPermission,
+    destroyRole,
+} from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
 import CreateRoleDialog from '@/components/otentikasi/role-permission/add-role';
@@ -22,7 +22,7 @@ import {
 type TRole = {
     id: number;
     name: string;
-}
+};
 
 type PageProps = {
     roles: TRole[];
@@ -44,9 +44,9 @@ export default function MasterRolePage() {
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }
+    };
     const handleDelete = () => {
         router.delete(destroyRole(roleId!).url, {
             preserveScroll: true,
@@ -59,15 +59,11 @@ export default function MasterRolePage() {
     const columns: ColumnDef<TRole>[] = [
         {
             accessorKey: 'name',
-            header: 'Nama Role'
+            header: 'Nama Role',
         },
         {
             id: 'actions',
-            header: () => (
-                <div className="text-center">
-                    Aksi
-                </div>
-            ),
+            header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
                 const role = row.original;
@@ -82,7 +78,6 @@ export default function MasterRolePage() {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent align="end">
-
                                 <DropdownMenuItem
                                     onClick={() => handleActionDetail(role)}
                                 >
@@ -93,7 +88,7 @@ export default function MasterRolePage() {
                                     onClick={() => handleActionDelete(role)}
                                     className="text-red-500"
                                 >
-                                    <Trash className="text-red-500"/> Delete
+                                    <Trash className="text-red-500" /> Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

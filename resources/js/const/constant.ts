@@ -1,4 +1,12 @@
-import { HelpCircle, KeyRound, LayoutGrid, LayoutList, PackageSearch, Users, Newspaper } from 'lucide-react';
+import {
+    HelpCircle,
+    KeyRound,
+    LayoutGrid,
+    LayoutList,
+    PackageSearch,
+    Users,
+    Newspaper,
+} from 'lucide-react';
 import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
 import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
 import { index as indexTradeIn } from '@/actions/App/Http/Controllers/Customer/TradeInController';
@@ -48,7 +56,7 @@ export const menuItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
-        permission: PERMISSIONS.DASHBOARD_VIEW
+        permission: PERMISSIONS.DASHBOARD_VIEW,
     },
     {
         title: 'Inventory',
@@ -130,8 +138,8 @@ export const menuItems: NavItem[] = [
                 href: indexReviews(),
                 permission: '',
                 icon: null,
-            }
-        ]
+            },
+        ],
     },
     {
         title: 'News',
@@ -157,7 +165,7 @@ export const menuItems: NavItem[] = [
                 permission: '',
                 icon: null,
             },
-        ]
+        ],
     },
     {
         title: 'Master',
@@ -185,46 +193,54 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Transmisi',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.TRANSMISSION}),
+                href: indexReference({
+                    type: MASTER_REFERENCE_TYPE.TRANSMISSION,
+                }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Type Mobil',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.CAR_TYPE}),
+                href: indexReference({ type: MASTER_REFERENCE_TYPE.CAR_TYPE }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Bahan Bakar',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.FUEL_TYPE}),
+                href: indexReference({ type: MASTER_REFERENCE_TYPE.FUEL_TYPE }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Jumlah Kursi',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.SEAT_TYPE}),
+                href: indexReference({ type: MASTER_REFERENCE_TYPE.SEAT_TYPE }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Jenis Plat',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.PLATE_TYPE}),
+                href: indexReference({
+                    type: MASTER_REFERENCE_TYPE.PLATE_TYPE,
+                }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Status Order',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.STATUS_ORDER}),
+                href: indexReference({
+                    type: MASTER_REFERENCE_TYPE.STATUS_ORDER,
+                }),
                 permission: '',
                 icon: null,
             },
             {
                 title: 'Tipe Pembayaran',
-                href: indexReference({type: MASTER_REFERENCE_TYPE.TYPE_PAID_ORDER}),
+                href: indexReference({
+                    type: MASTER_REFERENCE_TYPE.TYPE_PAID_ORDER,
+                }),
                 permission: '',
                 icon: null,
-            }
+            },
         ],
     },
     {
@@ -246,8 +262,8 @@ export const menuItems: NavItem[] = [
                 icon: null,
             },
         ],
-    }
-]
+    },
+];
 
 export const secondaryItems = [
     {
@@ -256,5 +272,4 @@ export const secondaryItems = [
         icon: HelpCircle,
         permission: '',
     },
-]
-
+];
