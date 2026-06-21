@@ -5,6 +5,7 @@ use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', [TestController::class, 'test'])->name('test');
+Route::get('/test-notification', [TestController::class, 'testNotification'])->name('test.notification');
 
 Route::get('/hello', function () {
     return response()->json(['message' => 'Hello, World!']);

@@ -102,42 +102,7 @@ class ApiController extends Controller
                 ]);
             }
             $validated = $request->validate($rules);
-            DB::transaction(function () use ($validated, $request, $car) {
-
-                $customer = $this->customerService->updateOrCreate($validated);
-
-                $order = $this->orderService->storeOrder([
-                    'customer_id' => $customer->customer_id,
-                    'car_id' => $car->car_id,
-                ]);
-
-                if ($request->type === 'tradein') {
-                    $this->tradeInService->store([
-                        'car_id' => $car->car_id,
-                        'order_id' => $order->order_id,
-                        'brand' => $validated['brand'],
-                        'model' => $validated['model'],
-                        'variant' => $validated['variant'],
-                        'year' => $validated['year'],
-                        'kilometer' => $validated['kilometer'],
-                    ]);
-                    $order->update([
-                        'type_paid_code' => 'TRADE IN',
-                    ]);
-                }
-
-                if ($validated['isTestDrive']) {
-                    $this->testDriveService->store([
-                        'customer_id' => $customer->customer_id,
-                        'car_id' => $car->car_id,
-                        'branch_id' => $car->branch_id,
-                        'test_drive_date' => DateHelper::combine(
-                            $validated['date'],
-                            $validated['time']
-                        ),
-                    ]);
-                }
-            });
+            $this->orderService->doOrder($validated, $request->type, $car);
 
             return $this->successResponse($validated);
 

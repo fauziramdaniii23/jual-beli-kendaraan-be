@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\CarPublishedNotification;
 use App\services\BrandService;
+use App\services\OrderService;
 use App\services\PromoService;
 use App\services\StockUnitService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class TestController extends Controller
 {
     use ApiResponse;
 
     public function __construct(
+        protected OrderService $orderService,
         protected BrandService $brandService,
         protected PromoService $promoService,
         protected StockUnitService $stockUnitService,
@@ -22,13 +24,30 @@ class TestController extends Controller
 
     public function test(Request $request)
     {
-        DB::enableQueryLog();
-        $data = $this->stockUnitService->getUnitWithPagination($request);
+        return $this->successResponse('test');
+    }
 
-        $queries = DB::getQueryLog();
+    public function testGetNotification(Request $request)
+    {
+        $user = User::findOrFail(1);
 
-        Log::info('Total Queries: '.count($queries));
+        return $this->successResponse([
+            'all' => $user->notifications,
+            'unread' => $user->unreadNotifications,
+            'read' => $user->readNotifications,
+        ]);
+    }
 
-        return $this->successResponse($data);
+    public function testNotification()
+    {
+        $user = User::findOrFail(1);
+        $user->notify(
+            new CarPublishedNotification(
+                3,
+                'test send email'
+            )
+        );
+
+        return $this->successResponse($user->notifications);
     }
 }
