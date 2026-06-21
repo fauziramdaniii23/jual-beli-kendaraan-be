@@ -2,29 +2,20 @@
 
 namespace App\services;
 
+
+use App\Models\Car;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\User;
+use App\Notifications\CarPublishedNotification;
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Notification;
+
 class NotificationService
 {
-    public function markAsRead(string $id)
+    public function sendNotificationOrder(Order $order, Car $car, Customer $customer): void
     {
-        $notification = auth()
-            ->user()
-            ->notifications()
-            ->findOrFail($id);
-
-        $notification->markAsRead();
-
-        return response()->json([
-            'message' => 'success',
-        ]);
-    }
-
-    public function unreadCount()
-    {
-        return [
-            'count' => auth()
-                ->user()
-                ->unreadNotifications()
-                ->count(),
-        ];
+        $users = User::permission('notification')->get();
+        Notification::send($users, new OrderNotification($order, $car, $customer));
     }
 }

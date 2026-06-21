@@ -16,6 +16,7 @@ class OrderService
         protected CustomerService $customerService,
         protected TestDriveService $testDriveService,
         protected TradeInService $tradeInService,
+        protected NotificationService $notificationService,
     ) {}
 
     public function getOrders(Request $request)
@@ -71,6 +72,7 @@ class OrderService
                     ),
                 ]);
             }
+            $this->notificationService->sendNotificationOrder($order, $car, $customer);
         });
     }
 }

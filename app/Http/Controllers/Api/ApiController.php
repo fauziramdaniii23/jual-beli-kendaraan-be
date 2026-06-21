@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helper\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\MasterReference;
 use App\services\BranchService;
 use App\services\CustomerService;
 use App\services\FAQService;
+use App\services\NotificationService;
 use App\services\OrderService;
 use App\services\PromoService;
 use App\services\ReviewService;
@@ -18,7 +18,6 @@ use App\services\TradeInService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -34,6 +33,7 @@ class ApiController extends Controller
         protected BranchService $branchService,
         protected FAQService $faqService,
         protected PromoService $promoService,
+        protected NotificationService $notificationService,
     ) {}
 
     public function getStockUnit(Request $request): JsonResponse
