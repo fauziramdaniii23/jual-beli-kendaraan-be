@@ -9,9 +9,9 @@ import {
 } from 'lucide-react';
 import { index as indexCustomer } from '@/actions/App/Http/Controllers/Customer/CustomerController';
 import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/OrderController';
-import { index as indexTradeIn } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexTestDrive } from '@/actions/App/Http/Controllers/Customer/TestDriveController';
+import { index as indexTradeIn } from '@/actions/App/Http/Controllers/Customer/TradeInController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
@@ -19,6 +19,7 @@ import { index as indexModel } from '@/actions/App/Http/Controllers/Master/Maste
 import { index as indexReference } from '@/actions/App/Http/Controllers/Master/MasterReferenceController';
 import { index as indexFAQ } from '@/actions/App/Http/Controllers/News/FAQController';
 import { index as indexPromo } from '@/actions/App/Http/Controllers/News/PromoController';
+import { index as indexNotification } from '@/actions/App/Http/Controllers/Otentikasi/NotificationController';
 import { indexRole } from '@/actions/App/Http/Controllers/Otentikasi/RoleAndPermissionController';
 import { index as indexUsers } from '@/actions/App/Http/Controllers/Otentikasi/UserController';
 import { dashboard } from '@/routes';
@@ -249,6 +250,12 @@ export const menuItems: NavItem[] = [
         icon: KeyRound,
         permission: PERMISSIONS.OTENTIKASI_VIEW,
         items: [
+            {
+                title: 'Notifikasi',
+                href: indexNotification(),
+                permission: '',
+                icon: null,
+            },
             {
                 title: 'User',
                 href: indexUsers(),

@@ -1,6 +1,6 @@
 import { router, Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     indexRole,
     updatePermission,
@@ -37,9 +37,6 @@ export default function MasterPermissionPage() {
 
     const [payload, setPayload] = useState<PermissionState>({});
     const [data, setData] = useState<TPermission[]>(permissions);
-    useEffect(() => {
-        console.log(payload);
-    }, [payload]);
 
     const initPayload = (permission: string, checked: boolean) => {
         setPayload((prev) => ({

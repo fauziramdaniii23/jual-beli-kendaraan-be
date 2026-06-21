@@ -12,6 +12,7 @@ use App\Http\Controllers\Master\MasterModelController;
 use App\Http\Controllers\Master\MasterReferenceController;
 use App\Http\Controllers\News\FAQController;
 use App\Http\Controllers\News\PromoController;
+use App\Http\Controllers\Otentikasi\NotificationController;
 use App\Http\Controllers\Otentikasi\RoleAndPermissionController;
 use App\Http\Controllers\Otentikasi\UserController;
 use Illuminate\Support\Facades\Route;
@@ -103,6 +104,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('mst-reference/{id}', [MasterReferenceController::class, 'destroy'])->name('master.reference.destroy')->middleware('can:master.delete');
     });
     Route::middleware('can:otentikasi.view')->prefix('otentikasi')->group(function () {
+        Route::get('notification', [NotificationController::class, 'index'])->name('otentikasi.notification');
+        Route::post('notification', [NotificationController::class, 'update'])->name('otentikasi.notification.store')->middleware('can:otentikasi.edit');
+
         Route::get('role', [RoleAndPermissionController::class, 'indexRole'])->name('otentikasi.role');
         Route::post('role', [RoleAndPermissionController::class, 'storeRole'])->name('otentikasi.role.store')->middleware('can:otentikasi.create');
         Route::delete('role/{id}', [RoleAndPermissionController::class, 'destroyRole'])->name('otentikasi.role.destroy')->middleware('can:otentikasi.delete');

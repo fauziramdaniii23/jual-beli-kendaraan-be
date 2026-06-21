@@ -59,7 +59,12 @@ export default function MasterRolePage() {
     const columns: ColumnDef<TRole>[] = [
         {
             accessorKey: 'name',
-            header: 'Nama Role',
+            header: () => <div className="text-center">Nama Role</div>,
+            cell: ({row}) => {
+                const name = row.original.name;
+
+                return <div className="text-center">{name}</div>
+            }
         },
         {
             id: 'actions',
@@ -81,7 +86,7 @@ export default function MasterRolePage() {
                                 <DropdownMenuItem
                                     onClick={() => handleActionDetail(role)}
                                 >
-                                    <Eye /> Detail
+                                    <Eye /> Detail Permission
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
@@ -106,7 +111,7 @@ export default function MasterRolePage() {
                 <CreateRoleDialog />
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={roles} />
+                <DataTable showRowNumber={false} columns={columns} data={roles} />
             </div>
             <ConfirmDialog
                 confirmText="Hapus"
