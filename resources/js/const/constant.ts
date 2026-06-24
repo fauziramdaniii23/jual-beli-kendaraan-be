@@ -77,6 +77,12 @@ export const menuItems: NavItem[] = [
                 permission: '',
                 icon: null,
             },
+            // {
+            //     title: 'Pembiayaan',
+            //     href: '/inventory/garansi',
+            //     permission: '',
+            //     icon: null,
+            // },
             {
                 title: 'Garansi',
                 href: '/inventory/garansi',

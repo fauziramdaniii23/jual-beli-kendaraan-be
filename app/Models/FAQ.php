@@ -24,24 +24,24 @@ class FAQ extends Model
     ];
     protected static function booted(): void
     {
-        static::creating(function ($brand) {
-            $brand->created_by = Auth::user()?->email;
-            $brand->updated_by = Auth::user()?->email;
+        static::creating(function ($faq) {
+            $faq->created_by = Auth::user()?->email;
+            $faq->updated_by = Auth::user()?->email;
         });
 
-        static::updating(function ($brand) {
-            $brand->updated_by = Auth::user()?->email;
+        static::updating(function ($faq) {
+            $faq->updated_by = Auth::user()?->email;
         });
 
-        static::deleting(function ($brand) {
-            $brand->deleted_by = Auth::user()?->email;
-            $brand->is_published = false;
+        static::deleting(function ($faq) {
+            $faq->deleted_by = Auth::user()?->email;
+            $faq->is_published = false;
 
             /**
              * supaya deleted_by tersimpan
              * sebelum soft delete dijalankan
              */
-            $brand->saveQuietly();
+            $faq->saveQuietly();
         });
     }
     public function category(): BelongsTo
