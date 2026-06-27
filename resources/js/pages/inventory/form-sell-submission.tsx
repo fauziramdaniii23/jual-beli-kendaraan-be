@@ -79,7 +79,6 @@ export default function FormSellSubmissionPage() {
                     <div className="mt-4 flex w-full gap-4">
                         <div className="flex-1">
                             <FieldGroup>
-                                {type === 'create' && (
                                     <Field>
                                         <FieldLabel>
                                             Nama Customer
@@ -88,6 +87,8 @@ export default function FormSellSubmissionPage() {
                                             </span>
                                         </FieldLabel>
                                         <Combobox
+                                            defaultValue={form.data.customer}
+                                            disabled={disable}
                                             items={customers}
                                             itemToStringLabel={(
                                                 item: TCustomer,
@@ -106,6 +107,7 @@ export default function FormSellSubmissionPage() {
                                             <ComboboxInput
                                                 placeholder="Pilih Customer"
                                                 showClear
+                                                disabled={disable}
                                             />
 
                                             <ComboboxContent>
@@ -133,7 +135,6 @@ export default function FormSellSubmissionPage() {
                                             </ComboboxContent>
                                         </Combobox>
                                     </Field>
-                                )}
                                 <Field>
                                     <FieldLabel>
                                         Model

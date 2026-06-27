@@ -185,12 +185,7 @@ export default function FormOrderPage() {
                                                 car_id: string;
                                                 name: string;
                                             }) => item?.name}
-                                            onValueChange={(
-                                                val: {
-                                                    car_id: string;
-                                                    name: string;
-                                                } | null,
-                                            ) =>
+                                            onValueChange={(val: { car_id: string; name: string; } | null,) =>
                                                 form.setData(
                                                     'car_id',
                                                     Number(val?.car_id),
@@ -218,12 +213,9 @@ export default function FormOrderPage() {
                                                             }}
                                                         >
                                                             {unit.name}
-                                                            <Badge
-                                                                variant={unit.status.ref_code.toLowerCase()}
-                                                            >
+                                                            <Badge variant={unit.status.ref_code.toLowerCase()}>
                                                                 {
-                                                                    unit.status
-                                                                        .ref_value
+                                                                    unit.status.ref_value
                                                                 }
                                                             </Badge>
                                                         </ComboboxItem>
