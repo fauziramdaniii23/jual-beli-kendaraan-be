@@ -49,7 +49,9 @@ type PageProps = {
 
 export default function SellSubmissionPage() {
     const { sellSubmisions, status } = usePage<PageProps>().props;
-    const [sellSubmisionsId, setSellSubmisionsId] = React.useState<number | null>(null);
+    const [sellSubmisionsId, setSellSubmisionsId] = React.useState<
+        number | null
+    >(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');

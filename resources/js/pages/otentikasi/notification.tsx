@@ -1,8 +1,8 @@
 import { router } from '@inertiajs/react';
 import { Head, usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MailQuestion, MoreHorizontal} from 'lucide-react';
-import React, {useState } from 'react';
+import { MailQuestion, MoreHorizontal } from 'lucide-react';
+import React, { useState } from 'react';
 import { update } from '@/actions/App/Http/Controllers/Otentikasi/NotificationController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import Title from '@/components/app/title';
@@ -29,10 +29,11 @@ type PageProps = {
 export default function MasterNotificationPage() {
     const { roles } = usePage<PageProps>().props;
 
-    const [isUpdateConfirmOpen, setIsUpdateConfirmOpen] = useState<boolean>(false);
+    const [isUpdateConfirmOpen, setIsUpdateConfirmOpen] =
+        useState<boolean>(false);
     const [hasNotif, setHasNotif] = useState<boolean>(false);
-    const [role, setRole] = useState<string>('')
-    const openUpdateConfirm = (data : TRole) => {
+    const [role, setRole] = useState<string>('');
+    const openUpdateConfirm = (data: TRole) => {
         setRole(data.name);
         setHasNotif(data.hasNotif);
         setIsUpdateConfirmOpen(true);
@@ -40,8 +41,8 @@ export default function MasterNotificationPage() {
     const handleUpdateNotifikasi = () => {
         router.post(update().url, {
             role: role,
-            hasNotif: hasNotif
-        })
+            hasNotif: hasNotif,
+        });
     };
 
     const columns: ColumnDef<TRole>[] = [

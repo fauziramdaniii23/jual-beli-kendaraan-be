@@ -1,4 +1,3 @@
-
 import type { TCustomer } from '@/components/customers/customer/type';
 import type { TMasterReference } from '@/types';
 
@@ -21,4 +20,3 @@ export type TSellSubmission = {
 export const defaultSellSubmission: TSellSubmission = {
     status_code: 'NEW',
 };
-

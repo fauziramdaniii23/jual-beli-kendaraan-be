@@ -342,11 +342,16 @@ export default function FormTradeInPage() {
                                     <InputGroupNumberFormat
                                         value={form.data.expectation_price}
                                         onChange={(value) =>
-                                            form.setData('expectation_price', value)
+                                            form.setData(
+                                                'expectation_price',
+                                                value,
+                                            )
                                         }
                                         disable={disable}
                                         className="input w-full"
-                                        invalid={!!form.errors.expectation_price}
+                                        invalid={
+                                            !!form.errors.expectation_price
+                                        }
                                     />
                                     {form.errors.expectation_price && (
                                         <div className="text-sm text-destructive">

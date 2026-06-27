@@ -94,7 +94,9 @@ export default function FormOrderPage() {
                                             items={customers}
                                             itemToStringLabel={(
                                                 item: TCustomer,
-                                            ) => `${item.name} ( +${item.phone} )`}
+                                            ) =>
+                                                `${item.name} ( +${item.phone} )`
+                                            }
                                             onValueChange={(
                                                 val: TCustomer | null,
                                             ) =>

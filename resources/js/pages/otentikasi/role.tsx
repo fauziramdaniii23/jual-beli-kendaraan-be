@@ -60,11 +60,11 @@ export default function MasterRolePage() {
         {
             accessorKey: 'name',
             header: () => <div className="text-center">Nama Role</div>,
-            cell: ({row}) => {
+            cell: ({ row }) => {
                 const name = row.original.name;
 
-                return <div className="text-center">{name}</div>
-            }
+                return <div className="text-center">{name}</div>;
+            },
         },
         {
             id: 'actions',
@@ -111,7 +111,11 @@ export default function MasterRolePage() {
                 <CreateRoleDialog />
             </div>
             <div className="m-4">
-                <DataTable showRowNumber={false} columns={columns} data={roles} />
+                <DataTable
+                    showRowNumber={false}
+                    columns={columns}
+                    data={roles}
+                />
             </div>
             <ConfirmDialog
                 confirmText="Hapus"

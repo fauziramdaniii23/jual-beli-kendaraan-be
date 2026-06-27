@@ -9,7 +9,7 @@ import DatePicker from '@/components/app/date-picker';
 import Title from '@/components/app/title';
 import type { TCustomer } from '@/components/customers/customer/type';
 import { defaultSellSubmission } from '@/components/inventory/sell-submission/types';
-import type {TSellSubmission} from '@/components/inventory/sell-submission/types';
+import type { TSellSubmission } from '@/components/inventory/sell-submission/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
