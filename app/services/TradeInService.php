@@ -14,8 +14,6 @@ class TradeInService
     {
         return $this->repository->getTradeIn(
             filters: [
-                'brand_id' => $request->brand_id,
-                'model_id' => $request->model_id,
                 'status_code' => $request->status_code,
                 'year' => $request->year,
             ]
