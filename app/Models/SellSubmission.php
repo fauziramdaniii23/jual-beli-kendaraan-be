@@ -6,33 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class TradeIn extends Model
+class SellSubmission extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'trade_in';
+    protected $table = 'sell_submission';
 
-    protected $primaryKey = 'trade_in_id';
+    protected $primaryKey = 'sell_submission_id';
 
     public $incrementing = true;
 
     public $timestamps = true;
 
     protected $fillable = [
-        'car_id',
+        'customer_id',
         'brand',
         'model',
         'variant',
-        'order_id',
         'status_code',
         'inspection_date',
         'year',
         'kilometer',
-        'expectation_price',
-        'final_price',
         'created_by',
         'updated_by',
         'deleted_by',
+        'expectation_price',
+        'final_price',
     ];
 
     protected $casts = [
@@ -43,39 +42,29 @@ class TradeIn extends Model
 
     protected static function booted(): void
     {
-        static::creating(function ($order) {
-            $order->created_by = Auth::user()?->email;
-            $order->updated_by = Auth::user()?->email;
+        static::creating(function ($sell) {
+            $sell->created_by = Auth::user()?->email;
+            $sell->updated_by = Auth::user()?->email;
         });
 
-        static::updating(function ($order) {
-            $order->updated_by = Auth::user()?->email;
+        static::updating(function ($sell) {
+            $sell->updated_by = Auth::user()?->email;
         });
 
-        static::deleting(function ($order) {
-            $order->deleted_by = Auth::user()?->email;
+        static::deleting(function ($sell) {
+            $sell->deleted_by = Auth::user()?->email;
 
             /**
              * supaya deleted_by tersimpan
              * sebelum soft delete dijalankan
              */
-            $order->saveQuietly();
+            $sell->saveQuietly();
         });
-    }
-
-    public function unit()
-    {
-        return $this->belongsTo(Car::class, 'car_id');
     }
 
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
-    }
-
-    public function order()
-    {
-        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function status()
@@ -84,6 +73,6 @@ class TradeIn extends Model
             MasterReference::class,
             'status_code',
             'ref_code'
-        )->where('ref_type', MasterReference::STATUS_TRADE_IN);
+        )->where('ref_type', MasterReference::STATUS_SELL);
     }
 }

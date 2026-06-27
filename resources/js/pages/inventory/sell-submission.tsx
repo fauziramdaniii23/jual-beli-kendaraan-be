@@ -14,14 +14,14 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import {
-    index as indexTradeIn,
+    index as indexSell,
     form,
     destroy,
-} from '@/actions/App/Http/Controllers/Customer/TradeInController';
+} from '@/actions/App/Http/Controllers/inventory/SellSubmissionController';
 import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import { SelectWithClear } from '@/components/app/select-with-clear';
 import Title from '@/components/app/title';
-import type { TTradeIn } from '@/components/customers/orders/types';
+import type { TSellSubmission } from '@/components/inventory/sell-submission/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -43,26 +43,26 @@ import { formatDate, formatRibuan, formatRupiah } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
 
 type PageProps = {
-    tradeIns: TTradeIn[];
+    sellSubmisions: TSellSubmission[];
     status: TMasterReference[];
 };
 
-export default function TradeInPage() {
-    const { tradeIns, status } = usePage<PageProps>().props;
-    const [tradeInId, setTradeInId] = React.useState<number | null>(null);
+export default function SellSubmissionPage() {
+    const { sellSubmisions, status } = usePage<PageProps>().props;
+    const [sellSubmisionsId, setSellSubmisionsId] = React.useState<number | null>(null);
     const [isDeleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
     const [statusCode, setStatusCode] = React.useState<string>('');
     const [year, setYear] = useState<string>('');
 
     const handleAction = (
-        trade_in_id: number | undefined,
+        sell_submission_id: number | undefined,
         type: 'detail' | 'create' | 'update' | 'delete',
     ) => {
         router.get(
             form().url,
             {
-                trade_in_id: trade_in_id,
+                sell_submission_id: sell_submission_id,
                 type: type,
             },
             {
@@ -74,7 +74,7 @@ export default function TradeInPage() {
 
     const submitFilter = () => {
         router.get(
-            indexTradeIn().url,
+            indexSell().url,
             {
                 status_code: statusCode === '' ? undefined : statusCode,
                 year: year === '' ? undefined : year,
@@ -86,7 +86,7 @@ export default function TradeInPage() {
         );
     };
     const handleDelete = () => {
-        router.delete(destroy(tradeInId!).url, {
+        router.delete(destroy(sellSubmisionsId!).url, {
             preserveScroll: true,
             onSuccess: () => {
                 setDeleteConfirmOpen(false);
@@ -94,12 +94,12 @@ export default function TradeInPage() {
         });
     };
 
-    const handleConfirmDelete = (tradeIn: TTradeIn) => {
-        setTradeInId(tradeIn.trade_in_id!);
+    const handleConfirmDelete = (sell: TSellSubmission) => {
+        setSellSubmisionsId(sell.sell_submission_id!);
         setDeleteConfirmOpen(true);
     };
 
-    const columns: ColumnDef<TTradeIn>[] = [
+    const columns: ColumnDef<TSellSubmission>[] = [
         {
             accessorKey: 'brand',
             header: 'Merek',
@@ -204,10 +204,6 @@ export default function TradeInPage() {
             ),
         },
         {
-            accessorKey: 'order.order_uuid',
-            header: 'Order ID',
-        },
-        {
             accessorKey: 'status.ref_value',
             header: 'Status',
             cell: ({ row }) => {
@@ -225,7 +221,7 @@ export default function TradeInPage() {
             header: () => <div className="text-center">Aksi</div>,
             enableHiding: false,
             cell: ({ row }) => {
-                const tradeIn = row.original;
+                const sell = row.original;
 
                 return (
                     <div className="text-center">
@@ -240,7 +236,7 @@ export default function TradeInPage() {
                                 <DropdownMenuItem
                                     onClick={() =>
                                         handleAction(
-                                            tradeIn.trade_in_id,
+                                            sell.sell_submission_id,
                                             'detail',
                                         )
                                     }
@@ -250,7 +246,7 @@ export default function TradeInPage() {
                                 <DropdownMenuItem
                                     onClick={() =>
                                         handleAction(
-                                            tradeIn.trade_in_id,
+                                            sell.sell_submission_id,
                                             'update',
                                         )
                                     }
@@ -259,7 +255,7 @@ export default function TradeInPage() {
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
-                                    onClick={() => handleConfirmDelete(tradeIn)}
+                                    onClick={() => handleConfirmDelete(sell)}
                                     className="text-red-500"
                                 >
                                     <Trash className="text-red-500" /> Delete
@@ -274,10 +270,10 @@ export default function TradeInPage() {
 
     return (
         <>
-            <Head title="Tukar Tambah" />
+            <Head title="Pengajuan Jual Unit" />
             <Title
-                title="Daftar Tukar Tambah"
-                description="Daftar Semua Unit yang diajukan Tukar Tambah"
+                title="Daftar Pengajuan Jual Unit"
+                description="Daftar Semua Unit yang diajukan Pengajuan Jual Unit"
             />
             <div className="m-4 rounded-md border">
                 <Collapsible className="rounded-md data-[state=open]:bg-muted">
@@ -353,16 +349,16 @@ export default function TradeInPage() {
             <div className="mx-4 mt-4">
                 <Button onClick={() => handleAction(undefined, 'create')}>
                     <Plus />
-                    Tambah Data Tukar Tambah
+                    Tambah Data Pengajuan Jual Unit
                 </Button>
             </div>
             <div className="m-4">
-                <DataTable columns={columns} data={tradeIns} />
+                <DataTable columns={columns} data={sellSubmisions} />
             </div>
             <ConfirmDialog
                 confirmText="Hapus"
-                title="Hapus Data Tukar Tambah"
-                description="Apakah Anda yakin ingin menghapus Data Tukar Tambah ini?"
+                title="Hapus Order"
+                description="Apakah Anda yakin ingin menghapus Order ini?"
                 open={isDeleteConfirmOpen}
                 onOpenChange={setDeleteConfirmOpen}
                 onConfirm={handleDelete}
@@ -371,14 +367,14 @@ export default function TradeInPage() {
     );
 }
 
-TradeInPage.layout = {
+SellSubmissionPage.layout = {
     breadcrumbs: [
         {
-            title: 'Customer',
+            title: 'Inventory',
         },
         {
-            title: 'Tukar Tambah',
-            href: indexTradeIn(),
+            title: 'Pengajuan Jual Unit',
+            href: indexSell(),
         },
     ],
 };

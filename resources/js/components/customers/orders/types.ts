@@ -26,6 +26,8 @@ export type TTradeIn = {
     kilometer?: number;
     status_code: string;
     inspection_date: string;
+    expectation_price?: number;
+    final_price?: number;
     unit?: TUnit;
     order?: TOrder;
     status?: TMasterReference;

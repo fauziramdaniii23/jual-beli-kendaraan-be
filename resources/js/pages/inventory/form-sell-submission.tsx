@@ -4,11 +4,12 @@ import {
     index,
     store,
     update,
-} from '@/actions/App/Http/Controllers/Customer/TradeInController';
+} from '@/actions/App/Http/Controllers/inventory/SellSubmissionController';
 import DatePicker from '@/components/app/date-picker';
 import Title from '@/components/app/title';
-import { defaultTradeIn } from '@/components/customers/orders/types';
-import type { TOrder, TTradeIn } from '@/components/customers/orders/types';
+import type { TCustomer } from '@/components/customers/customer/type';
+import { defaultSellSubmission } from '@/components/inventory/sell-submission/types';
+import type {TSellSubmission} from '@/components/inventory/sell-submission/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -35,46 +36,26 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
-import { formatRibuan } from '@/lib/utils';
 import type { TMasterReference } from '@/types';
 
 type PageProps = {
-    tradeIn: TTradeIn;
-    orders: TOrder[];
+    submission: TSellSubmission;
+    customers: TCustomer[];
     status: TMasterReference[];
-    order: TOrder;
     type: 'detail' | 'create' | 'update';
 };
 
-export default function FormTradeInPage() {
-    const { tradeIn, orders, status, type, order } = usePage<PageProps>().props;
+export default function FormSellSubmissionPage() {
+    const { submission, status, type, customers } = usePage<PageProps>().props;
     const label = TYPE_LABEL[type];
-    const form = useForm<TTradeIn>(tradeIn ?? defaultTradeIn);
+    const form = useForm<TSellSubmission>(submission ?? defaultSellSubmission);
     const disable = type === 'detail';
 
-    const selectedOrder = orders.find((o) => o.order_id === tradeIn?.order_id);
-
-    const [unitName, setUnitName] = React.useState<string>(
-        selectedOrder?.unit?.name ?? '',
-    );
-
-    const handleChangeOrderOptions = (order: TOrder) => {
-        if (!order) {
-            setUnitName('');
-            form.setData('order_id', undefined);
-
-            return;
-        }
-
-        setUnitName(order.unit!.name);
-        form.setData('order_id', order.order_id);
-        form.setData('car_id', order.unit!.car_id);
-    };
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         const url =
-            type === 'update' && tradeIn
-                ? update(tradeIn.trade_in_id!).url
+            type === 'update' && submission
+                ? update(submission.sell_submission_id!).url
                 : store.url();
 
         form.post(url, {
@@ -88,10 +69,10 @@ export default function FormTradeInPage() {
 
     return (
         <>
-            <Head title={`${label} Data Tukar Tambah`} />
+            <Head title={`${label} Data Jual Unit`} />
             <Title
-                title={`${label} Data Tukar Tambah`}
-                description={`Form ${label} Data Tukar Tambah`}
+                title={`${label} Data Jual Unit`}
+                description={`Form ${label} Data Jual Unit`}
             />
             <div className="m-4">
                 <form onSubmit={submit} className="space-y-4">
@@ -101,42 +82,51 @@ export default function FormTradeInPage() {
                                 {type === 'create' && (
                                     <Field>
                                         <FieldLabel>
-                                            Order ID
+                                            Nama Customer
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </FieldLabel>
-
                                         <Combobox
-                                            items={orders}
-                                            itemToStringLabel={(item: TOrder) =>
-                                                `${item.order_uuid} - ${item.customer?.name}`
+                                            items={customers}
+                                            itemToStringLabel={(
+                                                item: TCustomer,
+                                            ) =>
+                                                `${item.name} ( +${item.phone} )`
                                             }
                                             onValueChange={(
-                                                val: TOrder | null,
-                                            ) => handleChangeOrderOptions(val!)}
+                                                val: TCustomer | null,
+                                            ) =>
+                                                form.setData(
+                                                    'customer_id',
+                                                    Number(val?.customer_id),
+                                                )
+                                            }
                                         >
                                             <ComboboxInput
-                                                placeholder="Pilih Order"
+                                                placeholder="Pilih Customer"
                                                 showClear
                                             />
 
                                             <ComboboxContent>
                                                 <ComboboxEmpty>
-                                                    Order tidak ditemukan
+                                                    Customer tidak ditemukan.
                                                 </ComboboxEmpty>
 
                                                 <ComboboxList>
-                                                    {(order) => (
+                                                    {(customer) => (
                                                         <ComboboxItem
-                                                            key={order.order_id}
-                                                            value={order}
-                                                        >
-                                                            {order.order_uuid} -{' '}
-                                                            {
-                                                                order.customer
-                                                                    .name
+                                                            key={
+                                                                customer.customer_id
                                                             }
+                                                            value={customer}
+                                                        >
+                                                            {customer.name}{' '}
+                                                            <span className="italic">
+                                                                (+
+                                                                {customer.phone}
+                                                                )
+                                                            </span>
                                                         </ComboboxItem>
                                                     )}
                                                 </ComboboxList>
@@ -146,27 +136,27 @@ export default function FormTradeInPage() {
                                 )}
                                 <Field>
                                     <FieldLabel>
-                                        Merek
+                                        Model
                                         <span className="text-destructive">
                                             *
                                         </span>
                                     </FieldLabel>
                                     <Input
                                         name="name"
-                                        value={form.data.brand || ''}
+                                        value={form.data.model || ''}
                                         onChange={(e) =>
                                             form.setData(
-                                                'brand',
+                                                'model',
                                                 e.target.value,
                                             )
                                         }
                                         className="input w-full"
-                                        aria-invalid={!!form.errors.brand}
+                                        aria-invalid={!!form.errors.model}
                                         disabled={disable}
                                     />
-                                    {form.errors.brand && (
+                                    {form.errors.model && (
                                         <div className="text-sm text-destructive">
-                                            {form.errors.brand}
+                                            {form.errors.model}
                                         </div>
                                     )}
                                 </Field>
@@ -217,35 +207,24 @@ export default function FormTradeInPage() {
                                     />
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Tanggal Inspeksi</FieldLabel>
-                                    <DatePicker
-                                        value={form.data.inspection_date || ''}
-                                        onChange={(val) =>
-                                            form.setData('inspection_date', val)
-                                        }
-                                        invalid={!!form.errors.inspection_date}
-                                        disabled={disable}
-                                    />
-                                    {form.errors.inspection_date && (
-                                        <div className="text-sm text-destructive">
-                                            {form.errors.inspection_date}
-                                        </div>
-                                    )}
-                                </Field>
-                                <Field>
-                                    <FieldLabel>Harga Akhir</FieldLabel>
+                                    <FieldLabel>Harga Jual</FieldLabel>
                                     <InputGroupNumberFormat
-                                        value={form.data.final_price}
+                                        value={form.data.expectation_price}
                                         onChange={(value) =>
-                                            form.setData('final_price', value)
+                                            form.setData(
+                                                'expectation_price',
+                                                value,
+                                            )
                                         }
                                         disable={disable}
                                         className="input w-full"
-                                        invalid={!!form.errors.final_price}
+                                        invalid={
+                                            !!form.errors.expectation_price
+                                        }
                                     />
-                                    {form.errors.final_price && (
+                                    {form.errors.expectation_price && (
                                         <div className="text-sm text-destructive">
-                                            {form.errors.final_price}
+                                            {form.errors.expectation_price}
                                         </div>
                                     )}
                                 </Field>
@@ -253,44 +232,29 @@ export default function FormTradeInPage() {
                         </div>
                         <div className="flex-1">
                             <FieldGroup>
-                                {type === 'create' && (
-                                    <Field>
-                                        <FieldLabel>
-                                            Nama Unit
-                                            <span className="text-xs text-slate-600 italic">
-                                                (Pilih Order)
-                                            </span>
-                                        </FieldLabel>
-                                        <Input
-                                            value={unitName}
-                                            className="input w-full"
-                                            disabled={true}
-                                        />
-                                    </Field>
-                                )}
                                 <Field>
                                     <FieldLabel>
-                                        Model
+                                        Merek
                                         <span className="text-destructive">
                                             *
                                         </span>
                                     </FieldLabel>
                                     <Input
                                         name="name"
-                                        value={form.data.model || ''}
+                                        value={form.data.brand || ''}
                                         onChange={(e) =>
                                             form.setData(
-                                                'model',
+                                                'brand',
                                                 e.target.value,
                                             )
                                         }
                                         className="input w-full"
-                                        aria-invalid={!!form.errors.model}
+                                        aria-invalid={!!form.errors.brand}
                                         disabled={disable}
                                     />
-                                    {form.errors.model && (
+                                    {form.errors.brand && (
                                         <div className="text-sm text-destructive">
-                                            {form.errors.model}
+                                            {form.errors.brand}
                                         </div>
                                     )}
                                 </Field>
@@ -338,19 +302,35 @@ export default function FormTradeInPage() {
                                     />
                                 </Field>
                                 <Field>
+                                    <FieldLabel>Tanggal Inspeksi</FieldLabel>
+                                    <DatePicker
+                                        value={form.data.inspection_date || ''}
+                                        onChange={(val) =>
+                                            form.setData('inspection_date', val)
+                                        }
+                                        invalid={!!form.errors.inspection_date}
+                                        disabled={disable}
+                                    />
+                                    {form.errors.inspection_date && (
+                                        <div className="text-sm text-destructive">
+                                            {form.errors.inspection_date}
+                                        </div>
+                                    )}
+                                </Field>
+                                <Field>
                                     <FieldLabel>Harga Jual</FieldLabel>
                                     <InputGroupNumberFormat
-                                        value={form.data.expectation_price}
+                                        value={form.data.final_price}
                                         onChange={(value) =>
-                                            form.setData('expectation_price', value)
+                                            form.setData('final_price', value)
                                         }
                                         disable={disable}
                                         className="input w-full"
-                                        invalid={!!form.errors.expectation_price}
+                                        invalid={!!form.errors.final_price}
                                     />
-                                    {form.errors.expectation_price && (
+                                    {form.errors.final_price && (
                                         <div className="text-sm text-destructive">
-                                            {form.errors.expectation_price}
+                                            {form.errors.final_price}
                                         </div>
                                     )}
                                 </Field>
@@ -383,30 +363,28 @@ export default function FormTradeInPage() {
                 {(type === 'detail' || type === 'update') && (
                     <Card className="my-4">
                         <CardHeader className="text-lg font-semibold text-gray-800">
-                            Detail Order
+                            Detail Customer
                         </CardHeader>
                         <CardContent>
                             <div className="flex w-full gap-4">
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
-                                            <FieldLabel>Order ID</FieldLabel>
-                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                {order.order_uuid}
-                                            </div>
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel>Tahun</FieldLabel>
-                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                {order.unit?.year}
-                                            </div>
-                                        </Field>
-                                        <Field>
                                             <FieldLabel>
                                                 Nama Customer
                                             </FieldLabel>
                                             <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                {order.customer?.name}
+                                                {form.data.customer?.name ??
+                                                    '-'}
+                                            </div>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>
+                                                Email Customer
+                                            </FieldLabel>
+                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                                {form.data.customer?.email ??
+                                                    '-'}
                                             </div>
                                         </Field>
                                     </FieldGroup>
@@ -414,19 +392,13 @@ export default function FormTradeInPage() {
                                 <div className="flex-1">
                                     <FieldGroup>
                                         <Field>
-                                            <FieldLabel>Unit</FieldLabel>
-                                            <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                {order.unit?.name}
-                                            </div>
-                                        </Field>
-                                        <Field>
                                             <FieldLabel>
-                                                Kilometer(KM)
+                                                No Handphone
                                             </FieldLabel>
                                             <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                {formatRibuan(
-                                                    order.unit?.kilometer ?? 0,
-                                                )}
+                                                +
+                                                {form.data.customer?.phone ??
+                                                    '-'}
                                             </div>
                                         </Field>
                                         <Field>
@@ -434,7 +406,8 @@ export default function FormTradeInPage() {
                                                 No Handphone
                                             </FieldLabel>
                                             <div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                                +{order.customer?.phone}
+                                                {form.data.customer?.address ??
+                                                    '-'}
                                             </div>
                                         </Field>
                                     </FieldGroup>
@@ -448,7 +421,7 @@ export default function FormTradeInPage() {
     );
 }
 
-FormTradeInPage.layout = (page: React.ReactElement<PageProps>) => {
+FormSellSubmissionPage.layout = (page: React.ReactElement<PageProps>) => {
     const pageProps = (page.props as PageProps | undefined) ?? undefined;
     const breadcrumbTitle = pageProps?.type ? TYPE_LABEL[pageProps?.type] : '';
 
@@ -456,8 +429,8 @@ FormTradeInPage.layout = (page: React.ReactElement<PageProps>) => {
         <AppLayout
             breadcrumbs={[
                 { title: 'Customer', href: '#' },
-                { title: 'Tukar Tambah', href: index() },
-                { title: `${breadcrumbTitle} Data Tukar Tambah`, href: '#' },
+                { title: 'Jual Unit', href: index() },
+                { title: `${breadcrumbTitle} Data Jual Unit`, href: '#' },
             ]}
         >
             {page}

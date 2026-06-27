@@ -5,6 +5,7 @@ use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\Customer\TestDriveController;
 use App\Http\Controllers\Customer\TradeInController;
+use App\Http\Controllers\inventory\SellSubmissionController;
 use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBranchController;
 use App\Http\Controllers\Master\MasterBrandController;
@@ -32,6 +33,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('stock-unit', [StockUnitController::class, 'store'])->name('inventory.stock-unit.store')->middleware('can:inventory.create');
         Route::post('stock-unit/{id}', [StockUnitController::class, 'update'])->name('inventory.stock-unit.update')->middleware('can:inventory.edit');
         Route::delete('stock-unit/{id}', [StockUnitController::class, 'destroy'])->name('inventory.stock-unit.destroy')->middleware('can:inventory.delete');
+
+        Route::get('sell-submission', [SellSubmissionController::class, 'index'])->name('inventory.sell-submission');
+        Route::get('sell-submission/form', [SellSubmissionController::class, 'form'])->name('inventory.sell-submission.form');
+        Route::post('sell-submission', [SellSubmissionController::class, 'store'])->name('inventory.sell-submission.store')->middleware('can:inventory.create');
+        Route::post('sell-submission/{sell_submission}', [SellSubmissionController::class, 'update'])->name('inventory.sell-submission.update')->middleware('can:inventory.edit');
+        Route::delete('sell-submission/{sell_submission}', [SellSubmissionController::class, 'destroy'])->name('inventory.sell-submission.destroy')->middleware('can:inventory.delete');
     });
 
     Route::middleware('can:customer.view')->prefix('customer')->group(function () {

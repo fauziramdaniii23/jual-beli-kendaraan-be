@@ -12,6 +12,7 @@ import { index as indexOrder } from '@/actions/App/Http/Controllers/Customer/Ord
 import { index as indexReviews } from '@/actions/App/Http/Controllers/Customer/ReviewsController';
 import { index as indexTestDrive } from '@/actions/App/Http/Controllers/Customer/TestDriveController';
 import { index as indexTradeIn } from '@/actions/App/Http/Controllers/Customer/TradeInController';
+import { index as indexSellSubmission } from '@/actions/App/Http/Controllers/inventory/SellSubmissionController';
 import { index as indexStockUnit } from '@/actions/App/Http/Controllers/inventory/StockUnitController';
 import { index as indexBranch } from '@/actions/App/Http/Controllers/Master/MasterBranchController';
 import { index as indexBrand } from '@/actions/App/Http/Controllers/Master/MasterBrandController';
@@ -73,7 +74,7 @@ export const menuItems: NavItem[] = [
             },
             {
                 title: 'Pengajuan Jual Unit',
-                href: '/inventory/pengajuan-jual-unit',
+                href: indexSellSubmission(),
                 permission: '',
                 icon: null,
             },

@@ -19,6 +19,7 @@ class MasterReference extends Model
     const TYPE_PAID_ORDER = 'TYPE_PAID_ORDER';
     const STATUS_TEST_DRIVE = 'STATUS_TEST_DRIVE';
     const STATUS_TRADE_IN = 'STATUS_TRADE_IN';
+    const STATUS_SELL = 'STATUS_SELL';
 
 
     protected $table = 'mst_reference';

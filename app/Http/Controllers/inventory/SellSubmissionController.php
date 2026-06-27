@@ -1,55 +1,51 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\inventory;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\MasterReference;
-use App\Models\Order;
+use App\Models\SellSubmission;
 use App\Models\TradeIn;
+use App\services\SellSubmissionService;
 use App\services\StockUnitService;
-use App\services\TradeInService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TradeInController extends Controller
+class SellSubmissionController extends Controller
 {
     public function __construct(
-        protected TradeInService $tradeInService,
+        protected SellSubmissionService $sellSubmissionService,
         protected StockUnitService $stockUnitService,
     ) {}
 
     public function index(Request $request)
     {
-        $tradeIns = $this->tradeInService->getTradeIn($request);
-        $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
+        $sellSubmisions = $this->sellSubmissionService->getSellSubmission($request);
+        $status = MasterReference::byType(MasterReference::STATUS_SELL)->get();
 
-        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status]);
+        return Inertia::render('inventory/sell-submission', ['sellSubmisions' => $sellSubmisions, 'status' => $status]);
     }
 
     public function form(Request $request)
     {
         try {
             $type = $request->input('type');
-            $tradeInId = $request->input('trade_in_id');
+            $submissionId = $request->input('sell_submission_id');
 
-            $tradeIn = $tradeInId ? TradeIn::with([
-                'unit',
-                'order',
-            ])->findOrFail($tradeInId) : null;
+            $submission = $submissionId ? SellSubmission::with([
+                'customer',
+                'status',
+            ])->findOrFail($submissionId) : null;
 
-            $orders = Order::query()->with(['unit', 'customer'])->where('type_paid_code', 'TRADE IN')->get();
-            $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
-            $order = null;
-            if ($type !== 'create') {
-                $order = Order::query()->with(['unit', 'customer'])->where('order_id', $tradeIn->order_id)->first();
-            }
+            $customers = Customer::query()->select(['customer_id', 'name', 'email', 'phone'])->get();
+            $status = MasterReference::byType(MasterReference::STATUS_SELL)->get();
 
-            return Inertia::render('customers/form-trade-in', [
+            return Inertia::render('inventory/form-sell-submission', [
                 'type' => $type,
-                'tradeIn' => $tradeIn,
-                'orders' => $orders,
+                'submission' => $submission,
+                'customers' => $customers,
                 'status' => $status,
-                'order' => $order,
             ]);
         } catch (\Exception $e) {
             Inertia::flash('toast', [
@@ -66,41 +62,7 @@ class TradeInController extends Controller
     {
         try {
             $validated = $request->validate([
-                'car_id' => 'required|exists:cars,car_id',
-                'order_id' => 'required|exists:orders,order_id',
-                'brand' => 'required|string',
-                'model' => 'required|string',
-                'variant' => 'required|string',
-                'status_code' => 'required|string',
-                'year' => 'required|integer',
-                'kilometer' => 'required|numeric',
-                'inspection_date' => 'required|string',
-                'expectation_price' => 'required|numeric',
-                'final_price' => 'required|numeric',
-            ]);
-            $this->tradeInService->store($validated);
-
-            Inertia::flash('toast', [
-                'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil disimpan.',
-            ]);
-
-            return redirect()->route('customer.trade-in');
-        } catch (\Exception $e) {
-            Inertia::flash('toast', [
-                'type' => 'error',
-                'message' => $e->getMessage(),
-            ]);
-
-            return redirect()->back();
-        }
-    }
-
-    public function update(Request $request, TradeIn $tradeIn)
-    {
-        try {
-            $validated = $request->validate([
-                'car_id' => 'required|exists:cars,car_id',
+                'customer_id' => 'required|exists:customers,customer_id',
                 'brand' => 'required|string',
                 'model' => 'required|string',
                 'variant' => 'required|string',
@@ -111,14 +73,14 @@ class TradeInController extends Controller
                 'expectation_price' => 'required|numeric',
                 'final_price' => 'nullable|numeric',
             ]);
-            $tradeIn->update($validated);
+            $this->sellSubmissionService->store($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil disimpan.',
+                'message' => 'Data Pengajuan Jual Unit berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.trade-in');
+            return redirect()->route('inventory.sell-submission');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -129,13 +91,46 @@ class TradeInController extends Controller
         }
     }
 
-    public function destroy(TradeIn $tradeIn)
+    public function update(Request $request, SellSubmission $sellSubmission)
     {
         try {
-            $tradeIn->delete();
+            $validated = $request->validate([
+                'customer_id' => 'required|exists:customers,customer_id',
+                'brand' => 'required|string',
+                'model' => 'required|string',
+                'variant' => 'required|string',
+                'status_code' => 'required|string',
+                'year' => 'required|integer',
+                'kilometer' => 'required|numeric',
+                'inspection_date' => 'required|string',
+                'expectation_price' => 'required|numeric',
+                'final_price' => 'nullable|numeric',
+            ]);
+            $sellSubmission->update($validated);
+
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil dihapus.',
+                'message' => 'Data Pengajuan Jual Unit berhasil disimpan.',
+            ]);
+
+            return redirect()->route('inventory.sell-submission');
+        } catch (\Exception $e) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->back();
+        }
+    }
+
+    public function destroy(SellSubmission $sellSubmission)
+    {
+        try {
+            $sellSubmission->delete();
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => 'Data Pengajuan Jual Unit berhasil dihapus.',
             ]);
 
             return redirect()->route('customer.orders');
