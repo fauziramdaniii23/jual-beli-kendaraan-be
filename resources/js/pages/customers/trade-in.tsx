@@ -337,8 +337,8 @@ export default function TradeInPage() {
             </div>
             <ConfirmDialog
                 confirmText="Hapus"
-                title="Hapus Order"
-                description="Apakah Anda yakin ingin menghapus Order ini?"
+                title="Hapus Data Tukar Tambah"
+                description="Apakah Anda yakin ingin menghapus Data Tukar Tambah ini?"
                 open={isDeleteConfirmOpen}
                 onOpenChange={setDeleteConfirmOpen}
                 onConfirm={handleDelete}
