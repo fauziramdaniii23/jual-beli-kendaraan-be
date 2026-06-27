@@ -14,12 +14,6 @@ class TradeInRepository
             'order',
             'status',
         ])
-            ->when(! empty($filters['brand_id']),
-                fn ($query) => $query->where('brand_id', $filters['brand_id'])
-            )
-            ->when(! empty($filters['model_id']),
-                fn ($query) => $query->where('model_id', $filters['model_id'])
-            )
             ->when(! empty($filters['status_code']),
                 fn ($query) => $query->where('status_code', $filters['status_code'])
             )
@@ -29,5 +23,4 @@ class TradeInRepository
             ->latest()
             ->get();
     }
-
 }
