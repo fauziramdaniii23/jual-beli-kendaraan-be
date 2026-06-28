@@ -99,6 +99,8 @@ class ApiController extends Controller
                     'variant' => 'required|string',
                     'year' => 'required|integer',
                     'kilometer' => 'required|numeric',
+                    'inspection_date' => 'nullable|string',
+                    'expectation_price' => 'required|numeric',
                 ]);
             }
             $validated = $request->validate($rules);

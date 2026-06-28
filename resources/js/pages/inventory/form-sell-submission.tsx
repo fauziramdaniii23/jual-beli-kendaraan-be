@@ -88,26 +88,15 @@ export default function FormSellSubmissionPage() {
                                         </FieldLabel>
                                         <Combobox
                                             defaultValue={form.data.customer}
-                                            disabled={disable}
+                                            disabled={disable || type === 'update'}
                                             items={customers}
-                                            itemToStringLabel={(
-                                                item: TCustomer,
-                                            ) =>
-                                                `${item.name} ( +${item.phone} )`
-                                            }
-                                            onValueChange={(
-                                                val: TCustomer | null,
-                                            ) =>
-                                                form.setData(
-                                                    'customer_id',
-                                                    Number(val?.customer_id),
-                                                )
-                                            }
+                                            itemToStringLabel={(item: TCustomer,) => `${item.name} ( +${item.phone} )`}
+                                            onValueChange={(val: TCustomer | null,) => form.setData('customer_id', Number(val?.customer_id),)}
                                         >
                                             <ComboboxInput
                                                 placeholder="Pilih Customer"
                                                 showClear
-                                                disabled={disable}
+                                                disabled={disable || type === 'update'}
                                             />
 
                                             <ComboboxContent>
@@ -118,16 +107,12 @@ export default function FormSellSubmissionPage() {
                                                 <ComboboxList>
                                                     {(customer) => (
                                                         <ComboboxItem
-                                                            key={
-                                                                customer.customer_id
-                                                            }
+                                                            key={customer.customer_id}
                                                             value={customer}
                                                         >
                                                             {customer.name}{' '}
                                                             <span className="italic">
-                                                                (+
-                                                                {customer.phone}
-                                                                )
+                                                                (+{customer.phone})
                                                             </span>
                                                         </ComboboxItem>
                                                     )}
@@ -145,12 +130,7 @@ export default function FormSellSubmissionPage() {
                                     <Input
                                         name="name"
                                         value={form.data.model || ''}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                'model',
-                                                e.target.value,
-                                            )
-                                        }
+                                        onChange={(e) => form.setData('model', e.target.value,)}
                                         className="input w-full"
                                         aria-invalid={!!form.errors.model}
                                         disabled={disable}
