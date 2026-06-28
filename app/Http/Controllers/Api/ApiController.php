@@ -12,6 +12,7 @@ use App\services\NotificationService;
 use App\services\OrderService;
 use App\services\PromoService;
 use App\services\ReviewService;
+use App\services\SellSubmissionService;
 use App\services\StockUnitService;
 use App\services\TestDriveService;
 use App\services\TradeInService;
@@ -30,6 +31,7 @@ class ApiController extends Controller
         protected OrderService $orderService,
         protected TestDriveService $testDriveService,
         protected TradeInService $tradeInService,
+        protected SellSubmissionService $sellSubmissionService,
         protected BranchService $branchService,
         protected FAQService $faqService,
         protected PromoService $promoService,
@@ -105,6 +107,31 @@ class ApiController extends Controller
             }
             $validated = $request->validate($rules);
             $this->orderService->doOrder($validated, $request->type, $car);
+
+            return $this->successResponse($validated);
+
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+    public function sellSubmission(Request $request): JsonResponse
+    {
+        try {
+            $rules = [
+                'brand' => 'required|string',
+                'model' => 'required|string',
+                'variant' => 'required|string',
+                'year' => 'required|integer',
+                'kilometer' => 'required|numeric',
+                'inspection_date' => 'nullable|string',
+                'expectation_price' => 'required|numeric',
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'address' => 'nullable|string',
+            ];
+            $validated = $request->validate($rules);
+            $this->sellSubmissionService->doSellSubmission($validated);
 
             return $this->successResponse($validated);
 
