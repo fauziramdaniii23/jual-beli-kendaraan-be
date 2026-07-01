@@ -23,3 +23,4 @@ Route::get('/promo', [ApiController::class, 'getPromo'])->name('promo');
 Route::get('/all-promo-with-unit', [ApiController::class, 'getAllPromoWithUnit'])->name('all.promo.with.unit');
 Route::get('/option-filters', [ApiController::class, 'getOptionFilters'])->name('option.filters');
 Route::post('/sell-submission', [ApiController::class, 'sellSubmission'])->name('sell.submission');
+Route::post('/pre-order', [ApiController::class, 'preOrder'])->name('pre-order');

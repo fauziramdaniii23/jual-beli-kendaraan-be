@@ -10,6 +10,7 @@ use App\services\CustomerService;
 use App\services\FAQService;
 use App\services\NotificationService;
 use App\services\OrderService;
+use App\services\PreOrderService;
 use App\services\PromoService;
 use App\services\ReviewService;
 use App\services\SellSubmissionService;
@@ -32,6 +33,7 @@ class ApiController extends Controller
         protected TestDriveService $testDriveService,
         protected TradeInService $tradeInService,
         protected SellSubmissionService $sellSubmissionService,
+        protected PreOrderService $preOrderService,
         protected BranchService $branchService,
         protected FAQService $faqService,
         protected PromoService $promoService,
@@ -132,6 +134,30 @@ class ApiController extends Controller
             ];
             $validated = $request->validate($rules);
             $this->sellSubmissionService->doSellSubmission($validated);
+
+            return $this->successResponse($validated);
+
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+    public function preOrder(Request $request): JsonResponse
+    {
+        try {
+            $rules = [
+                'brand' => 'required|string',
+                'model' => 'required|string',
+                'variant' => 'required|string',
+                'year' => 'required|integer',
+                'kilometer' => 'required|numeric',
+                'expectation_price' => 'required|numeric',
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'address' => 'nullable|string',
+            ];
+            $validated = $request->validate($rules);
+            $this->preOrderService->doPreOrder($validated);
 
             return $this->successResponse($validated);
 

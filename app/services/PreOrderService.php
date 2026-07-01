@@ -43,7 +43,6 @@ class PreOrderService
                 'variant' => $validated['variant'],
                 'year' => $validated['year'],
                 'kilometer' => $validated['kilometer'],
-                'inspection_date' => $validated['inspection_date'],
                 'expectation_price' => $validated['expectation_price'],
             ]);
         });
