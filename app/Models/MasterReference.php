@@ -20,6 +20,7 @@ class MasterReference extends Model
     const STATUS_TEST_DRIVE = 'STATUS_TEST_DRIVE';
     const STATUS_TRADE_IN = 'STATUS_TRADE_IN';
     const STATUS_SELL = 'STATUS_SELL';
+    const STATUS_PO = 'STATUS_PO';
 
 
     protected $table = 'mst_reference';

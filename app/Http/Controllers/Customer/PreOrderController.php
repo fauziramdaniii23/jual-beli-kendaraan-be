@@ -3,53 +3,51 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\MasterReference;
-use App\Models\Order;
-use App\Models\TradeIn;
+use App\Models\PreOrder;
+use App\Models\SellSubmission;
+use App\repositories\PreOrderRepository;
+use App\services\PreOrderService;
+use App\services\SellSubmissionService;
 use App\services\StockUnitService;
-use App\services\TradeInService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TradeInController extends Controller
+class PreOrderController extends Controller
 {
     public function __construct(
-        protected TradeInService $tradeInService,
+        protected PreOrderService $preOrderService,
         protected StockUnitService $stockUnitService,
     ) {}
 
     public function index(Request $request)
     {
-        $tradeIns = $this->tradeInService->getTradeIn($request);
-        $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
+        $preOrders = $this->preOrderService->getPreOrder($request);
+        $status = MasterReference::byType(MasterReference::STATUS_PO)->get();
 
-        return Inertia::render('customers/trade-in', ['tradeIns' => $tradeIns, 'status' => $status]);
+        return Inertia::render('customers/pre-order', ['preOrders' => $preOrders, 'status' => $status]);
     }
 
     public function form(Request $request)
     {
         try {
             $type = $request->input('type');
-            $tradeInId = $request->input('trade_in_id');
+            $poId = $request->input('pre_order_id');
 
-            $tradeIn = $tradeInId ? TradeIn::with([
-                'unit',
-                'order',
-            ])->findOrFail($tradeInId) : null;
+            $po = $poId ? PreOrder::with([
+                'customer',
+                'status',
+            ])->findOrFail($poId) : null;
 
-            $orders = Order::query()->with(['unit', 'customer'])->where('type_paid_code', 'TRADE IN')->get();
-            $status = MasterReference::byType(MasterReference::STATUS_TRADE_IN)->get();
-            $order = null;
-            if ($type !== 'create') {
-                $order = Order::query()->with(['unit', 'customer'])->where('order_id', $tradeIn->order_id)->first();
-            }
+            $customers = Customer::query()->select(['customer_id', 'name', 'email', 'phone'])->get();
+            $status = MasterReference::byType(MasterReference::STATUS_PO)->get();
 
-            return Inertia::render('customers/form-trade-in', [
+            return Inertia::render('customers/form-pre-order', [
                 'type' => $type,
-                'tradeIn' => $tradeIn,
-                'orders' => $orders,
+                'po' => $po,
+                'customers' => $customers,
                 'status' => $status,
-                'order' => $order,
             ]);
         } catch (\Exception $e) {
             Inertia::flash('toast', [
@@ -66,26 +64,23 @@ class TradeInController extends Controller
     {
         try {
             $validated = $request->validate([
-                'car_id' => 'required|exists:cars,car_id',
-                'order_id' => 'required|exists:orders,order_id',
+                'customer_id' => 'required|exists:customers,customer_id',
                 'brand' => 'required|string',
                 'model' => 'required|string',
                 'variant' => 'required|string',
                 'status_code' => 'required|string',
                 'year' => 'required|integer',
                 'kilometer' => 'required|numeric',
-                'inspection_date' => 'required|string',
                 'expectation_price' => 'required|numeric',
-                'final_price' => 'required|numeric',
             ]);
-            $this->tradeInService->store($validated);
+            $this->preOrderService->store($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil disimpan.',
+                'message' => 'Data Pengajuan Jual Unit berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.trade-in');
+            return redirect()->route('customer.pre-order');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -96,29 +91,27 @@ class TradeInController extends Controller
         }
     }
 
-    public function update(Request $request, TradeIn $tradeIn)
+    public function update(Request $request, PreOrder $preOrder)
     {
         try {
             $validated = $request->validate([
-                'car_id' => 'required|exists:cars,car_id',
+                'customer_id' => 'required|exists:customers,customer_id',
                 'brand' => 'required|string',
                 'model' => 'required|string',
                 'variant' => 'required|string',
                 'status_code' => 'required|string',
                 'year' => 'required|integer',
                 'kilometer' => 'required|numeric',
-                'inspection_date' => 'required|string',
                 'expectation_price' => 'required|numeric',
-                'final_price' => 'nullable|numeric',
             ]);
-            $tradeIn->update($validated);
+            $preOrder->update($validated);
 
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil disimpan.',
+                'message' => 'Data Pengajuan Jual Unit berhasil disimpan.',
             ]);
 
-            return redirect()->route('customer.trade-in');
+            return redirect()->route('customer.pre-order');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
@@ -129,16 +122,16 @@ class TradeInController extends Controller
         }
     }
 
-    public function destroy(TradeIn $tradeIn)
+    public function destroy(PreOrder $preOrder)
     {
         try {
-            $tradeIn->delete();
+            $preOrder->delete();
             Inertia::flash('toast', [
                 'type' => 'success',
-                'message' => 'Data Tukar Tambah berhasil dihapus.',
+                'message' => 'Data Pengajuan Jual Unit berhasil dihapus.',
             ]);
 
-            return redirect()->route('customer.trade-in');
+            return redirect()->route('customer.pre-order');
         } catch (\Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',

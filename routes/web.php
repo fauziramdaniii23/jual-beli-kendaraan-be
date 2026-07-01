@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\PreOrderController;
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\Customer\TestDriveController;
 use App\Http\Controllers\Customer\TradeInController;
@@ -64,6 +65,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('test-drive', [TestDriveController::class, 'store'])->name('customer.test-drive.store')->middleware('can:customer.create');
         Route::post('test-drive/{test_drive}', [TestDriveController::class, 'update'])->name('customer.test-drive.update')->middleware('can:customer.edit');
         Route::delete('test-drive/{test_drive}', [TestDriveController::class, 'destroy'])->name('customer.test-drive.destroy')->middleware('can:customer.delete');
+
+        Route::get('pre-order', [PreOrderController::class, 'index'])->name('customer.pre-order');
+        Route::get('pre-order/form', [PreOrderController::class, 'form'])->name('customer.pre-order.form');
+        Route::post('pre-order', [PreOrderController::class, 'store'])->name('customer.pre-order.store')->middleware('can:customer.create');
+        Route::post('pre-order/{pre_order}', [PreOrderController::class, 'update'])->name('customer.pre-order.update')->middleware('can:customer.edit');
+        Route::delete('pre-order/{pre_order}', [PreOrderController::class, 'destroy'])->name('customer.pre-order.destroy')->middleware('can:customer.delete');
 
         Route::get('reviews', [ReviewsController::class, 'index'])->name('customer.reviews');
         Route::get('reviews/form', [ReviewsController::class, 'form'])->name('customer.reviews.form');
