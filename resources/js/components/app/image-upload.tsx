@@ -154,6 +154,7 @@ export function ImageUpload({
         images.forEach((img) => {
             URL.revokeObjectURL(img.preview);
         });
+        setPreviewImages([]);
         setImages([]);
         setError('');
 
