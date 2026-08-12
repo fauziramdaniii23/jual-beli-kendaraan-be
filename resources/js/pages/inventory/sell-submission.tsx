@@ -104,7 +104,7 @@ export default function SellSubmissionPage() {
     const columns: ColumnDef<TSellSubmission>[] = [
         {
             accessorKey: 'customer.name',
-            header: 'Nama Customer'
+            header: 'Nama Customer',
         },
         {
             accessorKey: 'brand',

@@ -45,6 +45,13 @@ class StockUnitRepository
         return $query->get(['car_id', 'name', 'year', 'stnk_validity_period', 'price', 'status']);
     }
 
+    public function getUnitHasBeenSold()
+    {
+        $unit = Car::query()->whereNot('status_code', 'SOLD');
+
+        return $unit->get();
+    }
+
     public function getUnitWithPagination(array $filter = [])
     {
         $query = Car::query()

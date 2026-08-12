@@ -6,6 +6,7 @@ use App\Http\Controllers\Customer\PreOrderController;
 use App\Http\Controllers\Customer\ReviewsController;
 use App\Http\Controllers\Customer\TestDriveController;
 use App\Http\Controllers\Customer\TradeInController;
+use App\Http\Controllers\inventory\SalesInvoiceController;
 use App\Http\Controllers\inventory\SellSubmissionController;
 use App\Http\Controllers\inventory\StockUnitController;
 use App\Http\Controllers\Master\MasterBranchController;
@@ -40,6 +41,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('sell-submission', [SellSubmissionController::class, 'store'])->name('inventory.sell-submission.store')->middleware('can:inventory.create');
         Route::post('sell-submission/{sell_submission}', [SellSubmissionController::class, 'update'])->name('inventory.sell-submission.update')->middleware('can:inventory.edit');
         Route::delete('sell-submission/{sell_submission}', [SellSubmissionController::class, 'destroy'])->name('inventory.sell-submission.destroy')->middleware('can:inventory.delete');
+
+        Route::get('sales-invoice', [SalesInvoiceController::class, 'index'])->name('inventory.sales-invoice');
+        Route::get('sales-invoice/create', [SalesInvoiceController::class, 'create'])->name('inventory.sales-invoice.create')->middleware('can:inventory.create');
+        Route::get('sales-invoice/{id}', [SalesInvoiceController::class, 'show'])->name('inventory.sales-invoice.show');
+        Route::post('sales-invoice', [SalesInvoiceController::class, 'store'])->name('inventory.sales-invoice.store')->middleware('can:inventory.create');
+        Route::post('sales-invoice/{id}', [SalesInvoiceController::class, 'update'])->name('inventory.sales-invoice.update')->middleware('can:inventory.edit');
+        Route::delete('sales-invoice/{id}', [SalesInvoiceController::class, 'destroy'])->name('inventory.sales-invoice.destroy')->middleware('can:inventory.delete');
+
+        Route::get('warranty', [StockUnitController::class, 'warranty'])->name('inventory.warranty');
     });
 
     Route::middleware('can:customer.view')->prefix('customer')->group(function () {

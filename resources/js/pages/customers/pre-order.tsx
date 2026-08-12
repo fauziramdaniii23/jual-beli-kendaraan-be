@@ -55,7 +55,10 @@ export default function PreOrderPage() {
     const [statusCode, setStatusCode] = React.useState<string>('');
     const [year, setYear] = useState<string>('');
 
-    const handleAction = (pre_order_id: number | undefined, type: 'detail' | 'create' | 'update' | 'delete') => {
+    const handleAction = (
+        pre_order_id: number | undefined,
+        type: 'detail' | 'create' | 'update' | 'delete',
+    ) => {
         router.get(
             form().url,
             {
@@ -99,7 +102,7 @@ export default function PreOrderPage() {
     const columns: ColumnDef<TPreOrder>[] = [
         {
             accessorKey: 'customer.name',
-            header: 'Nama Customer'
+            header: 'Nama Customer',
         },
         {
             accessorKey: 'brand',
@@ -212,20 +215,14 @@ export default function PreOrderPage() {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem
                                     onClick={() =>
-                                        handleAction(
-                                            po.pre_order_id,
-                                            'detail',
-                                        )
+                                        handleAction(po.pre_order_id, 'detail')
                                     }
                                 >
                                     <Eye /> Detail
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onClick={() =>
-                                        handleAction(
-                                            po.pre_order_id,
-                                            'update',
-                                        )
+                                        handleAction(po.pre_order_id, 'update')
                                     }
                                 >
                                     <SquarePen /> Update

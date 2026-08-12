@@ -6,47 +6,34 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StockUnitRequest;
 use App\Models\MasterReference;
 use App\Models\Promo;
+use App\services\SalesInvoiceService;
 use App\services\StockUnitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class StockUnitController extends Controller
+class SalesInvoiceController extends Controller
 {
-    public function __construct(protected StockUnitService $stockUnitService) {}
-
-    private $optionTypes = [
-        'brand' => 'BRAND',
-        'branch' => 'BRANCH',
-        'model' => 'MODEL',
-        'transmission' => MasterReference::TYPE_TRANSMISSION,
-        'car_type' => MasterReference::TYPE_CAR,
-        'fuel_type' => MasterReference::TYPE_FUEL_TYPE,
-        'status' => MasterReference::TYPE_STATUS,
-        'plate_type' => MasterReference::TYPE_PLATE,
-        'seat_type' => MasterReference::TYPE_SEAT,
-    ];
+    public function __construct(
+        protected SalesInvoiceService $salesInvoiceService,
+        protected StockUnitService $stockUnitService
+    ) {}
 
     public function index(Request $request)
     {
-        $stockUnit = $this->stockUnitService->getUnit($request);
+        $salesInvoice = $this->salesInvoiceService->getSalesInvoice();
 
-        $options = collect($this->optionTypes)
-            ->mapWithKeys(fn ($type, $key) => [
-                $key => $this->stockUnitService->getOptionFilter($type),
-            ]);
-
-        return Inertia::render('inventory/stock-unit', ['stock_unit' => $stockUnit, 'options' => $options]);
+        return Inertia::render('inventory/sales-invoice', ['sales_invoice' => $salesInvoice]);
     }
 
     public function create(Request $request)
     {
-        $options = collect($this->optionTypes)
-            ->mapWithKeys(fn ($type, $key) => [
-                $key => $this->stockUnitService->getOptionFilter($type),
-            ]);
-        $promos = Promo::query()->select(['promo_id', 'name', 'code'])->get();
+        $orders = $this->salesInvoiceService->getOrder();
 
-        return Inertia::render('inventory/form-stock-unit', ['options' => $options, 'type' => 'create', 'promos' => $promos]);
+        return Inertia::render('inventory/form-sales-invoice',
+            [
+                'type' => 'create',
+                'orders' => $orders,
+            ]);
     }
 
     public function store(StockUnitRequest $request)

@@ -7,7 +7,7 @@ import {
 } from '@/actions/App/Http/Controllers/Customer/PreOrderController';
 import Title from '@/components/app/title';
 import type { TCustomer } from '@/components/customers/customer/type';
-import type { TPreOrder} from '@/components/customers/pre-order/types';
+import type { TPreOrder } from '@/components/customers/pre-order/types';
 import { defaultPreOrder } from '@/components/customers/pre-order/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -79,7 +79,11 @@ export default function FormPreOrderPage() {
                         <div className="flex-1">
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>Nama Customer<span className="text-destructive">*</span>
+                                    <FieldLabel>
+                                        Nama Customer
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
                                     </FieldLabel>
                                     <Combobox
                                         defaultValue={form.data.customer}
@@ -130,7 +134,10 @@ export default function FormPreOrderPage() {
                                 </Field>
                                 <Field>
                                     <FieldLabel>
-                                        Model<span className="text-destructive">*</span>
+                                        Model
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
                                     </FieldLabel>
                                     <Input
                                         name="name"
@@ -152,7 +159,12 @@ export default function FormPreOrderPage() {
                                     )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel>Varian<span className="text-destructive">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        Varian
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </FieldLabel>
                                     <Input
                                         name="name"
                                         value={form.data.variant || ''}
@@ -173,7 +185,11 @@ export default function FormPreOrderPage() {
                                     )}
                                 </Field>
                                 <Field>
-                                    <FieldLabel> Tahun <span className="text-red-600">*</span></FieldLabel>
+                                    <FieldLabel>
+                                        {' '}
+                                        Tahun{' '}
+                                        <span className="text-red-600">*</span>
+                                    </FieldLabel>
                                     <Input
                                         value={form.data.year}
                                         onChange={(e) => {
@@ -195,7 +211,10 @@ export default function FormPreOrderPage() {
                             <FieldGroup>
                                 <Field>
                                     <FieldLabel>
-                                        Merek<span className="text-destructive">*</span>
+                                        Merek
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
                                     </FieldLabel>
                                     <Input
                                         name="name"
@@ -247,7 +266,8 @@ export default function FormPreOrderPage() {
                                 </Field>
                                 <Field>
                                     <FieldLabel>
-                                        Kilometer(KM)<span className="text-red-600">*</span>
+                                        Kilometer(KM)
+                                        <span className="text-red-600">*</span>
                                     </FieldLabel>
                                     <NumberFormatInput
                                         value={form.data.kilometer}
@@ -263,11 +283,16 @@ export default function FormPreOrderPage() {
                                     <InputGroupNumberFormat
                                         value={form.data.expectation_price}
                                         onChange={(value) =>
-                                            form.setData('expectation_price', value)
+                                            form.setData(
+                                                'expectation_price',
+                                                value,
+                                            )
                                         }
                                         disable={disable}
                                         className="input w-full"
-                                        invalid={!!form.errors.expectation_price}
+                                        invalid={
+                                            !!form.errors.expectation_price
+                                        }
                                     />
                                     {form.errors.expectation_price && (
                                         <div className="text-sm text-destructive">

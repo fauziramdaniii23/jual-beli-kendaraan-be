@@ -12,15 +12,19 @@ interface ImageFile {
 }
 
 interface ImageUploadProps {
+    accept?: string[];
     onImagesSelected?: (files: File[]) => void;
     maxImages?: number;
     maxFileSize?: number; // in MB
+    multiple?: boolean;
 }
 
 export function ImageUpload({
+    accept = ['image/*'],
     onImagesSelected,
     maxImages = 10,
     maxFileSize = 5,
+    multiple = true,
 }: ImageUploadProps) {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [previewImages, setPreviewImages] = useState<TImageProps[]>([]);

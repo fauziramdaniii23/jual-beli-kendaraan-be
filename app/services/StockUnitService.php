@@ -38,6 +38,12 @@ class StockUnitService
 
         return $units->map(fn ($unit) => $this->mapUnit($unit));
     }
+    public function getWarrantyCars(Request $request)
+    {
+        $units = $this->stockUnitRepository->getUnitHasBeenSold();
+
+        return $units;
+    }
 
     public function getUnitWithPagination(Request $request)
     {
@@ -102,9 +108,7 @@ class StockUnitService
     {
         $stockUnit = $this->stockUnitRepository->getUnitById($id);
 
-        $map = $this->mapUnit($stockUnit);
-
-        return $map;
+        return $this->mapUnit($stockUnit);
     }
 
     public function store(array $data)
