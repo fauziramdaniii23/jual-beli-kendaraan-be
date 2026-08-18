@@ -161,36 +161,8 @@ export default function FormSalesInvoicePage() {
 
                                                     <ComboboxList>
                                                         {(order) => (
-                                                            <ComboboxItem
-                                                                key={
-                                                                    order.order_id
-                                                                }
-                                                                value={order}
-                                                            >
-                                                                {
-                                                                    order.order_uuid
-                                                                }{' '}
-                                                                <span className="italic">
-                                                                    (
-                                                                    {
-                                                                        order
-                                                                            .customer
-                                                                            .name
-                                                                    }{' '}
-                                                                    /{' '}
-                                                                    {
-                                                                        order
-                                                                            .customer
-                                                                            .phone
-                                                                    }
-                                                                    ) (
-                                                                    {
-                                                                        order
-                                                                            .unit
-                                                                            .name
-                                                                    }
-                                                                    )
-                                                                </span>
+                                                            <ComboboxItem key={order.order_id} value={order}>
+                                                                {order.order_uuid}{' '}<span className="italic">({order.customer.name}{' '}/{' '}{order.customer.phone}) ({order.unit.name})</span>
                                                             </ComboboxItem>
                                                         )}
                                                     </ComboboxList>
