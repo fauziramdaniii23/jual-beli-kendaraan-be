@@ -50,7 +50,10 @@ export function ConfirmDialog({
                     </AlertDialogCancel>
 
                     <AlertDialogAction
-                        onClick={onConfirm}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onConfirm();
+                        }}
                         disabled={loading || disable}
                     >
                         {loading && <Spinner />}

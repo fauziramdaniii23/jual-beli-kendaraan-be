@@ -6,6 +6,7 @@ import {
     store,
     update,
 } from '@/actions/App/Http/Controllers/inventory/SalesInvoiceController';
+import { ConfirmDialog } from '@/components/app/confirm-dialog';
 import DatePicker from '@/components/app/date-picker';
 import { FileUpload } from '@/components/app/file-upload';
 import Title from '@/components/app/title';
@@ -25,7 +26,6 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroupNumberFormat } from '@/components/ui/number-format-inputgroup';
-import { Spinner } from '@/components/ui/spinner';
 import { TYPE_LABEL } from '@/const/constant';
 import AppLayout from '@/layouts/app-layout';
 import type { TImageProps } from '@/types';
@@ -49,9 +49,15 @@ export default function FormSalesInvoicePage() {
     const disable = type === 'detail';
     const [selectOrder, setSelectOrder] = useState<TOrder | null>(null);
     const [sameFinalPrice, setSameFinalPrice] = useState<boolean>(false)
+    const [confirm, setConfirm] = useState<boolean>(false);
 
-    const submit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setConfirm(true);
+    };
+
+    const submit = () => {
+
         const url =
             type === 'update' && salesInvoice
                 ? update(salesInvoice.sales_invoice_id!).url
@@ -62,6 +68,7 @@ export default function FormSalesInvoicePage() {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
+                setConfirm(false);
             },
         });
     };
@@ -98,22 +105,20 @@ export default function FormSalesInvoicePage() {
     };
 
     const handleCheckboxSameFinalPrice = (val : boolean) => {
-        if (val) {
-            form.setData('final_price', selectOrder?.unit?.final_price);
-        } else {
-            form.setData('final_price', undefined);
-        }
+        setSameFinalPrice(val);
+        const price = val ? selectOrder?.unit?.final_price : undefined;
+        form.setData('final_price', price);
     }
 
     return (
         <>
-            <Head title={`${label} Stock Unit`} />
+            <Head title={`${label} Faktur Penjualan`} />
             <Title
-                title={`${label} Stock Unit`}
-                description={`Form ${label} Stock Unit`}
+                title={`${label} Faktur Penjualan`}
+                description={`Form ${label} Faktur Penjualan`}
             />
             <div className="m-4">
-                <form onSubmit={submit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {!disable && (
                         <FileUpload
                             onFilesSelected={handleImageChange}
@@ -284,10 +289,18 @@ export default function FormSalesInvoicePage() {
                             {disable ? 'Kembali' : 'Batal'}
                         </Button>
                         {!disable && (
-                            <Button type="submit" disabled={form.processing}>
-                                {form.processing && <Spinner />}
-                                {form.processing ? 'Menyimpan...' : 'Simpan'}
-                            </Button>
+                            <>
+                                <Button type="submit">
+                                    {form.processing ? 'Menyimpan...' : 'Simpan'}
+                                </Button>
+                                <ConfirmDialog
+                                    open={confirm}
+                                    onOpenChange={(val) => setConfirm(val)}
+                                    title={`${label} Faktur Penjualan ?`}
+                                    confirmText={form.processing ? 'Menyimpan...' : 'Simpan'}
+                                    loading={form.processing}
+                                    onConfirm={submit}/>
+                            </>
                         )}
                     </div>
                 </form>
